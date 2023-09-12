@@ -20,3 +20,9 @@ export {
     handleBorrow,
     handleRepay,
 } from './mappings/action';
+
+export {
+    handleAssign,
+    handlePunkBought,
+    handlePunkTransfer
+} from './mappings/cryptoPunks';

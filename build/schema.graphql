@@ -200,3 +200,8 @@ type Account @entity {
   amountBorrowed: BigInt!
   totalAssets: BigInt!
 }
+
+type Punk @entity(immutable: false) {
+  id: String!
+  owner: Bytes! # address
+}
