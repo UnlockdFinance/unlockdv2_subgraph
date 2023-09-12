@@ -1,12 +1,13 @@
 specVersion: 0.0.5
 schema:
   file: ./schema.graphql
+
 dataSources:
   - kind: ethereum
     name: uToken
     network: sepolia
     source:
-      address: "0x6F656F240CA33085be60257348C4625d51B159f3"
+      address: "0x6F656F240CA33085be60257348C4625d51B159f3" 
       abi: uToken
       startBlock: 4242015
     mapping:
@@ -14,17 +15,76 @@ dataSources:
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - AdminChanged
-        - BeaconUpgraded
-        - Upgraded
+        - Approval
+        - BalanceTransfer
+        - BorrowOnBelhalf 
+        - Burn
+        - Deposit
+        - Mint
+        - Paused
+        - PausedTimeUpdated
+        - RepayOnBelhalf
+        - ReserveDataUpdated
+        - Transfer
+        - TreasuryAddressUpdated
+        - UTokenSwept
+        - Unpaused
+        - Withdraw
       abis:
         - name: uToken
           file: ./abis/uToken.json
       eventHandlers:
-        - event: AdminChanged(address,address)
-          handler: handleAdminChanged
-        - event: BeaconUpgraded(indexed address)
-          handler: handleBeaconUpgraded
-        - event: Upgraded(indexed address)
-          handler: handleUpgraded
-      file: ./src/u-token.ts
+        - event: Approval(indexed address,indexed address,uint256)  
+          handler: handleApproval
+        - event: BalanceTransfer(indexed address,indexed address,uint256,uint256)
+          handler: handleBalanceTransfer
+        - event: BorrowOnBelhalf(indexed address,indexed address,indexed uint256,bytes32,address,uint256)
+          handler: handleBorrowOnBelhalf
+        - event: Burn(indexed address,indexed address,uint256,uint256)
+          handler: handleBurn
+        - event: Deposit(address,indexed address,uint256,indexed address,indexed uint16)
+          handler: handleDeposit
+        - event: Mint(indexed address,uint256,uint256)
+          handler: handleMint
+        - event: Paused()
+          handler: handlePaused
+        - event: PausedTimeUpdated(uint256,uint256)
+          handler: handlePausedTimeUpdated
+        - event: RepayOnBelhalf(address,bytes32,address,indexed uint256,indexed address,uint256) 
+          handler: handleRepayOnBelhalf
+        - event: ReserveDataUpdated(indexed address,uint256,uint256,uint256,uint256)
+          handler: handleReserveDataUpdated
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+        - event: TreasuryAddressUpdated(indexed address)
+          handler: handleTreasuryAddressUpdated
+        - event: UTokenSwept(indexed address,indexed address,indexed uint256)
+          handler: handleUTokenSwept
+        - event: Unpaused()
+          handler: handleUnpaused
+        - event: Withdraw(indexed address,indexed address,uint256,indexed address)
+          handler: handleWithdraw
+      file: ./src/mappings.ts
+  - kind: ethereum 
+    name: action
+    network: sepolia
+    source:
+      address: "0x7c6BB94Aac059274EEcAcB5E6aBb73F46600a029"  
+      abi: Action
+      startBlock: 4242016
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities: 
+        - Borrow
+        - Repay
+      abis:
+        - name: Action
+          file: ./abis/Action.json
+      eventHandlers:
+        - event: Borrow(indexed address,indexed bytes32,uint256,uint256,address)
+          handler: handleBorrow
+        - event: Repay(indexed address,indexed bytes32,uint256,uint256)
+          handler: handleRepay
+      file: ./src/mappings.ts
