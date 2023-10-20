@@ -15,7 +15,7 @@ type BalanceTransfer @entity {
   to: Bytes!
   value: BigInt!
   index: BigInt!
-  
+
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -29,7 +29,7 @@ type BorrowOnBelhalf @entity {
   loanId: Bytes!
   underlyingAsset: Bytes!
   borrowRate: BigInt!
-  
+
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -41,7 +41,7 @@ type Burn @entity {
   target: Bytes!
   value: BigInt!
   index: BigInt!
-  
+
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -98,7 +98,7 @@ type RepayOnBelhalf @entity {
   amount: BigInt!
   onBehalfOf: Bytes!
   borrowRate: BigInt!
-  
+
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -131,8 +131,8 @@ type Transfer @entity {
 type TreasuryAddressUpdated @entity {
   id: ID!
   _newTreasuryAddress: Bytes!
-  
-  blockNumber: BigInt! 
+
+  blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
 }
@@ -144,8 +144,8 @@ type UTokenSwept @entity {
   amount: BigInt!
 
   blockNumber: BigInt!
-  blockTimestamp: BigInt! 
-  transactionHash: Bytes!  
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
 }
 
 type Unpaused @entity {
@@ -159,7 +159,7 @@ type Unpaused @entity {
 type Withdraw @entity {
   id: ID!
   user: Bytes!
-  reserve: Bytes! 
+  reserve: Bytes!
   amount: BigInt!
   to: Bytes!
 
@@ -169,29 +169,37 @@ type Withdraw @entity {
 }
 
 type Borrow @entity {
-  id: ID! 
+  id: ID!
   user: Bytes! # address
   loanId: Bytes!
   amount: BigInt!
   totalAssets: BigInt!
   uToken: Bytes! # address
-  
+  assets: [Asset!]! @derivedFrom(field: "borrow")
+
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
   transactionInput: Bytes!
 }
 
+type Asset @entity {
+    id: ID!
+    collection: Bytes!
+    tokenId: Bytes!
+    borrow: Borrow!
+}
+
 type Repay @entity {
   id: ID!
   user: Bytes! # address
-  loanId: Bytes! 
+  loanId: Bytes!
   amount: BigInt!
   unlockedAssets: BigInt!
 
   blockNumber: BigInt!
   blockTimestamp: BigInt!
-  transactionHash: Bytes!  
+  transactionHash: Bytes!
 }
 
 type Account @entity {

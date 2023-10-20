@@ -7,7 +7,7 @@ dataSources:
     name: uToken
     network: sepolia
     source:
-      address: "0x163BE70e6e126F70Af1E7D1Ebc531F70b2c85a3B" 
+      address: "0x163BE70e6e126F70Af1E7D1Ebc531F70b2c85a3B"
       abi: uToken
       startBlock: 4437551
     mapping:
@@ -17,7 +17,7 @@ dataSources:
       entities:
         - Approval
         - BalanceTransfer
-        - BorrowOnBelhalf 
+        - BorrowOnBelhalf
         - Burn
         - Deposit
         - Mint
@@ -34,7 +34,7 @@ dataSources:
         - name: uToken
           file: ./abis/uToken.json
       eventHandlers:
-        - event: Approval(indexed address,indexed address,uint256)  
+        - event: Approval(indexed address,indexed address,uint256)
           handler: handleApproval
         - event: BalanceTransfer(indexed address,indexed address,uint256,uint256)
           handler: handleBalanceTransfer
@@ -50,7 +50,7 @@ dataSources:
           handler: handlePaused
         - event: PausedTimeUpdated(uint256,uint256)
           handler: handlePausedTimeUpdated
-        - event: RepayOnBelhalf(address,bytes32,address,indexed uint256,indexed address,uint256) 
+        - event: RepayOnBelhalf(address,bytes32,address,indexed uint256,indexed address,uint256)
           handler: handleRepayOnBelhalf
         - event: ReserveDataUpdated(indexed address,uint256,uint256,uint256,uint256)
           handler: handleReserveDataUpdated
@@ -65,7 +65,7 @@ dataSources:
         - event: Withdraw(indexed address,indexed address,uint256,indexed address)
           handler: handleWithdraw
       file: ./src/mappings.ts
-  - kind: ethereum 
+  - kind: ethereum
     name: action
     network: sepolia
     source:
@@ -76,9 +76,10 @@ dataSources:
       kind: ethereum/events
       apiVersion: 0.0.7
       language: wasm/assemblyscript
-      entities: 
+      entities:
         - Borrow
         - Repay
+        - Asset
       abis:
         - name: Action
           file: ./abis/Action.json
