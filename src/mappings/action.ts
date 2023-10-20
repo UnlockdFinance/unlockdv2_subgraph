@@ -4,7 +4,7 @@ import {
 } from "../../generated/action/Action"
 import {getOrCreateAccount} from "../helpers/account"
 
-import {getOrCreateBorrow, getOrCreateRepay} from "../helpers/action"
+import {getOrCreateAsset, getOrCreateBorrow, getOrCreateRepay} from "../helpers/action"
 import {Bytes, ethereum} from "@graphprotocol/graph-ts";
 import {Asset} from "../../generated/schema";
 
@@ -23,14 +23,12 @@ export function handleBorrow(event: BorrowEvent): void {
     const decoded = ethereum.decode('(address,uint256,(address,uint256)[],SignAction,EIP712Signature)', dataToDecode);
 
     decoded!.toTuple()[2].toArray().forEach((_asset) => {
-        const asset = new Asset(_asset.toTuple()[0].toAddress().toHexString() + "-" + _asset.toTuple()[1].toString())
-        asset.borrow = borrow.id
+        const asset = getOrCreateAsset(_asset.toTuple()[0].toAddress().toHexString() + "-" + _asset.toTuple()[1].toString())
         asset.collection = _asset.toTuple()[0].toAddress()
         asset.tokenId = _asset.toTuple()[1].toBytes()
         asset.save()
-
-        borrow.assets.push(asset.id)
     })
+
     borrow.blockNumber = event.block.number
     borrow.blockTimestamp = event.block.timestamp
     borrow.transactionHash = event.transaction.hash

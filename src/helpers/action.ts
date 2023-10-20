@@ -1,6 +1,7 @@
 import { 
     Borrow,
     Repay,
+    Asset,
   } from '../../generated/schema';
   
     export function getOrCreateBorrow(
@@ -31,4 +32,19 @@ import {
       }
   
       return repay as Repay;
+    }
+
+    export function getOrCreateAsset(
+      id: String, 
+      createIfNotFound: boolean = true,
+    ): Asset {
+      // @ts-ignore: assign wrapper object to primitive
+      let asset = Asset.load(id);
+  
+      if (asset == null && createIfNotFound) {
+      // @ts-ignore: assign wrapper object to primitive{
+        asset = new Asset(id);
+      }
+  
+      return asset as Asset;
     }
