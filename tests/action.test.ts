@@ -49,6 +49,19 @@ describe("Describe entity assertions", () => {
             "uToken",
             "0x163be70e6e126f70af1e7d1ebc531f70b2c85a3b"
         );
+
+        assert.fieldEquals(
+            "Asset",
+            "0x4ac593920d734be24250cb0bfac39df621c6e636-32",
+            "collection",
+            "0x4ac593920d734be24250cb0bfac39df621c6e636"
+        );
+        assert.fieldEquals(
+            "Asset",
+            "0x4ac593920d734be24250cb0bfac39df621c6e636-32",
+            "tokenId",
+            "32"
+        );
     })
     test("Assign created and stored multiple asset", () => {
         let to = Address.fromString("0x07fd350bb866d1768b4eeb87b452f1669038fbd0");
@@ -82,5 +95,32 @@ describe("Describe entity assertions", () => {
             "uToken",
             "0x163be70e6e126f70af1e7d1ebc531f70b2c85a3b"
         );
+        //Nft 1
+        assert.fieldEquals(
+            "Asset",
+            "0x4ac593920d734be24250cb0bfac39df621c6e636-51",
+            "collection",
+            "0x4ac593920d734be24250cb0bfac39df621c6e636"
+        );
+        assert.fieldEquals(
+            "Asset",
+            "0x4ac593920d734be24250cb0bfac39df621c6e636-51",
+            "tokenId",
+            "51"
+        );
+        //Nft 2
+        assert.fieldEquals(
+            "Asset",
+            "0x4ac593920d734be24250cb0bfac39df621c6e636-52",
+            "collection",
+            "0x4ac593920d734be24250cb0bfac39df621c6e636"
+        );
+        assert.fieldEquals(
+            "Asset",
+            "0x4ac593920d734be24250cb0bfac39df621c6e636-52",
+            "tokenId",
+            "52"
+        );
+
     })
 })

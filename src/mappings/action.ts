@@ -23,9 +23,9 @@ export function handleBorrow(event: BorrowEvent): void {
     const decoded = ethereum.decode('(address,uint256,(address,uint256)[],SignAction,EIP712Signature)', dataToDecode);
 
     decoded!.toTuple()[2].toArray().forEach((_asset) => {
-        const asset = getOrCreateAsset(_asset.toTuple()[0].toAddress().toHexString() + "-" + _asset.toTuple()[1].toString())
+        const asset = getOrCreateAsset(_asset.toTuple()[0].toAddress().toHexString() + "-" + _asset.toTuple()[1].toBigInt().toString())
         asset.collection = _asset.toTuple()[0].toAddress()
-        asset.tokenId = _asset.toTuple()[1].toBytes()
+        asset.tokenId = _asset.toTuple()[1].toBigInt()
         asset.save()
     })
 
