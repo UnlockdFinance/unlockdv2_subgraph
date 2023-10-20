@@ -119,6 +119,7 @@ import { getOrCreateAccount } from "../helpers/account"
 
     const deposited = account.amountDeposited.plus(deposit.amount)
     account.amountBorrowed = deposited
+    account.user = event.params.user
     account.save()
   }
 
@@ -268,6 +269,7 @@ import { getOrCreateAccount } from "../helpers/account"
     withdraw.save()
 
     const Withdrawal = account.amountDeposited.minus(withdraw.amount)
+    account.user = event.params.user
     account.amountBorrowed = Withdrawal
     account.save()
   }

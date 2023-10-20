@@ -179,6 +179,7 @@ type Borrow @entity {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+  transactionInput: Bytes!
 }
 
 type Repay @entity {

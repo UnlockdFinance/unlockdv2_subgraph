@@ -23,6 +23,7 @@ import { getOrCreateBorrow, getOrCreateRepay } from "../helpers/action"
 
     const borrowed = account.amountBorrowed.plus(borrow.amount)
     account.amountBorrowed = borrowed
+    account.user = event.params.user
     account.save()
   }
   
@@ -43,5 +44,6 @@ import { getOrCreateBorrow, getOrCreateRepay } from "../helpers/action"
 
     const repaid = account.amountBorrowed.minus(repay.amount)
     account.amountBorrowed = repaid
+    account.user = event.params.user
     account.save()
   }

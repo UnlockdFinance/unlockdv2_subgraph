@@ -1998,6 +1998,19 @@ export class Borrow extends Entity {
   set transactionHash(value: Bytes) {
     this.set("transactionHash", Value.fromBytes(value));
   }
+
+  get transactionInput(): Bytes {
+    let value = this.get("transactionInput");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set transactionInput(value: Bytes) {
+    this.set("transactionInput", Value.fromBytes(value));
+  }
 }
 
 export class Repay extends Entity {
