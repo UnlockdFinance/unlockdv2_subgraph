@@ -1947,8 +1947,8 @@ export class Borrow extends Entity {
     this.set("totalAssets", Value.fromBigInt(value));
   }
 
-  get token(): Bytes {
-    let value = this.get("token");
+  get uToken(): Bytes {
+    let value = this.get("uToken");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -1956,8 +1956,8 @@ export class Borrow extends Entity {
     }
   }
 
-  set token(value: Bytes) {
-    this.set("token", Value.fromBytes(value));
+  set uToken(value: Bytes) {
+    this.set("uToken", Value.fromBytes(value));
   }
 
   get blockNumber(): BigInt {

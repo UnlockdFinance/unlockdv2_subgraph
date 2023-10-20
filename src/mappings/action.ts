@@ -14,6 +14,8 @@ import { getOrCreateBorrow, getOrCreateRepay } from "../helpers/action"
     borrow.loanId = event.params.loanId
     borrow.amount = event.params.amount
     borrow.totalAssets = event.params.totalAssets
+    borrow.uToken = event.params.token
+    borrow.transactionInput = event.transaction.input
     
     borrow.blockNumber = event.block.number
     borrow.blockTimestamp = event.block.timestamp
