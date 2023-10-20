@@ -175,6 +175,7 @@ type Borrow @entity {
   amount: BigInt!
   totalAssets: BigInt!
   uToken: Bytes! # address
+  assets: [Asset!]! @derivedFrom(field: "borrow")
 
   blockNumber: BigInt!
   blockTimestamp: BigInt!
@@ -186,6 +187,7 @@ type Asset @entity {
     id: ID!
     collection: Bytes!
     tokenId: BigInt!
+    borrow: Borrow!
 }
 
 type Repay @entity {

@@ -49,6 +49,12 @@ describe("Describe entity assertions", () => {
             "uToken",
             "0x163be70e6e126f70af1e7d1ebc531f70b2c85a3b"
         );
+        assert.fieldEquals(
+            "Borrow",
+            "0x1724725a7a99b8aa0a2c8c41206ace892de862288a83b72a999a8d20ee4b1654",
+            "assets",
+            "[0x4ac593920d734be24250cb0bfac39df621c6e636-32]"
+        );
 
         assert.fieldEquals(
             "Asset",
@@ -61,6 +67,12 @@ describe("Describe entity assertions", () => {
             "0x4ac593920d734be24250cb0bfac39df621c6e636-32",
             "tokenId",
             "32"
+        );
+        assert.fieldEquals(
+            "Asset",
+            "0x4ac593920d734be24250cb0bfac39df621c6e636-32",
+            "borrow",
+            "0x1724725a7a99b8aa0a2c8c41206ace892de862288a83b72a999a8d20ee4b1654"
         );
     })
     test("Assign created and stored multiple asset", () => {
@@ -95,6 +107,13 @@ describe("Describe entity assertions", () => {
             "uToken",
             "0x163be70e6e126f70af1e7d1ebc531f70b2c85a3b"
         );
+        assert.fieldEquals(
+            "Borrow",
+            "0x1724725a7a99b8aa0a2c8c41206ace892de862288a83b72a999a8d20ee4b1654",
+            "assets",
+            "[0x4ac593920d734be24250cb0bfac39df621c6e636-51, 0x4ac593920d734be24250cb0bfac39df621c6e636-52]"
+        );
+
         //Nft 1
         assert.fieldEquals(
             "Asset",
@@ -108,6 +127,12 @@ describe("Describe entity assertions", () => {
             "tokenId",
             "51"
         );
+        assert.fieldEquals(
+            "Asset",
+            "0x4ac593920d734be24250cb0bfac39df621c6e636-51",
+            "borrow",
+            "0x1724725a7a99b8aa0a2c8c41206ace892de862288a83b72a999a8d20ee4b1654"
+        );
         //Nft 2
         assert.fieldEquals(
             "Asset",
@@ -120,6 +145,12 @@ describe("Describe entity assertions", () => {
             "0x4ac593920d734be24250cb0bfac39df621c6e636-52",
             "tokenId",
             "52"
+        );
+        assert.fieldEquals(
+            "Asset",
+            "0x4ac593920d734be24250cb0bfac39df621c6e636-52",
+            "borrow",
+            "0x1724725a7a99b8aa0a2c8c41206ace892de862288a83b72a999a8d20ee4b1654"
         );
 
     })
