@@ -185,6 +185,7 @@ type Borrow @entity {
 
 type Asset @entity {
     id: ID!
+    assetId: Bytes!
     collection: Bytes!
     tokenId: BigInt!
     borrow: Borrow!

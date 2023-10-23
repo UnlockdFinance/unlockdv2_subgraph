@@ -116,3 +116,22 @@ dataSources:
         - event: Assign(indexed address,uint256)
           handler: handleAssign
       file: ./src/mappings.ts
+  - kind: ethereum
+    name: Helper
+    network: sepolia
+    source:
+      address: "0x2ef986f0bb7235172f42001f5c3baa03154b9da2"
+      abi: Helper
+      startBlock: 4547134
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Helper
+      abis:
+        - name: Helper
+          file: ./abis/Helper.json
+      blockHandlers:
+        - handler: handleBlock
+      file: ./src/mappings.ts
