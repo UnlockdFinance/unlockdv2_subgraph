@@ -10,7 +10,6 @@ import {Address, BigInt, Bytes, ethereum} from "@graphprotocol/graph-ts";
 import {handleBorrow} from "../src/mappings/action";
 import {Borrow} from "../generated/action/Action";
 import {Borrow as BorrowSchema} from "../generated/schema";
-import {Helper} from "../generated/Helper/Helper";
 
 
 describe("Describe entity assertions", () => {
@@ -32,7 +31,7 @@ describe("Describe entity assertions", () => {
         assignEvent.parameters.push(new ethereum.EventParam("totalAssets", ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(1))))
         assignEvent.parameters.push(new ethereum.EventParam("token", ethereum.Value.fromAddress(Address.fromString("0x163be70e6e126f70af1e7d1ebc531f70b2c85a3b"))))
 
-        createMockedFunction(Address.fromString('0x2ef986f0bb7235172f42001f5c3baa03154b9da2'), 'assetId', 'assetId(address,uint256):(bytes32)')
+        createMockedFunction(Address.fromString('0x2cabdeE7c9Eefb3Eb62A7AB6FbFF4518290d5dc5'), 'assetId', 'assetId(address,uint256):(bytes32)')
             .withArgs([
                 ethereum.Value.fromAddress(Address.fromString("0x4ac593920d734be24250cb0bfac39df621c6e636")),
                 ethereum.Value.fromUnsignedBigInt(BigInt.fromString("32"))
@@ -106,7 +105,7 @@ describe("Describe entity assertions", () => {
         assignEvent.parameters.push(new ethereum.EventParam("token", ethereum.Value.fromAddress(Address.fromString("0x163be70e6e126f70af1e7d1ebc531f70b2c85a3b"))))
 
         createMockedFunction(
-            Address.fromString('0x2ef986f0bb7235172f42001f5c3baa03154b9da2'),
+            Address.fromString('0x2cabdeE7c9Eefb3Eb62A7AB6FbFF4518290d5dc5'),
             'assetId',
             'assetId(address,uint256):(bytes32)')
             .withArgs([
@@ -116,7 +115,7 @@ describe("Describe entity assertions", () => {
             .returns([ethereum.Value.fromBytes(Bytes.fromHexString('0x0000000000000000000000000000000000000000000000000000000000001234'))])
 
 
-        createMockedFunction(Address.fromString('0x2ef986f0bb7235172f42001f5c3baa03154b9da2'), 'assetId', 'assetId(address,uint256):(bytes32)')
+        createMockedFunction(Address.fromString('0x2cabdeE7c9Eefb3Eb62A7AB6FbFF4518290d5dc5'), 'assetId', 'assetId(address,uint256):(bytes32)')
             .withArgs([
                 ethereum.Value.fromAddress(Address.fromString("0x4ac593920d734be24250cb0bfac39df621c6e636")),
                 ethereum.Value.fromUnsignedBigInt(BigInt.fromString("52"))

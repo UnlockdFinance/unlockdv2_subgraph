@@ -215,3 +215,7 @@ type Punk @entity(immutable: false) {
   id: String!
   owner: Bytes! # address
 }
+
+type Helper @entity {
+  id: ID!
+  }

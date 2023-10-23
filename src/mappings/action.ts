@@ -6,8 +6,7 @@ import {getOrCreateAccount} from "../helpers/account"
 
 import {getOrCreateAsset, getOrCreateBorrow, getOrCreateRepay} from "../helpers/action"
 import {Address, BigInt, Bytes, ethereum} from "@graphprotocol/graph-ts";
-import {Asset} from "../../generated/schema";
-import {Helper} from "../../generated/Helper/Helper";
+import {UnlockdHelper} from "../../generated/UnlockdHelper/UnlockdHelper";
 
 export function handleBorrow(event: BorrowEvent): void {
     const account = getOrCreateAccount(event.params.user.toHexString())
@@ -31,7 +30,7 @@ export function handleBorrow(event: BorrowEvent): void {
         asset.tokenId = _asset.toTuple()[1].toBigInt()
         asset.borrow = borrow.id
 
-        let callResult = Helper.bind(Address.fromString('0x2ef986f0bb7235172f42001f5c3baa03154b9da2'))
+        let callResult = UnlockdHelper.bind(Address.fromString('0x2cabdeE7c9Eefb3Eb62A7AB6FbFF4518290d5dc5'))
             .try_assetId(_asset.toTuple()[0].toAddress(), _asset.toTuple()[1].toBigInt())
 
         asset.assetId = callResult.value
