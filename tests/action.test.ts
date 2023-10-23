@@ -10,6 +10,7 @@ import {createAssignEvent} from "./cryptopunks-utils";
 import {Assign} from "../generated/CryptoPunks/CryptoPunks";
 import {handleBorrow} from "../src/mappings/action";
 import {Borrow} from "../generated/action/Action";
+import {Borrow as BorrowSchema} from "../generated/schema";
 
 
 describe("Describe entity assertions", () => {
@@ -49,12 +50,13 @@ describe("Describe entity assertions", () => {
             "uToken",
             "0x163be70e6e126f70af1e7d1ebc531f70b2c85a3b"
         );
-        assert.fieldEquals(
-            "Borrow",
-            "0x1724725a7a99b8aa0a2c8c41206ace892de862288a83b72a999a8d20ee4b1654",
-            "assets",
-            "[0x4ac593920d734be24250cb0bfac39df621c6e636-32]"
-        );
+
+        const borrow = BorrowSchema.load('0x1724725a7a99b8aa0a2c8c41206ace892de862288a83b72a999a8d20ee4b1654')
+        const assets = borrow!.assets.load()
+        assert.equals(
+            ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(assets.length)),
+            ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(1)))
+
 
         assert.fieldEquals(
             "Asset",
@@ -107,12 +109,12 @@ describe("Describe entity assertions", () => {
             "uToken",
             "0x163be70e6e126f70af1e7d1ebc531f70b2c85a3b"
         );
-        assert.fieldEquals(
-            "Borrow",
-            "0x1724725a7a99b8aa0a2c8c41206ace892de862288a83b72a999a8d20ee4b1654",
-            "assets",
-            "[0x4ac593920d734be24250cb0bfac39df621c6e636-51, 0x4ac593920d734be24250cb0bfac39df621c6e636-52]"
-        );
+
+        const borrow = BorrowSchema.load('0x1724725a7a99b8aa0a2c8c41206ace892de862288a83b72a999a8d20ee4b1654')
+        const assets = borrow!.assets.load()
+        assert.equals(
+            ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(assets.length)),
+            ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(2)))
 
         //Nft 1
         assert.fieldEquals(
