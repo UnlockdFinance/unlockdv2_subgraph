@@ -22,7 +22,6 @@ export function handleBorrow(event: BorrowEvent): void {
     const dataToDecode = getTxnInputDataToDecode(event)
     const decoded = ethereum.decode('(address,uint256,(address,uint256)[],SignAction,EIP712Signature)', dataToDecode);
     const assets = decoded!.toTuple()[2].toArray()
-    const newAssets = new Array<string>()
     for (let index = 0; index < assets.length; index++) {
         const _asset = assets[index]
         const assetId = _asset.toTuple()[0].toAddress().toHexString() + "-" + _asset.toTuple()[1].toBigInt().toString()
@@ -32,9 +31,7 @@ export function handleBorrow(event: BorrowEvent): void {
         asset.borrow = borrow.id
 
         asset.save()
-        newAssets.push(asset.id)
     }
-    borrow.assets = newAssets
     borrow.blockNumber = event.block.number
     borrow.blockTimestamp = event.block.timestamp
     borrow.transactionHash = event.transaction.hash
