@@ -4,9 +4,8 @@ import {
 } from "../../generated/action/Action"
 import {getOrCreateAccount} from "../helpers/account"
 
-import {getOrCreateAsset, getOrCreateBorrow, getOrCreateRepay} from "../helpers/action"
-import {Bytes, ethereum} from "@graphprotocol/graph-ts";
-import {Asset} from "../../generated/schema";
+import {getAssetId, getOrCreateAsset, getOrCreateBorrow, getOrCreateRepay} from "../helpers/action"
+import {BigInt, Bytes, ethereum} from "@graphprotocol/graph-ts";
 
 export function handleBorrow(event: BorrowEvent): void {
     const account = getOrCreateAccount(event.params.user.toHexString())
@@ -24,14 +23,19 @@ export function handleBorrow(event: BorrowEvent): void {
     const assets = decoded!.toTuple()[2].toArray()
     for (let index = 0; index < assets.length; index++) {
         const _asset = assets[index]
-        const assetId = _asset.toTuple()[0].toAddress().toHexString() + "-" + _asset.toTuple()[1].toBigInt().toString()
-        const asset = getOrCreateAsset(assetId)
+        const id = _asset.toTuple()[0].toAddress().toHexString() + "-" + _asset.toTuple()[1].toBigInt().toString()
+        const asset = getOrCreateAsset(id)
         asset.collection = _asset.toTuple()[0].toAddress()
         asset.tokenId = _asset.toTuple()[1].toBigInt()
         asset.borrow = borrow.id
-
+        if (event.block.number.ge(BigInt.fromU32(4547844))) {
+            asset.assetId = getAssetId(_asset.toTuple()[0].toAddress(), _asset.toTuple()[1].toBigInt())
+        } else {
+            asset.assetId = Bytes.fromUTF8("hello world")
+        }
         asset.save()
     }
+
     borrow.blockNumber = event.block.number
     borrow.blockTimestamp = event.block.timestamp
     borrow.transactionHash = event.transaction.hash

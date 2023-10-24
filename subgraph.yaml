@@ -1,4 +1,4 @@
-specVersion: 0.0.5
+specVersion: 0.0.8
 schema:
   file: ./schema.graphql
 
@@ -115,4 +115,25 @@ dataSources:
           handler: handlePunkTransfer
         - event: Assign(indexed address,uint256)
           handler: handleAssign
+      file: ./src/mappings.ts
+  - kind: ethereum
+    name: unlockdHelper
+    network: sepolia
+    source:
+      address: "0x2cabdeE7c9Eefb3Eb62A7AB6FbFF4518290d5dc5"
+      abi: UnlockdHelper
+      startBlock: 4547844
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - UnlockdHelper
+      abis:
+        - name: UnlockdHelper
+          file: ./abis/UnlockdHelper.json
+      blockHandlers:
+        - handler: handleOnce
+          filter:
+            kind: once
       file: ./src/mappings.ts

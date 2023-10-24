@@ -4,10 +4,9 @@ import {
     test,
     clearStore,
     afterEach, newMockEvent,
+    createMockedFunction
 } from "matchstick-as";
 import {Address, BigInt, Bytes, ethereum} from "@graphprotocol/graph-ts";
-import {createAssignEvent} from "./cryptopunks-utils";
-import {Assign} from "../generated/CryptoPunks/CryptoPunks";
 import {handleBorrow} from "../src/mappings/action";
 import {Borrow} from "../generated/action/Action";
 import {Borrow as BorrowSchema} from "../generated/schema";
@@ -31,6 +30,14 @@ describe("Describe entity assertions", () => {
         assignEvent.parameters.push(new ethereum.EventParam("amount", ethereum.Value.fromUnsignedBigInt(BigInt.fromString("100000000000000"))))
         assignEvent.parameters.push(new ethereum.EventParam("totalAssets", ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(1))))
         assignEvent.parameters.push(new ethereum.EventParam("token", ethereum.Value.fromAddress(Address.fromString("0x163be70e6e126f70af1e7d1ebc531f70b2c85a3b"))))
+
+        createMockedFunction(Address.fromString('0x2cabdeE7c9Eefb3Eb62A7AB6FbFF4518290d5dc5'), 'assetId', 'assetId(address,uint256):(bytes32)')
+            .withArgs([
+                ethereum.Value.fromAddress(Address.fromString("0x4ac593920d734be24250cb0bfac39df621c6e636")),
+                ethereum.Value.fromUnsignedBigInt(BigInt.fromString("32"))
+            ])
+            .returns([ethereum.Value.fromBytes(Bytes.fromHexString('0x0000000000000000000000000000000000000000000000000000000000001234'))])
+
 
         handleBorrow(assignEvent);
 
@@ -76,6 +83,12 @@ describe("Describe entity assertions", () => {
             "borrow",
             "0x1724725a7a99b8aa0a2c8c41206ace892de862288a83b72a999a8d20ee4b1654"
         );
+        assert.fieldEquals(
+            "Asset",
+            "0x4ac593920d734be24250cb0bfac39df621c6e636-32",
+            "assetId",
+            "0x0000000000000000000000000000000000000000000000000000000000001234"
+        );
     })
     test("Assign created and stored multiple asset", () => {
         let to = Address.fromString("0x07fd350bb866d1768b4eeb87b452f1669038fbd0");
@@ -90,6 +103,27 @@ describe("Describe entity assertions", () => {
         assignEvent.parameters.push(new ethereum.EventParam("amount", ethereum.Value.fromUnsignedBigInt(BigInt.fromString("100000000000000"))))
         assignEvent.parameters.push(new ethereum.EventParam("totalAssets", ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(1))))
         assignEvent.parameters.push(new ethereum.EventParam("token", ethereum.Value.fromAddress(Address.fromString("0x163be70e6e126f70af1e7d1ebc531f70b2c85a3b"))))
+
+        createMockedFunction(
+            Address.fromString('0x2cabdeE7c9Eefb3Eb62A7AB6FbFF4518290d5dc5'),
+            'assetId',
+            'assetId(address,uint256):(bytes32)')
+            .withArgs([
+                ethereum.Value.fromAddress(Address.fromString("0x4ac593920d734be24250cb0bfac39df621c6e636")),
+                ethereum.Value.fromUnsignedBigInt(BigInt.fromString("51"))
+            ])
+            .returns([ethereum.Value.fromBytes(Bytes.fromHexString('0x0000000000000000000000000000000000000000000000000000000000001234'))])
+
+
+        createMockedFunction(Address.fromString('0x2cabdeE7c9Eefb3Eb62A7AB6FbFF4518290d5dc5'), 'assetId', 'assetId(address,uint256):(bytes32)')
+            .withArgs([
+                ethereum.Value.fromAddress(Address.fromString("0x4ac593920d734be24250cb0bfac39df621c6e636")),
+                ethereum.Value.fromUnsignedBigInt(BigInt.fromString("52"))
+            ])
+            .returns([ethereum.Value.fromBytes(Bytes.fromHexString('0x0000000000000000000000000000000000000000000000000000000000001234'))])
+
+
+
 
         handleBorrow(assignEvent);
 
@@ -116,6 +150,7 @@ describe("Describe entity assertions", () => {
             ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(assets.length)),
             ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(2)))
 
+
         //Nft 1
         assert.fieldEquals(
             "Asset",
@@ -134,6 +169,12 @@ describe("Describe entity assertions", () => {
             "0x4ac593920d734be24250cb0bfac39df621c6e636-51",
             "borrow",
             "0x1724725a7a99b8aa0a2c8c41206ace892de862288a83b72a999a8d20ee4b1654"
+        );
+        assert.fieldEquals(
+            "Asset",
+            "0x4ac593920d734be24250cb0bfac39df621c6e636-51",
+            "assetId",
+            "0x0000000000000000000000000000000000000000000000000000000000001234"
         );
         //Nft 2
         assert.fieldEquals(
@@ -154,6 +195,14 @@ describe("Describe entity assertions", () => {
             "borrow",
             "0x1724725a7a99b8aa0a2c8c41206ace892de862288a83b72a999a8d20ee4b1654"
         );
+        assert.fieldEquals(
+            "Asset",
+            "0x4ac593920d734be24250cb0bfac39df621c6e636-52",
+            "assetId",
+            "0x0000000000000000000000000000000000000000000000000000000000001234"
+        );
 
     })
+
 })
+

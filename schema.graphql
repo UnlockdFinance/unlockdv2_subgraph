@@ -185,6 +185,7 @@ type Borrow @entity {
 
 type Asset @entity {
     id: ID!
+    assetId: Bytes!
     collection: Bytes!
     tokenId: BigInt!
     borrow: Borrow!
@@ -214,3 +215,7 @@ type Punk @entity(immutable: false) {
   id: String!
   owner: Bytes! # address
 }
+
+type Helper @entity {
+  id: ID!
+  }
