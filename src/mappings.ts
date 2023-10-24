@@ -27,4 +27,3 @@ export {
     handlePunkTransfer
 } from './mappings/cryptoPunks';
 
-export {handleOnce} from './mappings/unlockdHelper';
