@@ -5,10 +5,7 @@ import {
 import {getOrCreateAccount} from "../helpers/account"
 
 import {getAssetId, getOrCreateAsset, getOrCreateBorrow, getOrCreateRepay} from "../helpers/action"
-import {Bytes, ethereum} from "@graphprotocol/graph-ts";
-
-export function handleOnce(block: ethereum.Block): void {
-}
+import {BigInt, Bytes, ethereum} from "@graphprotocol/graph-ts";
 
 export function handleBorrow(event: BorrowEvent): void {
     const account = getOrCreateAccount(event.params.user.toHexString())
@@ -31,7 +28,11 @@ export function handleBorrow(event: BorrowEvent): void {
         asset.collection = _asset.toTuple()[0].toAddress()
         asset.tokenId = _asset.toTuple()[1].toBigInt()
         asset.borrow = borrow.id
-        asset.assetId = getAssetId(_asset.toTuple()[0].toAddress(), _asset.toTuple()[1].toBigInt())
+        if (event.block.number.ge(BigInt.fromU32(4547844))) {
+            asset.assetId = getAssetId(_asset.toTuple()[0].toAddress(), _asset.toTuple()[1].toBigInt())
+        } else {
+            asset.assetId = Bytes.fromUTF8("hello world")
+        }
         asset.save()
     }
 

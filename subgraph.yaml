@@ -117,7 +117,7 @@ dataSources:
           handler: handleAssign
       file: ./src/mappings.ts
   - kind: ethereum
-    name: UnlockdHelper
+    name: unlockdHelper
     network: sepolia
     source:
       address: "0x2cabdeE7c9Eefb3Eb62A7AB6FbFF4518290d5dc5"
