@@ -9,3 +9,4 @@ export let BIGINT_ONE = BigInt.fromI32(1);
 export let BIGDECIMAL_ZERO = new BigDecimal(BIGINT_ZERO);
 export let BIGDECIMAL_ONE = toDecimal(BigInt.fromI32(10).pow(18));
 export let BIGDECIMAL_HUNDRED = toDecimal(BigInt.fromI32(10).pow(20));
+export const UNLOCK_HELPER_ADDRESS = Address.fromString('0x2cabdeE7c9Eefb3Eb62A7AB6FbFF4518290d5dc5')

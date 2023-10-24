@@ -133,5 +133,7 @@ dataSources:
         - name: UnlockdHelper
           file: ./abis/UnlockdHelper.json
       blockHandlers:
-        - handler: handleBlock
+        - handler: handleOnce
+          filter:
+            kind: once
       file: ./src/mappings.ts

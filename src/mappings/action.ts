@@ -4,9 +4,11 @@ import {
 } from "../../generated/action/Action"
 import {getOrCreateAccount} from "../helpers/account"
 
-import {getOrCreateAsset, getOrCreateBorrow, getOrCreateRepay} from "../helpers/action"
-import {Address, BigInt, Bytes, ethereum} from "@graphprotocol/graph-ts";
-import {UnlockdHelper} from "../../generated/UnlockdHelper/UnlockdHelper";
+import {getAssetId, getOrCreateAsset, getOrCreateBorrow, getOrCreateRepay} from "../helpers/action"
+import {Bytes, ethereum} from "@graphprotocol/graph-ts";
+
+export function handleOnce(block: ethereum.Block): void {
+}
 
 export function handleBorrow(event: BorrowEvent): void {
     const account = getOrCreateAccount(event.params.user.toHexString())
@@ -29,11 +31,7 @@ export function handleBorrow(event: BorrowEvent): void {
         asset.collection = _asset.toTuple()[0].toAddress()
         asset.tokenId = _asset.toTuple()[1].toBigInt()
         asset.borrow = borrow.id
-
-        let callResult = UnlockdHelper.bind(Address.fromString('0x2cabdeE7c9Eefb3Eb62A7AB6FbFF4518290d5dc5'))
-            .try_assetId(_asset.toTuple()[0].toAddress(), _asset.toTuple()[1].toBigInt())
-
-        asset.assetId = callResult.value
+        asset.assetId = getAssetId(_asset.toTuple()[0].toAddress(), _asset.toTuple()[1].toBigInt())
         asset.save()
     }
 
