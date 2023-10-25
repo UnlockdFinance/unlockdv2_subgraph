@@ -170,8 +170,7 @@ type Withdraw @entity {
 
 type Borrow @entity {
   id: ID!
-  user: Bytes! # address
-  loanId: Bytes!
+  user: Account! # address
   amount: BigInt!
   totalAssets: BigInt!
   uToken: Bytes! # address
@@ -209,6 +208,7 @@ type Account @entity {
   amountDeposited: BigInt!
   amountBorrowed: BigInt!
   totalAssets: BigInt!
+  borrows: [Borrow!]! @derivedFrom(field: "user")
 }
 
 type Punk @entity(immutable: false) {

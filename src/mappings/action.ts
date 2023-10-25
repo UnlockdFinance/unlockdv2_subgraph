@@ -11,9 +11,9 @@ export function handleBorrow(event: BorrowEvent): void {
     const account = getOrCreateAccount(event.params.user.toHexString())
     const borrow = getOrCreateBorrow(event.params.loanId.toHexString())
 
-    borrow.user = event.params.user
-    borrow.loanId = event.params.loanId
-    borrow.amount = event.params.amount
+    borrow.user = account.id
+    borrow.amount = borrow.amount.plus(event.params.amount)
+    
     borrow.totalAssets = event.params.totalAssets
     borrow.uToken = event.params.token
     borrow.transactionInput = event.transaction.input
@@ -39,9 +39,13 @@ export function handleBorrow(event: BorrowEvent): void {
 
     borrow.save()
 
-    const borrowed = account.amountBorrowed.plus(borrow.amount)
+    const borrowed = account.amountBorrowed.plus(event.params.amount)
+    const totalAssets = account.totalAssets.plus(borrow.totalAssets)
+
     account.amountBorrowed = borrowed
     account.user = event.params.user
+    account.totalAssets = totalAssets
+
     account.save()
 }
 

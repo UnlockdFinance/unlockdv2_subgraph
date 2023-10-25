@@ -17,6 +17,7 @@ export function getOrCreateBorrow(
     if (borrow == null && createIfNotFound) {
         // @ts-ignore: assign wrapper object to primitive
         borrow = new Borrow(id);
+        borrow.amount = BigInt.fromI32(0);
     }
 
     return borrow as Borrow;
