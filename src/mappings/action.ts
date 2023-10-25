@@ -9,7 +9,7 @@ import {BigInt, Bytes, ethereum} from "@graphprotocol/graph-ts";
 
 export function handleBorrow(event: BorrowEvent): void {
     const account = getOrCreateAccount(event.params.user.toHexString())
-    const borrow = getOrCreateBorrow(event.transaction.hash.toHexString())
+    const borrow = getOrCreateBorrow(event.params.loanId.toHexString())
 
     borrow.user = event.params.user
     borrow.loanId = event.params.loanId
@@ -28,11 +28,8 @@ export function handleBorrow(event: BorrowEvent): void {
         asset.collection = _asset.toTuple()[0].toAddress()
         asset.tokenId = _asset.toTuple()[1].toBigInt()
         asset.borrow = borrow.id
-        if (event.block.number.ge(BigInt.fromU32(4547844))) {
-            asset.assetId = getAssetId(_asset.toTuple()[0].toAddress(), _asset.toTuple()[1].toBigInt())
-        } else {
-            asset.assetId = Bytes.fromUTF8("hello world")
-        }
+        asset.assetId = getAssetId(_asset.toTuple()[0].toAddress(), _asset.toTuple()[1].toBigInt())
+
         asset.save()
     }
 

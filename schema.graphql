@@ -216,6 +216,3 @@ type Punk @entity(immutable: false) {
   owner: Bytes! # address
 }
 
-type Helper @entity {
-  id: ID!
-  }
