@@ -77,22 +77,25 @@ export function handleRepay(event: RepayEvent): void {
     repay.unlockedAssets = event.params.unlockedAssets
 
     const dataToDecode = getTxnInputDataToDecode(event)
-    const decoded = ethereum.decode('uint256,((bytes32,uint256,uint256,uint256,uint256,uint256,uint256),bytes32[],uint256,uint256),(uint8,bytes32,bytes32,uint256)', dataToDecode);
+    const repayABI = "uint256,((bytes32,uint256,uint256,uint256,uint256,uint256,uint256),bytes32[],uint256,uint256),(uint8,bytes32,bytes32,uint256)";
+    let decoded = ethereum.decode(repayABI, dataToDecode)
+
     if(decoded != null) {
-        let arr1 = decoded.toTuple()[1];
-        let _assets = arr1.toTuple()[1];
-        if(_assets != null) {
-            const assets = _assets.toArray()
-            const borrowAssets = borrow.assets.load()
-            for (let index = 0; index < assets.length; index++) {
-                const _asset = assets[index]
-                const existAsset = findAssetByAssetId(borrowAssets, _asset.toBytes())
-                if(existAsset) {
-                    store.remove('Asset', existAsset.id)
-                }
+        decoded = decoded.toTuple()[1]
+        const decodedAssets = decoded.toTuple()[1]
+        const assets = decodedAssets.toArray()
+        const borrowAssets = borrow.assets.load()
+        
+        for (let index = 0; index < assets.length; index++) {
+            const _asset = assets[index]
+            const existAsset = findAssetByAssetId(borrowAssets, _asset.toBytes())
+            if(existAsset != null) {
+                store.remove('Asset', existAsset.id)
             }
         }
     }
+
+    
     repay.blockNumber = event.block.number
     repay.blockTimestamp = event.block.timestamp
     repay.transactionHash = event.transaction.hash
