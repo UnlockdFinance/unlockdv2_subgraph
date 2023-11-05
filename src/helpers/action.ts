@@ -5,7 +5,7 @@ import {
 } from '../../generated/schema';
 import {Address, BigInt, Bytes} from "@graphprotocol/graph-ts";
 import {UnlockdHelper} from "../../generated/UnlockdHelper/UnlockdHelper";
-import {UNLOCK_HELPER_ADDRESS} from "../utils/constants";
+import {UNLOCK_HELPER_ADDRESS,BIGINT_ZERO} from "../utils/constants";
 
 export function getOrCreateBorrow(
     id: String,
@@ -17,7 +17,8 @@ export function getOrCreateBorrow(
     if (borrow == null && createIfNotFound) {
         // @ts-ignore: assign wrapper object to primitive
         borrow = new Borrow(id);
-        borrow.amount = BigInt.fromI32(0);
+        borrow.amount = BIGINT_ZERO;
+        borrow.totalAssets = BIGINT_ZERO;
     }
 
     return borrow as Borrow;
@@ -33,6 +34,8 @@ export function getOrCreateRepay(
     if (repay == null && createIfNotFound) {
         // @ts-ignore: assign wrapper object to primitive{
         repay = new Repay(id);
+        repay.amount = BIGINT_ZERO;
+        repay.unlockedAssets = BIGINT_ZERO;
     }
 
     return repay as Repay;
@@ -48,6 +51,7 @@ export function getOrCreateAsset(
     if (asset == null && createIfNotFound) {
         // @ts-ignore: assign wrapper object to primitive{
         asset = new Asset(id);
+        asset.tokenId = BIGINT_ZERO;
     }
 
     return asset as Asset;
