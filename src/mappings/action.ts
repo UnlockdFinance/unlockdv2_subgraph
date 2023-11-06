@@ -14,7 +14,7 @@ export function handleBorrow(event: BorrowEvent): void {
 
     borrow.user = account.id
     borrow.amount = borrow.amount.plus(event.params.amount)
-    
+
     borrow.totalAssets = event.params.totalAssets
     borrow.uToken = event.params.token
     borrow.transactionInput = event.transaction.input
@@ -51,7 +51,7 @@ export function handleBorrow(event: BorrowEvent): void {
 }
 
 function getTxnInputDataToDecode(event: ethereum.Event): Bytes {
-    const inputDataHexString = event.transaction.input.toHexString().slice(10); //take away function signature: 0x????????
+    const inputDataHexString = event.transaction.input.toHexString().slice(10); //take away function signature: 0x???????? and the function name 8 next caracters
     const hexStringToDecode = '0x0000000000000000000000000000000000000000000000000000000000000020' + inputDataHexString; // prepend tuple offset
     return Bytes.fromByteArray(Bytes.fromHexString(hexStringToDecode));
 }
@@ -77,16 +77,17 @@ export function handleRepay(event: RepayEvent): void {
     repay.unlockedAssets = event.params.unlockedAssets
 
     const dataToDecode = getTxnInputDataToDecode(event)
-    const repayABI = "uint256,((bytes32,uint256,uint256,uint256,uint256,uint256,uint256),bytes32[],uint256,uint256),(uint8,bytes32,bytes32,uint256)";
+    const repayABI = "(uint256,((bytes32,uint256,uint256,uint256,uint256,uint256,uint256),bytes32[],uint256,uint256),(uint8,bytes32,bytes32,uint256))";
     let decoded = ethereum.decode(repayABI, dataToDecode)
-    log.info("Decoded: {}", ["Decoded"])
+    log.info("Decoded: {}", [decoded!.toString()])
 
     if(decoded != null) {
         decoded = decoded.toTuple()[1]
         const decodedAssets = decoded.toTuple()[1]
+        log.debug("Decoded Assets: {}", [decodedAssets.toString()])
         const assets = decodedAssets.toArray()
         const borrowAssets = borrow.assets.load()
-        
+
         for (let index = 0; index < assets.length; index++) {
             const _asset = assets[index]
             const existAsset = findAssetByAssetId(borrowAssets, _asset.toBytes())
@@ -101,7 +102,8 @@ export function handleRepay(event: RepayEvent): void {
     repay.transactionHash = event.transaction.hash
 
     repay.save()
-
+    borrow.amount = borrow.amount.minus(repay.amount)
+    borrow.save()
     const borrowedAmount = account.amountBorrowed.minus(repay.amount)
     const newTotalAssets = account.totalAssets.minus(event.params.unlockedAssets)
 
