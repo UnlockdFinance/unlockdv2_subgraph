@@ -6,7 +6,7 @@ import { Asset } from "../../generated/schema";
 import {getOrCreateAccount} from "../helpers/account"
 
 import {getAssetId, getOrCreateAsset, getOrCreateBorrow, getOrCreateRepay} from "../helpers/action"
-import {BigInt, Bytes, ethereum, store} from "@graphprotocol/graph-ts";
+import {log, Bytes, ethereum, store} from "@graphprotocol/graph-ts";
 
 export function handleBorrow(event: BorrowEvent): void {
     const account = getOrCreateAccount(event.params.user.toHexString())
@@ -79,6 +79,7 @@ export function handleRepay(event: RepayEvent): void {
     const dataToDecode = getTxnInputDataToDecode(event)
     const repayABI = "uint256,((bytes32,uint256,uint256,uint256,uint256,uint256,uint256),bytes32[],uint256,uint256),(uint8,bytes32,bytes32,uint256)";
     let decoded = ethereum.decode(repayABI, dataToDecode)
+    log.info("Decoded: {}", ["Decoded"])
 
     if(decoded != null) {
         decoded = decoded.toTuple()[1]
@@ -95,7 +96,6 @@ export function handleRepay(event: RepayEvent): void {
         }
     }
 
-    
     repay.blockNumber = event.block.number
     repay.blockTimestamp = event.block.timestamp
     repay.transactionHash = event.transaction.hash
