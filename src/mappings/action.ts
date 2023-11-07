@@ -24,12 +24,11 @@ export function handleBorrow(event: BorrowEvent): void {
     const assets = decoded!.toTuple()[2].toArray()
     for (let index = 0; index < assets.length; index++) {
         const _asset = assets[index]
-        const id = _asset.toTuple()[0].toAddress().toHexString() + "-" + _asset.toTuple()[1].toBigInt().toString()
-        const asset = getOrCreateAsset(id)
+        const id = getAssetId(_asset.toTuple()[0].toAddress(), _asset.toTuple()[1].toBigInt())
+        const asset = getOrCreateAsset(id.toHexString())
         asset.collection = _asset.toTuple()[0].toAddress()
         asset.tokenId = _asset.toTuple()[1].toBigInt()
         asset.borrow = borrow.id
-        asset.assetId = getAssetId(_asset.toTuple()[0].toAddress(), _asset.toTuple()[1].toBigInt())
 
         asset.save()
     }
@@ -56,16 +55,6 @@ function getTxnInputDataToDecode(event: ethereum.Event): Bytes {
     return Bytes.fromByteArray(Bytes.fromHexString(hexStringToDecode));
 }
 
-function findAssetByAssetId(assets: Asset[], assetId: Bytes): Asset | null {
-    for (let index = 0; index < assets.length; index++) {
-        const asset = assets[index]
-        if(asset.assetId == assetId) {
-            return asset
-        }
-    }
-    return null
-}
-
 export function handleRepay(event: RepayEvent): void {
     const account = getOrCreateAccount(event.params.user.toHexString())
     const repay = getOrCreateRepay(event.transaction.hash.toHexString())
@@ -78,7 +67,7 @@ export function handleRepay(event: RepayEvent): void {
 
     for(let index = 0; index < event.params.assets.length; index++) {
         const assetId = event.params.assets[index]
-        store.remove('Asset', assetId.toString())
+        store.remove('Asset', assetId.toHexString())
     }
 
     repay.blockNumber = event.block.number
