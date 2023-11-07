@@ -2,7 +2,7 @@ import {
     Borrow as BorrowEvent,
     Repay as RepayEvent
 } from "../../generated/action/Action"
-import { Asset } from "../../generated/schema";
+import {Asset} from "../../generated/schema";
 import {getOrCreateAccount} from "../helpers/account"
 
 import {getAssetId, getOrCreateAsset, getOrCreateBorrow, getOrCreateRepay} from "../helpers/action"
@@ -14,7 +14,7 @@ export function handleBorrow(event: BorrowEvent): void {
 
     borrow.user = account.id
     borrow.amount = borrow.amount.plus(event.params.amount)
-    
+
     borrow.totalAssets = event.params.totalAssets
     borrow.uToken = event.params.token
     borrow.transactionInput = event.transaction.input
@@ -50,7 +50,7 @@ export function handleBorrow(event: BorrowEvent): void {
 }
 
 function getTxnInputDataToDecode(event: ethereum.Event): Bytes {
-    const inputDataHexString = event.transaction.input.toHexString().slice(10); //take away function signature: 0x????????
+    const inputDataHexString = event.transaction.input.toHexString().slice(10); //take away function signature: 0x???????? and the function name 8 next caracters
     const hexStringToDecode = '0x0000000000000000000000000000000000000000000000000000000000000020' + inputDataHexString; // prepend tuple offset
     return Bytes.fromByteArray(Bytes.fromHexString(hexStringToDecode));
 }
@@ -65,9 +65,10 @@ export function handleRepay(event: RepayEvent): void {
     repay.amount = event.params.amount
     repay.assets = event.params.assets
 
-    for(let index = 0; index < event.params.assets.length; index++) {
+    for (let index = 0; index < event.params.assets.length; index++) {
         const assetId = event.params.assets[index]
         store.remove('Asset', assetId.toHexString())
+
     }
 
     repay.blockNumber = event.block.number
@@ -75,8 +76,10 @@ export function handleRepay(event: RepayEvent): void {
     repay.transactionHash = event.transaction.hash
 
     repay.save()
+    borrow.totalAssets = borrow.totalAssets.minus(new BigInt(event.params.assets.length))
     borrow.amount = borrow.amount.minus(repay.amount)
     borrow.save()
+
 
     const borrowedAmount = account.amountBorrowed.minus(repay.amount)
     const newTotalAssets = account.totalAssets.minus(BigInt.fromI32(event.params.assets.length))

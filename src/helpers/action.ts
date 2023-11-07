@@ -4,8 +4,8 @@ import {
     Asset,
 } from '../../generated/schema';
 import {Address, BigInt, Bytes} from "@graphprotocol/graph-ts";
-import {UnlockdHelper} from "../../generated/UnlockdHelper/UnlockdHelper";
 import {UNLOCK_HELPER_ADDRESS,BIGINT_ZERO} from "../utils/constants";
+import {UnlockdHelper} from "../../generated/action/UnlockdHelper";
 
 export function getOrCreateBorrow(
     id: String,
