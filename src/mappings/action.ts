@@ -79,7 +79,7 @@ export function handleRepay(event: RepayEvent): void {
     borrow.save()
 
     const borrowedAmount = account.amountBorrowed.minus(repay.amount)
-    const newTotalAssets = account.totalAssets.minus(new BigInt(event.params.assets.length))
+    const newTotalAssets = account.totalAssets.minus(BigInt.fromI32(event.params.assets.length))
 
     account.amountBorrowed = borrowedAmount
     account.user = event.params.user
