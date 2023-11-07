@@ -2,11 +2,11 @@ import {
     Borrow as BorrowEvent,
     Repay as RepayEvent
 } from "../../generated/action/Action"
-import { Asset } from "../../generated/schema";
+import {Asset} from "../../generated/schema";
 import {getOrCreateAccount} from "../helpers/account"
 
 import {getAssetId, getOrCreateAsset, getOrCreateBorrow, getOrCreateRepay} from "../helpers/action"
-import {log, Bytes, ethereum, store} from "@graphprotocol/graph-ts";
+import {log, Bytes, ethereum, store, BigInt} from "@graphprotocol/graph-ts";
 
 export function handleBorrow(event: BorrowEvent): void {
     const account = getOrCreateAccount(event.params.user.toHexString())
@@ -24,12 +24,11 @@ export function handleBorrow(event: BorrowEvent): void {
     const assets = decoded!.toTuple()[2].toArray()
     for (let index = 0; index < assets.length; index++) {
         const _asset = assets[index]
-        const id = _asset.toTuple()[0].toAddress().toHexString() + "-" + _asset.toTuple()[1].toBigInt().toString()
-        const asset = getOrCreateAsset(id)
+        const id = getAssetId(_asset.toTuple()[0].toAddress(), _asset.toTuple()[1].toBigInt())
+        const asset = getOrCreateAsset(id.toHexString())
         asset.collection = _asset.toTuple()[0].toAddress()
         asset.tokenId = _asset.toTuple()[1].toBigInt()
         asset.borrow = borrow.id
-        asset.assetId = getAssetId(_asset.toTuple()[0].toAddress(), _asset.toTuple()[1].toBigInt())
 
         asset.save()
     }
@@ -56,16 +55,6 @@ function getTxnInputDataToDecode(event: ethereum.Event): Bytes {
     return Bytes.fromByteArray(Bytes.fromHexString(hexStringToDecode));
 }
 
-function findAssetByAssetId(assets: Asset[], assetId: Bytes): Asset | null {
-    for (let index = 0; index < assets.length; index++) {
-        const asset = assets[index]
-        if(asset.assetId == assetId) {
-            return asset
-        }
-    }
-    return null
-}
-
 export function handleRepay(event: RepayEvent): void {
     const account = getOrCreateAccount(event.params.user.toHexString())
     const repay = getOrCreateRepay(event.transaction.hash.toHexString())
@@ -74,27 +63,11 @@ export function handleRepay(event: RepayEvent): void {
     repay.user = event.params.user
     repay.loanId = event.params.loanId
     repay.amount = event.params.amount
-    repay.unlockedAssets = event.params.unlockedAssets
+    repay.assets = event.params.assets
 
-    const dataToDecode = getTxnInputDataToDecode(event)
-    const repayABI = "(uint256,((bytes32,uint256,uint256,uint256,uint256,uint256,uint256),bytes32[],uint256,uint256),(uint8,bytes32,bytes32,uint256))";
-    let decoded = ethereum.decode(repayABI, dataToDecode)
-    log.info("Decoded: {}", [decoded!.toString()])
-
-    if(decoded != null) {
-        decoded = decoded.toTuple()[1]
-        const decodedAssets = decoded.toTuple()[1]
-        log.debug("Decoded Assets: {}", [decodedAssets.toString()])
-        const assets = decodedAssets.toArray()
-        const borrowAssets = borrow.assets.load()
-
-        for (let index = 0; index < assets.length; index++) {
-            const _asset = assets[index]
-            const existAsset = findAssetByAssetId(borrowAssets, _asset.toBytes())
-            if(existAsset != null) {
-                store.remove('Asset', existAsset.id)
-            }
-        }
+    for (let index = 0; index < event.params.assets.length; index++) {
+        const assetId = event.params.assets[index]
+        store.remove('Asset', assetId.toHexString().toLowerCase())
     }
 
     repay.blockNumber = event.block.number
@@ -102,10 +75,12 @@ export function handleRepay(event: RepayEvent): void {
     repay.transactionHash = event.transaction.hash
 
     repay.save()
+    borrow.totalAssets = borrow.totalAssets.minus(BigInt.fromI32(event.params.assets.length))
     borrow.amount = borrow.amount.minus(repay.amount)
     borrow.save()
+
     const borrowedAmount = account.amountBorrowed.minus(repay.amount)
-    const newTotalAssets = account.totalAssets.minus(event.params.unlockedAssets)
+    const newTotalAssets = account.totalAssets.minus(BigInt.fromI32(event.params.assets.length))
 
     account.amountBorrowed = borrowedAmount
     account.user = event.params.user

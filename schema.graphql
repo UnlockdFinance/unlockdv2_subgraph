@@ -184,7 +184,6 @@ type Borrow @entity {
 
 type Asset @entity {
     id: ID!
-    assetId: Bytes!
     collection: Bytes!
     tokenId: BigInt!
     borrow: Borrow!
@@ -195,7 +194,7 @@ type Repay @entity {
   user: Bytes! # address
   loanId: Bytes!
   amount: BigInt!
-  unlockedAssets: BigInt!
+  assets: [Bytes!]! # assetIds
 
   blockNumber: BigInt!
   blockTimestamp: BigInt!
