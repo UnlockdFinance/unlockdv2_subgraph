@@ -35,7 +35,6 @@ export function getOrCreateRepay(
         // @ts-ignore: assign wrapper object to primitive{
         repay = new Repay(id);
         repay.amount = BIGINT_ZERO;
-        repay.unlockedAssets = BIGINT_ZERO;
     }
 
     return repay as Repay;

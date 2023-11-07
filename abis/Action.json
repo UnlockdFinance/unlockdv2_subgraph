@@ -21,17 +21,6 @@
     "type": "error"
   },
   {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "details",
-        "type": "string"
-      }
-    ],
-    "name": "ArrayLengthMismatch",
-    "type": "error"
-  },
-  {
     "inputs": [],
     "name": "AssetLocked",
     "type": "error"
@@ -42,14 +31,38 @@
     "type": "error"
   },
   {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "paramName",
-        "type": "string"
-      }
-    ],
-    "name": "InvalidParam",
+    "inputs": [],
+    "name": "InvalidArrayLength",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidAssetAmount",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidCurrentLiquidationThreshold",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidCurrentLtv",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidLoanOwner",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidRecoveredAddress",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidUToken",
     "type": "error"
   },
   {
@@ -59,28 +72,27 @@
   },
   {
     "inputs": [],
-    "name": "LowCollateral",
-    "type": "error"
-  },
-  {
-    "inputs": [],
     "name": "NotAssetOwner",
     "type": "error"
   },
   {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "paramName",
-        "type": "string"
-      }
-    ],
-    "name": "NotEquals",
+    "inputs": [],
+    "name": "NotEqualDeadline",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "TimestampExpired",
+    "name": "NotEqualSender",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "SenderZeroAddress",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "TokenAssetsMismatch",
     "type": "error"
   },
   {
@@ -90,23 +102,12 @@
   },
   {
     "inputs": [],
-    "name": "UnableToBorrowMore",
+    "name": "UnhealtyLoan",
     "type": "error"
   },
   {
     "inputs": [],
     "name": "UnlockdWalletNotFound",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "paramName",
-        "type": "string"
-      }
-    ],
-    "name": "ZeroAddress",
     "type": "error"
   },
   {
@@ -256,9 +257,9 @@
       },
       {
         "indexed": false,
-        "internalType": "uint256",
-        "name": "unlockedAssets",
-        "type": "uint256"
+        "internalType": "bytes32[]",
+        "name": "assets",
+        "type": "bytes32[]"
       }
     ],
     "name": "Repay",
@@ -331,9 +332,9 @@
                 "type": "uint256"
               },
               {
-                "internalType": "uint256",
+                "internalType": "uint88",
                 "name": "totalAssets",
-                "type": "uint256"
+                "type": "uint88"
               },
               {
                 "internalType": "uint256",
@@ -435,9 +436,9 @@
                 "type": "uint256"
               },
               {
-                "internalType": "uint256",
+                "internalType": "uint88",
                 "name": "totalAssets",
-                "type": "uint256"
+                "type": "uint88"
               },
               {
                 "internalType": "uint256",
@@ -479,8 +480,27 @@
     "outputs": [
       {
         "internalType": "bytes32",
-        "name": "",
+        "name": "digest",
         "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "loanId",
+        "type": "bytes32"
+      }
+    ],
+    "name": "getAmountToRepay",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -504,14 +524,19 @@
             "type": "bytes32"
           },
           {
-            "internalType": "enum DataTypes.LoanState",
-            "name": "state",
-            "type": "uint8"
-          },
-          {
             "internalType": "address",
             "name": "uToken",
             "type": "address"
+          },
+          {
+            "internalType": "uint88",
+            "name": "totalAssets",
+            "type": "uint88"
+          },
+          {
+            "internalType": "enum DataTypes.LoanState",
+            "name": "state",
+            "type": "uint8"
           },
           {
             "internalType": "address",
@@ -522,11 +547,6 @@
             "internalType": "address",
             "name": "owner",
             "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "totalAssets",
-            "type": "uint256"
           }
         ],
         "internalType": "struct DataTypes.Loan",
@@ -614,9 +634,9 @@
                 "type": "uint256"
               },
               {
-                "internalType": "uint256",
+                "internalType": "uint88",
                 "name": "totalAssets",
-                "type": "uint256"
+                "type": "uint88"
               },
               {
                 "internalType": "uint256",

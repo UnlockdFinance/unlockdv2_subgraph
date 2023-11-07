@@ -195,7 +195,7 @@ type Repay @entity {
   user: Bytes! # address
   loanId: Bytes!
   amount: BigInt!
-  unlockedAssets: BigInt!
+  assets: [Bytes!]! # assetIds
 
   blockNumber: BigInt!
   blockTimestamp: BigInt!
