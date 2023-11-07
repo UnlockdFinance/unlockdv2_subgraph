@@ -223,6 +223,8 @@ describe("Describe entity assertions", () => {
         const borrow = BorrowSchema.load('0xedc91659458f8ea15d176710d79ae82a7cf7a853cc72c15fcb26246ca3b3745f')
         assert.entityCount("Borrow", 1);
         assert.entityCount("Asset", 0);
+        assert.entityCount("Asset", borrow!.totalAssets.toU32() as i32);
+
     })
 
     /*

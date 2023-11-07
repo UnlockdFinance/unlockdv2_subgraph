@@ -68,7 +68,6 @@ export function handleRepay(event: RepayEvent): void {
     for (let index = 0; index < event.params.assets.length; index++) {
         const assetId = event.params.assets[index]
         store.remove('Asset', assetId.toHexString())
-
     }
 
     repay.blockNumber = event.block.number
@@ -76,13 +75,13 @@ export function handleRepay(event: RepayEvent): void {
     repay.transactionHash = event.transaction.hash
 
     repay.save()
-    borrow.totalAssets = borrow.totalAssets.minus(new BigInt(event.params.assets.length))
+    borrow.totalAssets = borrow.totalAssets.minus( BigInt.fromI32(event.params.assets.length))
     borrow.amount = borrow.amount.minus(repay.amount)
     borrow.save()
 
 
     const borrowedAmount = account.amountBorrowed.minus(repay.amount)
-    const newTotalAssets = account.totalAssets.minus(new BigInt(event.params.assets.length))
+    const newTotalAssets = account.totalAssets.minus(BigInt.fromI32(event.params.assets.length))
 
     account.amountBorrowed = borrowedAmount
     account.user = event.params.user
