@@ -211,7 +211,24 @@ type Account @entity {
 }
 
 type Punk @entity(immutable: false) {
-  id: String!
+  id: ID!
   owner: Bytes! # address
+}
+
+type MarketItems @entity(immutable: false) {
+  id: ID!
+  assetId: Bytes! # bytes32
+  loanId: Bytes! # bytes32
+  orderId: Bytes! # bytes32
+  collection: Bytes! # address
+  tokenId: BigInt!
+}
+
+type Sold @entity(immutable: false) {
+  id: ID!
+  assetId: Bytes! # bytes32
+  collection: Bytes! # address
+  tokenId: BigInt!
+  amount: BigInt!
 }
 

@@ -59,6 +59,46 @@ dataSources:
           handler: handleRepay
       file: ./src/mappings.ts
   - kind: ethereum
+    name: sellNow
+    network: sepolia
+    source:
+      address: "0xf497E1881Fb3E26fA07Eb66Db011868D98FeD82b"
+      abi: SellNow
+      startBlock: 4648070 #4437551
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Sold
+      abis:
+        - name: SellNow
+          file: ./abis/SellNow.json
+      eventHandlers:
+        - event: Sold(bytes32,bytes32,address,uint256,uint256)
+          handler: handleSold
+      file: ./src/mappings.ts
+  - kind: ethereum
+    name: market
+    network: sepolia
+    source:
+      address: "0xf497E1881Fb3E26fA07Eb66Db011868D98FeD82b"
+      abi: Market
+      startBlock: 4667035 #4437551
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - MarketItems
+      abis:
+        - name: Market
+          file: ./abis/Market.json
+      eventHandlers:
+        - event: MarketCreated(indexed bytes32,indexed bytes32,indexed bytes32,address,uint256)
+          handler: handleMarketOrderCreated
+      file: ./src/mappings.ts
+  - kind: ethereum
     name: CryptoPunks
     network: sepolia
     source:

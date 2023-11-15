@@ -2,11 +2,11 @@ import {
     Borrow as BorrowEvent,
     Repay as RepayEvent
 } from "../../generated/action/Action"
-import {Asset} from "../../generated/schema";
 import {getOrCreateAccount} from "../helpers/account"
 
 import {getAssetId, getOrCreateAsset, getOrCreateBorrow, getOrCreateRepay} from "../helpers/action"
-import {log, Bytes, ethereum, store, BigInt} from "@graphprotocol/graph-ts";
+import {ethereum, store, BigInt} from "@graphprotocol/graph-ts";
+import {getTxnInputDataToDecode} from "../utils/dataToDecode";
 
 export function handleBorrow(event: BorrowEvent): void {
     const account = getOrCreateAccount(event.params.user.toHexString())
@@ -49,12 +49,6 @@ export function handleBorrow(event: BorrowEvent): void {
     account.save()
 }
 
-function getTxnInputDataToDecode(event: ethereum.Event): Bytes {
-    const inputDataHexString = event.transaction.input.toHexString().slice(10); //take away function signature: 0x???????? and the function name 8 next caracters
-    const hexStringToDecode = '0x0000000000000000000000000000000000000000000000000000000000000020' + inputDataHexString; // prepend tuple offset
-    return Bytes.fromByteArray(Bytes.fromHexString(hexStringToDecode));
-}
-
 export function handleRepay(event: RepayEvent): void {
     const account = getOrCreateAccount(event.params.user.toHexString())
     const repay = getOrCreateRepay(event.transaction.hash.toHexString())
@@ -87,3 +81,4 @@ export function handleRepay(event: RepayEvent): void {
     account.totalAssets = newTotalAssets
     account.save()
 }
+

@@ -11,6 +11,14 @@ export {
 } from './mappings/action';
 
 export {
+    handleMarketOrderCreated,
+} from './mappings/market';
+
+export {
+    handleSold,
+} from './mappings/sell';
+
+export {
     handleAssign,
     handlePunkBought,
     handlePunkTransfer
