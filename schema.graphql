@@ -175,7 +175,7 @@ type Borrow @entity {
   totalAssets: BigInt!
   uToken: Bytes! # address
   assets: [Asset!]! @derivedFrom(field: "borrow")
-
+  orders: [Order!]! @derivedFrom(field: "borrow")
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -215,10 +215,27 @@ type Punk @entity(immutable: false) {
   owner: Bytes! # address
 }
 
-type MarketItems @entity(immutable: false) {
+type Order @entity(immutable: false) {
   id: ID!
+  status: String!
+  orderType: String!
   assetId: Bytes! # bytes32
+  seller: Bytes! # address
   loanId: Bytes! # bytes32
+  debtToSell: BigInt!
+  startAmount: BigInt!
+  endAmount: BigInt!
+  startTime: BigInt!
+  endTime: BigInt!
+  collection: Bytes! # address
+  tokenId: BigInt!
+  borrow: Borrow!
+}
+
+type MarketCreated @entity(immutable: false) {
+  id: ID!
+  loanId: Bytes! # bytes32
+  assetId: Bytes! # bytes32
   orderId: Bytes! # bytes32
   collection: Bytes! # address
   tokenId: BigInt!

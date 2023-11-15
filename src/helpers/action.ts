@@ -61,7 +61,7 @@ export function getAssetId(
     tokenId: BigInt,
 ): Bytes {
     const contract = UnlockdHelper.bind(UNLOCK_HELPER_ADDRESS)
-    const callResult = contract.try_assetId(collection, tokenId)
+    const callResult = contract.try_getAssetId(collection, tokenId)
 
     return callResult.value
 }

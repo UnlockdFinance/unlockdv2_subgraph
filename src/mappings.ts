@@ -11,7 +11,7 @@ export {
 } from './mappings/action';
 
 export {
-    handleMarketOrderCreated,
+    handleMarketCreated,
 } from './mappings/market';
 
 export {

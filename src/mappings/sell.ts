@@ -5,13 +5,14 @@ import {getOrCreateAccount} from "../helpers/account"
 import {getOrCreateBorrow} from "../helpers/action"
 import {store, BigInt} from "@graphprotocol/graph-ts";
 import { getOrCreateSell } from "../helpers/sell";
-import { getOrCreateMarketOrder } from "../helpers/market";
+import { getOrCreateOrder, getOrderId } from "../helpers/market";
 
 export function handleSold(event: SoldEvent): void {
     const sell = getOrCreateSell(event.transaction.hash.toHexString())
     const borrow = getOrCreateBorrow(event.params.loanId.toHexString())
     const account = getOrCreateAccount(borrow.user)
-    //const marketItems = getOrCreateMarketOrder(event.params.assetId.toHexString())
+    const orderId = getOrderId(event.params.assetId, event.params.loanId)
+    const order = getOrCreateOrder(orderId.toHexString())
 
     sell.assetId = event.params.assetId
     sell.collection = event.params.collection
@@ -21,9 +22,10 @@ export function handleSold(event: SoldEvent): void {
 
     store.remove('Asset', event.params.assetId.toHexString().toLowerCase())
     
-    // if (marketItems) {
-    //     store.remove('MarketItems', event.params.assetId.toHexString().toLowerCase())
-    // }
+    if (order) {
+        order.status = "SOLD"
+        order.save()
+    }
     
     borrow.totalAssets = borrow.totalAssets.minus(BigInt.fromI32(1))
     borrow.amount = borrow.amount.minus(event.params.amount)
