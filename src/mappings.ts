@@ -24,3 +24,7 @@ export {
     handlePunkTransfer
 } from './mappings/cryptoPunks';
 
+export {  
+    handleProxyCreated
+} from './mappings/unlockd';
+

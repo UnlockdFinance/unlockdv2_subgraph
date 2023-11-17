@@ -175,7 +175,7 @@ type Borrow @entity {
   totalAssets: BigInt!
   uToken: Bytes! # address
   assets: [Asset!]! @derivedFrom(field: "borrow")
-  orders: [Order!]! @derivedFrom(field: "borrow")
+  orders: Order!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -187,6 +187,7 @@ type Asset @entity {
     collection: Bytes!
     tokenId: BigInt!
     borrow: Borrow!
+    order: Order!
 }
 
 type Repay @entity {
@@ -229,7 +230,8 @@ type Order @entity(immutable: false) {
   endTime: BigInt!
   collection: Bytes! # address
   tokenId: BigInt!
-  borrow: Borrow!
+  borrow: [Borrow!]! @derivedFrom(field: "orders")
+  assets: [Asset!]! @derivedFrom(field: "order")
 }
 
 type MarketCreated @entity(immutable: false) {
@@ -247,5 +249,10 @@ type Sold @entity(immutable: false) {
   collection: Bytes! # address
   tokenId: BigInt!
   amount: BigInt!
+}
+
+type ProxyCreated @entity(immutable: false) {
+  id: ID!
+  proxy: Bytes! # address
 }
 

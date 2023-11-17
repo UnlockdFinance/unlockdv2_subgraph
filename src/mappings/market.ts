@@ -35,6 +35,5 @@ export function handleMarketCancel(event: MarketCancelEvent): void {
   const order = getOrCreateOrder(event.params.orderId.toHexString())
   order.status = "CANCELLED"
   order.save()
-  
 }
 
