@@ -2,23 +2,38 @@ import {
     Borrow as BorrowEvent,
     Repay as RepayEvent
 } from "../../generated/action/Action"
-import {Asset} from "../../generated/schema";
 import {getOrCreateAccount} from "../helpers/account"
 
-import {getAssetId, getOrCreateAsset, getOrCreateBorrow, getOrCreateRepay} from "../helpers/action"
-import {log, Bytes, ethereum, store, BigInt} from "@graphprotocol/graph-ts";
+import {getAssetId, getOrCreateAsset, getOrCreateBorrow, getOrCreateLoan, getOrCreateRepay} from "../helpers/action"
+import {ethereum, store, BigInt} from "@graphprotocol/graph-ts";
+import {getTxnInputDataToDecode} from "../utils/dataToDecode";
 
 export function handleBorrow(event: BorrowEvent): void {
     const account = getOrCreateAccount(event.params.user.toHexString())
-    const borrow = getOrCreateBorrow(event.params.loanId.toHexString())
+    const borrow = getOrCreateBorrow(event.transaction.hash.toHexString())
+    const loan = getOrCreateLoan(event.params.loanId.toHexString())
 
-    borrow.user = account.id
-    borrow.amount = borrow.amount.plus(event.params.amount)
-
-    borrow.totalAssets = event.params.totalAssets
+    // BORROW 
     borrow.uToken = event.params.token
+    borrow.loanId = event.params.loanId
+    borrow.user = event.params.user
+    borrow.amount = event.params.amount
+
+    borrow.blockNumber = event.block.number
+    borrow.blockTimestamp = event.block.timestamp
+    borrow.transactionHash = event.transaction.hash
     borrow.transactionInput = event.transaction.input
 
+    borrow.save()
+
+    // LOAN
+    loan.id = event.params.loanId.toHexString()
+    loan.user = event.params.user.toHexString()
+    loan.amount = event.params.amount    
+    loan.totalAssets  = event.params.totalAssets
+    loan.uToken = event.params.token
+
+    // ASSETS
     const dataToDecode = getTxnInputDataToDecode(event)
     const decoded = ethereum.decode('(address,uint256,(address,uint256)[],SignAction,EIP712Signature)', dataToDecode);
     const assets = decoded!.toTuple()[2].toArray()
@@ -28,19 +43,16 @@ export function handleBorrow(event: BorrowEvent): void {
         const asset = getOrCreateAsset(id.toHexString())
         asset.collection = _asset.toTuple()[0].toAddress()
         asset.tokenId = _asset.toTuple()[1].toBigInt()
-        asset.borrow = borrow.id
+        asset.loan = loan.id
 
         asset.save()
     }
 
-    borrow.blockNumber = event.block.number
-    borrow.blockTimestamp = event.block.timestamp
-    borrow.transactionHash = event.transaction.hash
+    loan.save()
 
-    borrow.save()
-
+    // ACCOUNT
     const borrowed = account.amountBorrowed.plus(event.params.amount)
-    const totalAssets = account.totalAssets.plus(borrow.totalAssets)
+    const totalAssets = account.totalAssets.plus(loan.totalAssets)
 
     account.amountBorrowed = borrowed
     account.user = event.params.user
@@ -49,16 +61,10 @@ export function handleBorrow(event: BorrowEvent): void {
     account.save()
 }
 
-function getTxnInputDataToDecode(event: ethereum.Event): Bytes {
-    const inputDataHexString = event.transaction.input.toHexString().slice(10); //take away function signature: 0x???????? and the function name 8 next caracters
-    const hexStringToDecode = '0x0000000000000000000000000000000000000000000000000000000000000020' + inputDataHexString; // prepend tuple offset
-    return Bytes.fromByteArray(Bytes.fromHexString(hexStringToDecode));
-}
-
 export function handleRepay(event: RepayEvent): void {
     const account = getOrCreateAccount(event.params.user.toHexString())
     const repay = getOrCreateRepay(event.transaction.hash.toHexString())
-    const borrow = getOrCreateBorrow(event.params.loanId.toHexString())
+    const loan = getOrCreateLoan(event.params.loanId.toHexString())
 
     repay.user = event.params.user
     repay.loanId = event.params.loanId
@@ -73,11 +79,12 @@ export function handleRepay(event: RepayEvent): void {
     repay.blockNumber = event.block.number
     repay.blockTimestamp = event.block.timestamp
     repay.transactionHash = event.transaction.hash
-
+    repay.transactionInput = event.transaction.input
     repay.save()
-    borrow.totalAssets = borrow.totalAssets.minus(BigInt.fromI32(event.params.assets.length))
-    borrow.amount = borrow.amount.minus(repay.amount)
-    borrow.save()
+    
+    loan.totalAssets = loan.totalAssets.minus(BigInt.fromI32(event.params.assets.length))
+    loan.amount = loan.amount.minus(repay.amount)
+    loan.save()
 
     const borrowedAmount = account.amountBorrowed.minus(repay.amount)
     const newTotalAssets = account.totalAssets.minus(BigInt.fromI32(event.params.assets.length))
@@ -87,3 +94,4 @@ export function handleRepay(event: RepayEvent): void {
     account.totalAssets = newTotalAssets
     account.save()
 }
+

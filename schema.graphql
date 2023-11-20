@@ -170,11 +170,10 @@ type Withdraw @entity {
 
 type Borrow @entity {
   id: ID!
-  user: Account! # address
-  amount: BigInt!
-  totalAssets: BigInt!
+  user: Bytes! # address
+  loanId: Bytes!
   uToken: Bytes! # address
-  assets: [Asset!]! @derivedFrom(field: "borrow")
+  amount: BigInt!
 
   blockNumber: BigInt!
   blockTimestamp: BigInt!
@@ -186,7 +185,7 @@ type Asset @entity {
     id: ID!
     collection: Bytes!
     tokenId: BigInt!
-    borrow: Borrow!
+    loan: Loan!
 }
 
 type Repay @entity {
@@ -199,6 +198,7 @@ type Repay @entity {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+  transactionInput: Bytes!
 }
 
 type Account @entity {
@@ -207,11 +207,163 @@ type Account @entity {
   amountDeposited: BigInt!
   amountBorrowed: BigInt!
   totalAssets: BigInt!
-  borrows: [Borrow!]! @derivedFrom(field: "user")
+  borrows: [Loan!]! @derivedFrom(field: "user")
 }
 
 type Punk @entity(immutable: false) {
-  id: String!
+  id: ID!
   owner: Bytes! # address
 }
 
+type Order @entity(immutable: false) {
+  id: ID!
+  market: BigInt!
+  status: BigInt!
+  orderType: String!
+  asset: Asset!
+  seller: Bytes! # address
+  loanId: Bytes! # bytes32
+  debtToSell: BigInt!
+  startAmount: BigInt!
+  endAmount: BigInt!
+  startTime: BigInt!
+  endTime: BigInt!
+  lastBidder: Bytes! # address
+  lastBidAmount: BigInt!
+  bidder: Bytes! # address
+  bidAmount: BigInt!
+  buyer: Bytes! # address
+  buyerAmount: BigInt!
+}
+
+type MarketCreated @entity(immutable: false) {
+  id: ID!
+  loanId: Bytes! # bytes32
+  assetId: Bytes! # bytes32
+  orderId: Bytes! # bytes32
+  collection: Bytes! # address
+  tokenId: BigInt!
+
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  transactionInput: Bytes!
+}
+
+type MarketBid @entity(immutable: false) {
+  id: ID!
+  user: Bytes!
+  loanId: Bytes! # bytes32
+  assetId: Bytes! # bytes32
+  orderId: Bytes! # bytes32
+  amount: BigInt! # address
+
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  transactionInput: Bytes!
+}
+
+type MarketClaim @entity(immutable: false) {
+  id: ID!
+  user: Bytes!
+  loanId: Bytes! # bytes32
+  assetId: Bytes! # bytes32
+  orderId: Bytes! # bytes32
+  amount: BigInt! # address
+
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  transactionInput: Bytes!
+}
+
+type MarketBuyNow @entity(immutable: false) {
+  id: ID!
+  user: Bytes!
+  loanId: Bytes! # bytes32
+  assetId: Bytes! # bytes32
+  orderId: Bytes! # bytes32
+  amount: BigInt! # address
+
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  transactionInput: Bytes!
+}
+
+type Sold @entity(immutable: false) {
+  id: ID!
+  assetId: Bytes! # bytes32
+  collection: Bytes! # address
+  tokenId: BigInt!
+  amount: BigInt!
+
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  transactionInput: Bytes!
+}
+
+type ProxyCreated @entity(immutable: false) {
+  id: ID!
+  proxy: Bytes! # address
+
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  transactionInput: Bytes!
+}
+
+type Loan @entity {
+  id: ID!
+  user: Account! # address
+  amount: BigInt!
+  totalAssets: BigInt!
+  uToken: Bytes! # address
+  assets: [Asset!]! @derivedFrom(field: "loan")
+}
+
+type AuctionBid @entity(immutable: false) {
+  id: ID!
+  user: Bytes!
+  loanId: Bytes! # bytes32
+  assetId: Bytes! # bytes32
+  orderId: Bytes! # bytes32
+  amount: BigInt! # address
+
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  transactionInput: Bytes!
+}
+
+type AuctionRedeem @entity(immutable: false) {
+  id: ID!
+  user: Bytes!
+  loanId: Bytes! # bytes32
+  assetId: Bytes! # bytes32
+  orderId: Bytes! # bytes32
+  amount: BigInt! # address
+
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  transactionInput: Bytes!
+}
+
+type AuctionFinalize @entity(immutable: false) {
+  id: ID!
+  loanId: Bytes! # bytes32
+  orderId: Bytes! # bytes32
+  assetId: Bytes! # bytes32
+  debtAmount: BigInt! # address
+  amount: BigInt! # address
+  winner: Bytes! # address
+  owner: Bytes! # address
+
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  transactionInput: Bytes!
+}
