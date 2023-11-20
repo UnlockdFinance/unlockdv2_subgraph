@@ -1,4 +1,5 @@
 import {
+    Loan,
     Borrow,
     Repay,
     Asset,
@@ -6,6 +7,23 @@ import {
 import {Address, BigInt, Bytes} from "@graphprotocol/graph-ts";
 import {UNLOCK_HELPER_ADDRESS,BIGINT_ZERO} from "../utils/constants";
 import {UnlockdHelper} from "../../generated/action/UnlockdHelper";
+
+export function getOrCreateLoan(
+    id: String,
+    createIfNotFound: boolean = true,
+): Loan {
+    // @ts-ignore: assign wrapper object to primitive
+    let loan = Loan.load(id);
+
+    if (loan == null && createIfNotFound) {
+        // @ts-ignore: assign wrapper object to primitive
+        loan = new Loan(id);
+        loan.amount = BIGINT_ZERO;
+        loan.totalAssets = BIGINT_ZERO;
+    }
+
+    return loan as Loan;
+}
 
 export function getOrCreateBorrow(
     id: String,
@@ -18,7 +36,6 @@ export function getOrCreateBorrow(
         // @ts-ignore: assign wrapper object to primitive
         borrow = new Borrow(id);
         borrow.amount = BIGINT_ZERO;
-        borrow.totalAssets = BIGINT_ZERO;
     }
 
     return borrow as Borrow;

@@ -170,12 +170,11 @@ type Withdraw @entity {
 
 type Borrow @entity {
   id: ID!
-  user: Account! # address
-  amount: BigInt!
-  totalAssets: BigInt!
+  user: Bytes! # address
+  loanId: Bytes!
   uToken: Bytes! # address
-  assets: [Asset!]! @derivedFrom(field: "borrow")
-  orders: Order!
+  amount: BigInt!
+
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -186,8 +185,7 @@ type Asset @entity {
     id: ID!
     collection: Bytes!
     tokenId: BigInt!
-    borrow: Borrow!
-    order: Order!
+    loan: Loan!
 }
 
 type Repay @entity {
@@ -208,7 +206,7 @@ type Account @entity {
   amountDeposited: BigInt!
   amountBorrowed: BigInt!
   totalAssets: BigInt!
-  borrows: [Borrow!]! @derivedFrom(field: "user")
+  borrows: [Loan!]! @derivedFrom(field: "user")
 }
 
 type Punk @entity(immutable: false) {
@@ -218,7 +216,7 @@ type Punk @entity(immutable: false) {
 
 type Order @entity(immutable: false) {
   id: ID!
-  status: String!
+  status: BigInt!
   orderType: String!
   assetId: Bytes! # bytes32
   seller: Bytes! # address
@@ -230,8 +228,7 @@ type Order @entity(immutable: false) {
   endTime: BigInt!
   collection: Bytes! # address
   tokenId: BigInt!
-  borrow: [Borrow!]! @derivedFrom(field: "orders")
-  assets: [Asset!]! @derivedFrom(field: "order")
+  loan: Loan!
 }
 
 type MarketCreated @entity(immutable: false) {
@@ -254,5 +251,15 @@ type Sold @entity(immutable: false) {
 type ProxyCreated @entity(immutable: false) {
   id: ID!
   proxy: Bytes! # address
+}
+
+type Loan @entity {
+  id: ID!
+  user: Account! # address
+  amount: BigInt!
+  totalAssets: BigInt!
+  uToken: Bytes! # address
+  assets: [Asset!]! @derivedFrom(field: "loan")
+  orders: [Order]! @derivedFrom(field: "loan")
 }
 

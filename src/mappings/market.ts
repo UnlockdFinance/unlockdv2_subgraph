@@ -4,6 +4,8 @@ import {
     MarketCancelAuction as MarketCancelEvent
   } from "../../generated/market/Market";
 import { getOrCreateMarketCreated, getOrCreateOrder, getOrder } from "../helpers/market";
+import { OrderStatus } from "../utils/constants";
+import {BigInt} from "@graphprotocol/graph-ts";
   
 export function handleMarketCreated(event: MarketCreatedEvent): void {
   const marketCreated = getOrCreateMarketCreated(event.transaction.hash.toHexString())
@@ -16,7 +18,8 @@ export function handleMarketCreated(event: MarketCreatedEvent): void {
 
   const order = getOrCreateOrder(event.params.orderId.toHexString())
   const onchainOrder = getOrder(event.params.orderId) as Market__getOrderResultValue0Struct
-  order.status = "ACTIVE"
+  
+  order.status = BigInt.fromI32(OrderStatus.ACTIVE)
   order.orderType = onchainOrder.orderType.toString()
   order.assetId = event.params.assetId
   order.seller = onchainOrder.owner
@@ -28,12 +31,13 @@ export function handleMarketCreated(event: MarketCreatedEvent): void {
   order.endTime = onchainOrder.timeframe.endTime
   order.collection = event.params.collection
   order.tokenId = event.params.tokenId
+  order.loan = event.params.loanId.toHexString()
   order.save()
 }
 
 export function handleMarketCancel(event: MarketCancelEvent): void {
   const order = getOrCreateOrder(event.params.orderId.toHexString())
-  order.status = "CANCELLED"
+  order.status = BigInt.fromI32(OrderStatus.CANCELLED)
   order.save()
 }
 

@@ -33,6 +33,7 @@ export function getOrCreateOrder(
     if (order == null && createIfNotFound) {
         // @ts-ignore: assign wrapper object to primitive
         order = new Order(id);
+        order.status = BIGINT_ZERO;
         order.debtToSell = BIGINT_ZERO;
         order.startAmount = BIGINT_ZERO;
         order.endAmount = BIGINT_ZERO;
