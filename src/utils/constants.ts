@@ -15,6 +15,14 @@ export const UNLOCK_MARKET_ADDRESS = Address.fromString('0xd0eC9eFa0960B38cD880F
 export enum OrderStatus {
     ACTIVE = 0,
     CANCELLED = 1,
-    SOLD = 2,
+    REDEEMED = 2,
+    SOLD = 3,
+    BOUGHT = 4,
+    CLAIMED = 5,
+}
+
+export enum Market {
+    DEBT = 0,
+    AUCTION = 1,
 }
 

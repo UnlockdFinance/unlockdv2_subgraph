@@ -19,6 +19,11 @@ export function handleSold(event: SoldEvent): void {
     sell.collection = event.params.collection
     sell.tokenId = event.params.tokenId
     sell.amount = event.params.amount
+    
+    sell.blockNumber = event.block.number
+    sell.blockTimestamp = event.block.timestamp
+    sell.transactionHash = event.transaction.hash
+    sell.transactionInput = event.transaction.input
     sell.save()
 
     store.remove('Asset', event.params.assetId.toHexString().toLowerCase())

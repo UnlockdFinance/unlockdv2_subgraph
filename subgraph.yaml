@@ -92,6 +92,9 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - MarketCreated
+        - MarketBid
+        - MarketClaim
+        - MarketBuyNow
         - Order
       abis:
         - name: Market
@@ -100,7 +103,39 @@ dataSources:
         - event: MarketCreated(indexed bytes32,indexed bytes32,indexed bytes32,address,uint256)
           handler: handleMarketCreated
         - event: MarketCancelAuction(indexed bytes32,indexed bytes32,address)
-          handler: handleMarketCreated
+          handler: handleMarketCancel
+        - event: MarketBid(indexed bytes32,indexed bytes32,indexed bytes32,uint256,address)
+          handler: handleMarketBid
+        - event: MarketClaim(indexed bytes32,indexed bytes32,indexed bytes32,uint256,address)
+          handler: handleMarketClaim
+        - event: MarketBuyNow(indexed bytes32,indexed bytes32,indexed bytes32,uint256,address)
+          handler: handleMarketBuyNow
+      file: ./src/mappings.ts
+  - kind: ethereum
+    name: auction
+    network: sepolia
+    source:
+      address: "0xE636ED8a5A1Ac2808EF067fF3a76619d4ED86e34"
+      abi: Auction
+      startBlock: 4712722 #4437551
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - AuctionBid
+        - AuctionRedeem
+        - AuctionFinalize
+      abis:
+        - name: Auction
+          file: ./abis/Auction.json
+      eventHandlers:
+        - event: AuctionBid(indexed bytes32,indexed bytes32,indexed bytes32,uint256,address)
+          handler: handleAuctionBid
+        - event: AuctionRedeem(indexed bytes32,indexed bytes32,indexed bytes32,uint256,address)
+          handler: handleAuctionRedeem
+        - event: AuctionFinalize(indexed bytes32,indexed bytes32,indexed bytes32,uint256,uint256,address,address)
+          handler: handleAuctionFinalize
       file: ./src/mappings.ts
   - kind: ethereum
     name: unlockd

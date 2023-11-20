@@ -12,7 +12,15 @@ export {
 
 export {
     handleMarketCreated,
+    handleMarketCancel,
+    handleMarketBid
 } from './mappings/market';
+
+export {
+    handleAuctionBid,
+    handleAuctionRedeem,
+    handleAuctionFinalize
+} from './mappings/auction';
 
 export {
     handleSold,

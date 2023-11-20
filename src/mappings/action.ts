@@ -79,8 +79,9 @@ export function handleRepay(event: RepayEvent): void {
     repay.blockNumber = event.block.number
     repay.blockTimestamp = event.block.timestamp
     repay.transactionHash = event.transaction.hash
-
+    repay.transactionInput = event.transaction.input
     repay.save()
+    
     loan.totalAssets = loan.totalAssets.minus(BigInt.fromI32(event.params.assets.length))
     loan.amount = loan.amount.minus(repay.amount)
     loan.save()
