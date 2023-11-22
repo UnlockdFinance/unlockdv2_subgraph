@@ -215,6 +215,15 @@ type Punk @entity(immutable: false) {
   owner: Bytes! # address
 }
 
+type Bid @entity {
+  id: ID!
+  bidder: Bytes! # address
+  bidAmount: BigInt!
+  amountOfDebt: BigInt!
+  amountToPay: BigInt!
+  order: Order!
+}
+
 type Order @entity(immutable: false) {
   id: ID!
   market: BigInt!
@@ -234,6 +243,7 @@ type Order @entity(immutable: false) {
   bidAmount: BigInt!
   buyer: Bytes! # address
   buyerAmount: BigInt!
+  bids: [Bid!]! @derivedFrom(field: "order")
 }
 
 type MarketCreated @entity(immutable: false) {

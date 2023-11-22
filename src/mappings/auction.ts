@@ -5,7 +5,7 @@ import {
   } from "../../generated/auction/Auction";
 import { Market__getOrderResultValue0Struct } from "../../generated/market/Market";
 import { getOrCreateAuctionBid, getOrCreateAuctionFinalize, getOrCreateAuctionRedeem } from "../helpers/auction";
-import { getOrCreateOrder, getOrder } from "../helpers/market";
+import { getOrCreateBid, getOrCreateOrder, getOrder } from "../helpers/market";
 import { Market, OrderStatus } from "../utils/constants";
 import { BigInt } from "@graphprotocol/graph-ts";
 
@@ -25,7 +25,6 @@ export function handleAuctionBid(event: AuctionBidEvent): void {
   
     const order = getOrCreateOrder(event.params.orderId.toHexString())
     const onchainOrder = getOrder(event.params.orderId) as Market__getOrderResultValue0Struct
-    
     order.status = BigInt.fromI32(OrderStatus.ACTIVE)
     order.market = BigInt.fromI32(Market.AUCTION)
     order.orderType = onchainOrder.orderType.toString()
@@ -38,6 +37,12 @@ export function handleAuctionBid(event: AuctionBidEvent): void {
     order.startTime = onchainOrder.timeframe.startTime
     order.endTime = onchainOrder.timeframe.endTime
     order.save()
+
+    const bidArr = getOrCreateBid(event.transaction.hash.toHexString())
+    bidArr.bidder = event.params.user
+    bidArr.bidAmount = event.params.amount
+    bidArr.order = order.id
+    bidArr.save()
   }
 
 export function handleAuctionRedeem(event: AuctionRedeemEvent): void {

@@ -96,6 +96,7 @@ dataSources:
         - MarketClaim
         - MarketBuyNow
         - Order
+        - Bid
       abis:
         - name: Market
           file: ./abis/Market.json

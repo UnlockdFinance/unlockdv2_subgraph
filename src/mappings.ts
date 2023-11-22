@@ -12,8 +12,10 @@ export {
 
 export {
     handleMarketCreated,
+    handleMarketClaim,
     handleMarketCancel,
-    handleMarketBid
+    handleMarketBid,
+    handleMarketBuyNow
 } from './mappings/market';
 
 export {

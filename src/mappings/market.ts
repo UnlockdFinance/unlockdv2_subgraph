@@ -5,9 +5,10 @@ import {
     MarketBid as MarketBidEvent,
     MarketClaim as MarketClaimEvent,
   } from "../../generated/market/Market";
-import { getOrCreateMarketBid, getOrCreateMarketBuyNow, getOrCreateMarketClaim, getOrCreateMarketCreated, getOrCreateOrder, getOrder } from "../helpers/market";
+import { getOrCreateBid, getOrCreateMarketBid, getOrCreateMarketBuyNow, getOrCreateMarketClaim, getOrCreateMarketCreated, getOrCreateOrder, getOrder } from "../helpers/market";
 import { Market, OrderStatus, ZERO_ADDRESS } from "../utils/constants";
-import {BigInt, Bytes} from "@graphprotocol/graph-ts";
+import {BigInt, Bytes, ethereum} from "@graphprotocol/graph-ts";
+import { getTxnInputDataToDecode } from "../utils/dataToDecode";
   
 export function handleMarketCreated(event: MarketCreatedEvent): void {
   const marketCreated = getOrCreateMarketCreated(event.transaction.hash.toHexString())
@@ -66,6 +67,19 @@ export function handleMarketBid(event: MarketBidEvent): void {
   order.bidder = event.params.user
   order.bidAmount = event.params.amount
   order.save()
+
+  const bid = getOrCreateBid(event.transaction.hash.toHexString())
+  bid.bidder = event.params.user
+  bid.bidAmount = event.params.amount
+  bid.order = order.id
+  
+  const dataToDecode = getTxnInputDataToDecode(event)
+  const decoded = ethereum.decode('(bytes32,uint128,uint128,SignMarket,EIP712Signature)', dataToDecode);
+  const amountToPay = decoded!.toTuple()[1].toBigInt()
+  const amountOfDebt = decoded!.toTuple()[2].toBigInt()
+  bid.amountToPay = amountToPay
+  bid.amountOfDebt = amountOfDebt
+  bid.save()
 }
 
 export function handleMarketClaim(event: MarketClaimEvent): void {
