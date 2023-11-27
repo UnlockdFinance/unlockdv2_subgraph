@@ -4,6 +4,7 @@ import {
     AuctionFinalize as AuctionFinalizeEvent,
   } from "../../generated/auction/Auction";
 import { Market__getOrderResultValue0Struct } from "../../generated/market/Market";
+import { getOrCreateAsset } from "../helpers/action";
 import { getOrCreateAuctionBid, getOrCreateAuctionFinalize, getOrCreateAuctionRedeem } from "../helpers/auction";
 import { getOrCreateBid, getOrCreateOrder, getOrder } from "../helpers/market";
 import { Market, OrderStatus } from "../utils/constants";
@@ -28,7 +29,11 @@ export function handleAuctionBid(event: AuctionBidEvent): void {
     order.status = BigInt.fromI32(OrderStatus.ACTIVE)
     order.market = BigInt.fromI32(Market.AUCTION)
     order.orderType = onchainOrder.orderType.toString()
-    order.asset = event.params.assetId.toHexString()
+
+    const asset = getOrCreateAsset(event.params.assetId.toHexString())
+    order.assetId = event.params.assetId
+    order.collection = asset.collection
+    order.tokenId = asset.tokenId
     order.seller = onchainOrder.owner
     order.loanId = event.params.loanId
     order.debtToSell = onchainOrder.offer.debtToSell

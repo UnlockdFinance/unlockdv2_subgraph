@@ -7,6 +7,7 @@ import {getOrCreateAccount} from "../helpers/account"
 import {getAssetId, getOrCreateAsset, getOrCreateBorrow, getOrCreateLoan, getOrCreateRepay} from "../helpers/action"
 import {ethereum, store, BigInt} from "@graphprotocol/graph-ts";
 import {getTxnInputDataToDecode} from "../utils/dataToDecode";
+import { LoanStatus } from "../utils/constants";
 
 export function handleBorrow(event: BorrowEvent): void {
     const account = getOrCreateAccount(event.params.user.toHexString())
@@ -29,6 +30,7 @@ export function handleBorrow(event: BorrowEvent): void {
     // LOAN
     loan.id = event.params.loanId.toHexString()
     loan.user = event.params.user.toHexString()
+    loan.status = BigInt.fromI32(LoanStatus.BORROWED)
     loan.amount = event.params.amount    
     loan.totalAssets  = event.params.totalAssets
     loan.uToken = event.params.token

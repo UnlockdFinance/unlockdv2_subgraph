@@ -158,7 +158,48 @@ dataSources:
         - event: ProxyCreated(indexed address,uint256)
           handler: handleProxyCreated
       file: ./src/mappings.ts
-
+  - kind: ethereum
+    name: orderLogic
+    network: sepolia
+    source:
+      address: "0xE636ED8a5A1Ac2808EF067fF3a76619d4ED86e34"
+      abi: OrderLogic
+      startBlock: 4712722 #4437551
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - LoanCreated
+      abis:
+        - name: OrderLogic
+          file: ./abis/OrderLogic.json
+        - name: Action
+          file: ./abis/Action.json
+      eventHandlers:
+        - event: LoanCreated(indexed address,indexed bytes32,uint256)
+          handler: handleLoanCreated
+      file: ./src/mappings.ts
+  - kind: ethereum
+    name: ProtocolOwner
+    network: sepolia
+    source:
+      address: "0xf0f991c46D9b2abd33133aF42D36c3728FfAf299"
+      abi: ProtocolOwner
+      startBlock: 4712722 #4437551
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - SetLoanId
+      abis:
+        - name: ProtocolOwner
+          file: ./abis/ProtocolOwner.json
+      eventHandlers:
+        - event: SetLoanId(bytes32,bytes32)
+          handler: handleSetLoanId
+      file: ./src/mappings.ts
   - kind: ethereum
     name: CryptoPunks
     network: sepolia

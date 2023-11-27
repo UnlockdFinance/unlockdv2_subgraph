@@ -11,18 +11,24 @@ export let BIGDECIMAL_ONE = toDecimal(BigInt.fromI32(10).pow(18));
 export let BIGDECIMAL_HUNDRED = toDecimal(BigInt.fromI32(10).pow(20));
 export const UNLOCK_HELPER_ADDRESS = Address.fromString('0xd186e00f3ad162c0f2b44e7fdc2c5697331a6c5c')
 export const UNLOCK_MARKET_ADDRESS = Address.fromString('0xd0eC9eFa0960B38cD880Fd72315a1C127C2cb062')
+export const UNLOCK_ACTION_ADDRESS = Address.fromString('0x048AEb66B161fDc344186BBe27fD576267604Af2')
+export const UNLOCK_PROTOCOL_OWNER_ADDRESS = Address.fromString('0xf0f991c46D9b2abd33133aF42D36c3728FfAf299')
 
 export enum OrderStatus {
     ACTIVE = 0,
     CANCELLED = 1,
     REDEEMED = 2,
-    SOLD = 3,
-    BOUGHT = 4,
-    CLAIMED = 5,
+    BOUGHT = 3,
+    CLAIMED = 4,
 }
 
 export enum Market {
     DEBT = 0,
     AUCTION = 1,
+}
+
+export enum LoanStatus {
+    BORROWED = 0,
+    PENDING = 1,
 }
 

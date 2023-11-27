@@ -106,12 +106,15 @@ export function getOrCreateOrder(
         order.endAmount = BIGINT_ZERO;
         order.startTime = BIGINT_ZERO;
         order.endTime = BIGINT_ZERO;
-        order.lastBidder = Bytes.fromHexString(ZERO_ADDRESS)
+        order.lastBidder = Bytes.fromHexString(ZERO_ADDRESS);
         order.lastBidAmount = BIGINT_ZERO;
-        order.bidder = Bytes.fromHexString(ZERO_ADDRESS)
+        order.bidder = Bytes.fromHexString(ZERO_ADDRESS);
         order.bidAmount = BIGINT_ZERO;
-        order.buyer = Bytes.fromHexString(ZERO_ADDRESS)
+        order.buyer = Bytes.fromHexString(ZERO_ADDRESS);
         order.buyerAmount = BIGINT_ZERO;
+        order.assetId = Bytes.fromHexString(ZERO_ADDRESS);
+        order.collection = Bytes.fromHexString(ZERO_ADDRESS);
+        order.tokenId = BIGINT_ZERO;
     }
 
     return order as Order;

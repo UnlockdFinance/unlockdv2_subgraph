@@ -4,11 +4,15 @@ import {
     MarketCancelAuction as MarketCancelEvent,
     MarketBid as MarketBidEvent,
     MarketClaim as MarketClaimEvent,
+    MarketBuyNow as MarketBuyNowEvent
   } from "../../generated/market/Market";
 import { getOrCreateBid, getOrCreateMarketBid, getOrCreateMarketBuyNow, getOrCreateMarketClaim, getOrCreateMarketCreated, getOrCreateOrder, getOrder } from "../helpers/market";
-import { Market, OrderStatus, ZERO_ADDRESS } from "../utils/constants";
-import {BigInt, Bytes, ethereum} from "@graphprotocol/graph-ts";
+import { LoanStatus, Market, OrderStatus, ZERO_ADDRESS } from "../utils/constants";
+import {BigInt, Bytes, ethereum, store, log} from "@graphprotocol/graph-ts";
 import { getTxnInputDataToDecode } from "../utils/dataToDecode";
+import { getAssetId, getOrCreateAsset, getOrCreateLoan } from "../helpers/action";
+import { getOrCreateLoanCreated } from "../helpers/orderLogic";
+import { getOrCreateSetLoanId } from "../helpers/protocolOwner";
   
 export function handleMarketCreated(event: MarketCreatedEvent): void {
   const marketCreated = getOrCreateMarketCreated(event.transaction.hash.toHexString())
@@ -26,11 +30,13 @@ export function handleMarketCreated(event: MarketCreatedEvent): void {
 
   const order = getOrCreateOrder(event.params.orderId.toHexString())
   const onchainOrder = getOrder(event.params.orderId) as Market__getOrderResultValue0Struct
-  
+  const asset = getOrCreateAsset(event.params.assetId.toHexString())
   order.status = BigInt.fromI32(OrderStatus.ACTIVE)
   order.market = BigInt.fromI32(Market.DEBT)
   order.orderType = onchainOrder.orderType.toString()
-  order.asset = event.params.assetId.toHexString()
+  order.assetId = event.params.assetId
+  order.collection = asset.collection
+  order.tokenId = asset.tokenId
   order.seller = onchainOrder.owner
   order.loanId = event.params.loanId
   order.debtToSell = onchainOrder.offer.debtToSell
@@ -80,6 +86,16 @@ export function handleMarketBid(event: MarketBidEvent): void {
   bid.amountToPay = amountToPay
   bid.amountOfDebt = amountOfDebt
   bid.save()
+
+  //status from 0 to 1
+  const loanCreated = getOrCreateLoanCreated(event.transaction.hash.toHexString())
+  if(loanCreated.loanId != Bytes.fromHexString(ZERO_ADDRESS)) {
+    const loan = getOrCreateLoan(loanCreated.loanId.toHexString())
+    loan.status = BigInt.fromI32(LoanStatus.PENDING)
+    loan.user = event.params.user.toHexString()
+    loan.amount = amountOfDebt
+    loan.save()
+  }
 }
 
 export function handleMarketClaim(event: MarketClaimEvent): void {
@@ -103,9 +119,25 @@ export function handleMarketClaim(event: MarketClaimEvent): void {
   order.bidder = event.params.user
   order.bidAmount = event.params.amount
   order.save()
+
+  // status from 1 to 0
+  const asset = getOrCreateAsset(event.params.assetId.toHexString())
+  store.remove('Asset', event.params.assetId.toHexString().toLowerCase())
+
+  const setLoanId = getOrCreateSetLoanId(event.transaction.hash.toHexString())
+
+  if(setLoanId.loanId != Bytes.fromHexString(ZERO_ADDRESS)) {
+    const loan = getOrCreateLoan(setLoanId.loanId.toHexString())
+    loan.status = BigInt.fromI32(LoanStatus.BORROWED)
+    loan.save()
+    asset.loan = loan.id
+    asset.save()
+  } else { 
+    store.remove('LoanCreated', event.transaction.hash.toHexString())
+  }
 }
 
-export function handleMarketBuyNow(event: MarketClaimEvent): void {
+export function handleMarketBuyNow(event: MarketBuyNowEvent): void {
   const marketBuyNow = getOrCreateMarketBuyNow(event.transaction.hash.toHexString())
   marketBuyNow.user = event.params.user
   marketBuyNow.loanId = event.params.loanId
@@ -124,5 +156,18 @@ export function handleMarketBuyNow(event: MarketClaimEvent): void {
   order.buyer = event.params.user
   order.buyerAmount = event.params.amount
   order.save()
-}
 
+  const asset = getOrCreateAsset(event.params.assetId.toHexString())
+  store.remove('Asset', event.params.assetId.toHexString().toLowerCase())
+
+  const loanCreated = getOrCreateLoanCreated(event.transaction.hash.toHexString())
+  if(loanCreated.loanId != Bytes.fromHexString(ZERO_ADDRESS)) {
+    const loan = getOrCreateLoan(loanCreated.loanId.toHexString())
+    loan.status = BigInt.fromI32(LoanStatus.BORROWED)
+    loan.save()
+    asset.loan = loan.id
+    asset.save()
+  } else { 
+    store.remove('LoanCreated', event.transaction.hash.toHexString())
+  }
+}

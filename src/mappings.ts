@@ -38,3 +38,11 @@ export {
     handleProxyCreated
 } from './mappings/unlockd';
 
+export {  
+    handleLoanCreated
+} from './mappings/orderLogic';
+
+export {  
+    handleSetLoanId
+} from './mappings/protocolOwner';
+

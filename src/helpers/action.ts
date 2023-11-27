@@ -5,8 +5,9 @@ import {
     Asset,
 } from '../../generated/schema';
 import {Address, BigInt, Bytes} from "@graphprotocol/graph-ts";
-import {UNLOCK_HELPER_ADDRESS,BIGINT_ZERO} from "../utils/constants";
+import {UNLOCK_HELPER_ADDRESS,BIGINT_ZERO, UNLOCK_ACTION_ADDRESS, LoanStatus, ZERO_ADDRESS} from "../utils/constants";
 import {UnlockdHelper} from "../../generated/action/UnlockdHelper";
+import { Action, Action__getLoanResultValue0Struct } from '../../generated/action/Action';
 
 export function getOrCreateLoan(
     id: String,
@@ -18,8 +19,11 @@ export function getOrCreateLoan(
     if (loan == null && createIfNotFound) {
         // @ts-ignore: assign wrapper object to primitive
         loan = new Loan(id);
+        loan.status = BigInt.fromI32(LoanStatus.PENDING);
+        loan.user = ZERO_ADDRESS;
         loan.amount = BIGINT_ZERO;
         loan.totalAssets = BIGINT_ZERO;
+        loan.uToken = Bytes.fromHexString(ZERO_ADDRESS);
     }
 
     return loan as Loan;
@@ -79,6 +83,15 @@ export function getAssetId(
 ): Bytes {
     const contract = UnlockdHelper.bind(UNLOCK_HELPER_ADDRESS)
     const callResult = contract.try_getAssetId(collection, tokenId)
+
+    return callResult.value
+}
+
+export function getLoan(
+    loanId: Bytes
+): Action__getLoanResultValue0Struct {
+    const contract = Action.bind(UNLOCK_ACTION_ADDRESS)
+    const callResult = contract.try_getLoan(loanId)
 
     return callResult.value
 }
