@@ -1,210 +1,211 @@
 [
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_aclManager",
-        "type": "address"
-      },
-      {
-        "internalType": "address[]",
-        "name": "_delegationControllers",
-        "type": "address[]"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
-  {
-    "inputs": [],
-    "name": "AllowedCollections__setCollectionsAllowances_arityMismatch",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "AllowedCollections__setCollectionsAllowances_invalidAddress",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "AllowedControllers__setDelegationControllerAllowance_invalidAddress",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "AllowedControllers__setDelegationControllerAllowances_arityMismatch",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "Caller_notAdmin",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "Caller_notGovernanceAdmin",
-    "type": "error"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "collections",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "bool",
-        "name": "isAllowed",
-        "type": "bool"
-      }
-    ],
-    "name": "Collections",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "delegationController",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "bool",
-        "name": "isAllowed",
-        "type": "bool"
-      }
-    ],
-    "name": "DelegationController",
-    "type": "event"
-  },
-  {
-    "inputs": [],
-    "name": "aclManager",
-    "outputs": [
-      {
-        "internalType": "contract IACLManager",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_collection",
-        "type": "address"
-      }
-    ],
-    "name": "isAllowedCollection",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_controller",
-        "type": "address"
-      }
-    ],
-    "name": "isAllowedDelegationController",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_collection",
-        "type": "address"
-      },
-      {
-        "internalType": "bool",
-        "name": "_allowed",
-        "type": "bool"
-      }
-    ],
-    "name": "setCollectionAllowance",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address[]",
-        "name": "_collections",
-        "type": "address[]"
-      },
-      {
-        "internalType": "bool[]",
-        "name": "_allowances",
-        "type": "bool[]"
-      }
-    ],
-    "name": "setCollectionsAllowances",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_controller",
-        "type": "address"
-      },
-      {
-        "internalType": "bool",
-        "name": "_allowed",
-        "type": "bool"
-      }
-    ],
-    "name": "setDelegationControllerAllowance",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address[]",
-        "name": "_controllers",
-        "type": "address[]"
-      },
-      {
-        "internalType": "bool[]",
-        "name": "_allowances",
-        "type": "bool[]"
-      }
-    ],
-    "name": "setDelegationControllerAllowances",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  }
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_aclManager",
+          "type": "address"
+        },
+        {
+          "internalType": "address[]",
+          "name": "_delegationControllers",
+          "type": "address[]"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [],
+      "name": "AllowedCollections__setCollectionsAllowances_arityMismatch",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "AllowedCollections__setCollectionsAllowances_invalidAddress",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "AllowedControllers__setDelegationControllerAllowance_invalidAddress",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "AllowedControllers__setDelegationControllerAllowances_arityMismatch",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "Caller_notAdmin",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "Caller_notGovernanceAdmin",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "collections",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "isAllowed",
+          "type": "bool"
+        }
+      ],
+      "name": "Collections",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "delegationController",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "isAllowed",
+          "type": "bool"
+        }
+      ],
+      "name": "DelegationController",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "aclManager",
+      "outputs": [
+        {
+          "internalType": "contract IACLManager",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_collection",
+          "type": "address"
+        }
+      ],
+      "name": "isAllowedCollection",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_controller",
+          "type": "address"
+        }
+      ],
+      "name": "isAllowedDelegationController",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_collection",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "_allowed",
+          "type": "bool"
+        }
+      ],
+      "name": "setCollectionAllowance",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address[]",
+          "name": "_collections",
+          "type": "address[]"
+        },
+        {
+          "internalType": "bool[]",
+          "name": "_allowances",
+          "type": "bool[]"
+        }
+      ],
+      "name": "setCollectionsAllowances",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_controller",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "_allowed",
+          "type": "bool"
+        }
+      ],
+      "name": "setDelegationControllerAllowance",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address[]",
+          "name": "_controllers",
+          "type": "address[]"
+        },
+        {
+          "internalType": "bool[]",
+          "name": "_allowances",
+          "type": "bool[]"
+        }
+      ],
+      "name": "setDelegationControllerAllowances",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
 ]
+
  

@@ -46,3 +46,7 @@ export {
     handleSetLoanId
 } from './mappings/protocolOwner';
 
+export {  
+    handleCollection
+} from './mappings/allowedController';
+

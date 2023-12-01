@@ -2,53 +2,65 @@ import {
     AuctionBid as AuctionBidEvent,
     AuctionRedeem as AuctionRedeemEvent,
     AuctionFinalize as AuctionFinalizeEvent,
+    Auction__getOrderAuctionResultValue0Struct,
   } from "../../generated/auction/Auction";
-import { Market__getOrderResultValue0Struct } from "../../generated/market/Market";
-import { getOrCreateAsset } from "../helpers/action";
-import { getOrCreateAuctionBid, getOrCreateAuctionFinalize, getOrCreateAuctionRedeem } from "../helpers/auction";
-import { getOrCreateBid, getOrCreateOrder, getOrder } from "../helpers/market";
-import { Market, OrderStatus } from "../utils/constants";
-import { BigInt } from "@graphprotocol/graph-ts";
+import { getOrCreateAsset, getOrCreateLoan } from "../helpers/action";
+import { getOrCreateAuctionBid, getOrCreateAuctionFinalize, getOrCreateAuctionRedeem, getOrderAuction } from "../helpers/auction";
+import { getOrCreateBid, getOrCreateOrder } from "../helpers/market";
+import { getOrCreateLoanCreated } from "../helpers/orderLogic";
+import { getOrCreateTotalCount } from "../helpers/totalCount";
+import { LoanStatus, Market, OrderStatus, ZERO_ADDRESS } from "../utils/constants";
+import { BigInt, Bytes, ethereum, store } from "@graphprotocol/graph-ts";
+import { getTxnInputDataToDecode } from "../utils/dataToDecode";
 
 export function handleAuctionBid(event: AuctionBidEvent): void {
-    const bid = getOrCreateAuctionBid(event.transaction.hash.toHexString())
-    bid.user = event.params.user
-    bid.loanId = event.params.loanId
-    bid.assetId = event.params.assetId
-    bid.orderId = event.params.orderId
-    bid.amount = event.params.amount
+    const auctionBid = getOrCreateAuctionBid(event.transaction.hash.toHexString())
+    auctionBid.user = event.params.user
+    auctionBid.loanId = event.params.loanId
+    auctionBid.assetId = event.params.assetId
+    auctionBid.orderId = event.params.orderId
+    auctionBid.amount = event.params.amount
   
-    bid.blockNumber = event.block.number
-    bid.blockTimestamp = event.block.timestamp
-    bid.transactionHash = event.transaction.hash
-    bid.transactionInput = event.transaction.input
-    bid.save()
+    auctionBid.blockNumber = event.block.number
+    auctionBid.blockTimestamp = event.block.timestamp
+    auctionBid.transactionHash = event.transaction.hash
+    auctionBid.transactionInput = event.transaction.input
+    auctionBid.save()
   
     const order = getOrCreateOrder(event.params.orderId.toHexString())
-    const onchainOrder = getOrder(event.params.orderId) as Market__getOrderResultValue0Struct
+    const onchainOrder = getOrderAuction(event.params.orderId) as Auction__getOrderAuctionResultValue0Struct
     order.status = BigInt.fromI32(OrderStatus.ACTIVE)
     order.market = BigInt.fromI32(Market.AUCTION)
     order.orderType = onchainOrder.orderType.toString()
-
-    const asset = getOrCreateAsset(event.params.assetId.toHexString())
-    order.assetId = event.params.assetId
-    order.collection = asset.collection
-    order.tokenId = asset.tokenId
-    order.seller = onchainOrder.owner
-    order.loanId = event.params.loanId
-    order.debtToSell = onchainOrder.offer.debtToSell
-    order.startAmount = onchainOrder.offer.startAmount
-    order.endAmount = onchainOrder.offer.endAmount
-    order.startTime = onchainOrder.timeframe.startTime
-    order.endTime = onchainOrder.timeframe.endTime
+    order.lastBidder = order.bidder
+    order.lastBidAmount = order.bidAmount
+    order.bidder = event.params.user
+    order.bidAmount = event.params.amount
+    order.date = event.block.timestamp
     order.save()
+    
+    const bid = getOrCreateBid(event.transaction.hash.toHexString())
+    bid.bidder = event.params.user
+    bid.bidAmount = event.params.amount
+    bid.order = order.id
+    
+    const dataToDecode = getTxnInputDataToDecode(event)
+    const decoded = ethereum.decode('(uint128,uint128,SignAuction,EIP712Signature)', dataToDecode);
+    const amountToPay = decoded!.toTuple()[0].toBigInt()
+    const amountOfDebt = decoded!.toTuple()[1].toBigInt()
+    bid.amountToPay = amountToPay
+    bid.amountOfDebt = amountOfDebt
+    bid.save()
+    bid.save()
 
-    const bidArr = getOrCreateBid(event.transaction.hash.toHexString())
-    bidArr.bidder = event.params.user
-    bidArr.bidAmount = event.params.amount
-    bidArr.order = order.id
-    bidArr.save()
-  }
+    const loanCreated = getOrCreateLoanCreated(event.transaction.hash.toHexString())
+    if(loanCreated.loanId != Bytes.fromHexString(ZERO_ADDRESS)) {
+      const loan = getOrCreateLoan(loanCreated.loanId.toHexString())
+      loan.status = BigInt.fromI32(LoanStatus.PENDING)
+      loan.user = event.params.user.toHexString()
+      loan.save()
+    }
+}
 
 export function handleAuctionRedeem(event: AuctionRedeemEvent): void {
   const redeem = getOrCreateAuctionRedeem(event.transaction.hash.toHexString())
@@ -66,6 +78,7 @@ export function handleAuctionRedeem(event: AuctionRedeemEvent): void {
 
   const order = getOrCreateOrder(event.params.orderId.toHexString())
   order.status = BigInt.fromI32(OrderStatus.REDEEMED)
+  order.date = event.block.timestamp
   order.save()
 }
 
@@ -87,7 +100,42 @@ export function handleAuctionFinalize(event: AuctionFinalizeEvent): void {
 
   const order = getOrCreateOrder(event.params.orderId.toHexString())
   order.status = BigInt.fromI32(OrderStatus.CLAIMED)
+  order.date = event.block.timestamp
   order.buyer = event.params.winner
   order.buyerAmount = event.params.amount
   order.save()
+
+  const asset = getOrCreateAsset(event.params.assetId.toHexString())
+  store.remove('Asset', event.params.assetId.toHexString().toLowerCase())
+
+  const loanCreated = getOrCreateLoanCreated(event.transaction.hash.toHexString())
+  if(loanCreated.loanId != Bytes.fromHexString(ZERO_ADDRESS)) {
+    const loan = getOrCreateLoan(loanCreated.loanId.toHexString())
+    loan.status = BigInt.fromI32(LoanStatus.BORROWED)
+    loan.save()
+    asset.loan = loan.id
+    asset.save()
+
+    const totalCount = getOrCreateTotalCount()
+    totalCount.totalCount = totalCount.totalCount.plus(BigInt.fromI32(1))
+    totalCount.save()
+
+    loan.totalAssets = loan.totalAssets.plus(BigInt.fromI32(1))
+    loan.save()
+  } else { 
+    store.remove('LoanCreated', event.transaction.hash.toHexString())
+  }
+
+  const loan = getOrCreateLoan(event.params.loanId.toHexString())
+  loan.totalAssets = loan.totalAssets.minus(BigInt.fromI32(1))
+  loan.save()
+
+  if(loan.totalAssets.equals(BigInt.fromI32(0))) {
+    loan.status = BigInt.fromI32(LoanStatus.PAID)
+    loan.save()
+  }
+
+  const totalCount = getOrCreateTotalCount()
+  totalCount.totalCount = totalCount.totalCount.minus(BigInt.fromI32(1))
+  totalCount.save()
 }

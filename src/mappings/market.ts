@@ -13,6 +13,7 @@ import { getTxnInputDataToDecode } from "../utils/dataToDecode";
 import { getAssetId, getOrCreateAsset, getOrCreateLoan } from "../helpers/action";
 import { getOrCreateLoanCreated } from "../helpers/orderLogic";
 import { getOrCreateSetLoanId } from "../helpers/protocolOwner";
+import { getOrCreateTotalCount } from "../helpers/totalCount";
   
 export function handleMarketCreated(event: MarketCreatedEvent): void {
   const marketCreated = getOrCreateMarketCreated(event.transaction.hash.toHexString())
@@ -31,8 +32,10 @@ export function handleMarketCreated(event: MarketCreatedEvent): void {
   const order = getOrCreateOrder(event.params.orderId.toHexString())
   const onchainOrder = getOrder(event.params.orderId) as Market__getOrderResultValue0Struct
   const asset = getOrCreateAsset(event.params.assetId.toHexString())
+  const loan = getOrCreateLoan(event.params.loanId.toHexString())
   order.status = BigInt.fromI32(OrderStatus.ACTIVE)
   order.market = BigInt.fromI32(Market.DEBT)
+  order.date = event.block.timestamp
   order.orderType = onchainOrder.orderType.toString()
   order.assetId = event.params.assetId
   order.collection = asset.collection
@@ -44,12 +47,14 @@ export function handleMarketCreated(event: MarketCreatedEvent): void {
   order.endAmount = onchainOrder.offer.endAmount
   order.startTime = onchainOrder.timeframe.startTime
   order.endTime = onchainOrder.timeframe.endTime
+  order.loan = loan.id
   order.save()
 }
 
 export function handleMarketCancel(event: MarketCancelEvent): void {
   const order = getOrCreateOrder(event.params.orderId.toHexString())
   order.status = BigInt.fromI32(OrderStatus.CANCELLED)
+  order.date = event.block.timestamp
   order.save()
 }
 
@@ -114,6 +119,7 @@ export function handleMarketClaim(event: MarketClaimEvent): void {
 
   const order = getOrCreateOrder(event.params.orderId.toHexString())
   order.status = BigInt.fromI32(OrderStatus.CLAIMED)
+  order.date = event.block.timestamp
   order.lastBidder = order.bidder
   order.lastBidAmount = order.bidAmount
   order.bidder = event.params.user
@@ -132,9 +138,29 @@ export function handleMarketClaim(event: MarketClaimEvent): void {
     loan.save()
     asset.loan = loan.id
     asset.save()
+
+    const totalCount = getOrCreateTotalCount()
+    totalCount.totalCount = totalCount.totalCount.plus(BigInt.fromI32(1))
+    totalCount.save()
+
+    loan.totalAssets = loan.totalAssets.plus(BigInt.fromI32(1))
+    loan.save()
   } else { 
     store.remove('LoanCreated', event.transaction.hash.toHexString())
   }
+
+  const loan = getOrCreateLoan(event.params.loanId.toHexString())
+  loan.totalAssets = loan.totalAssets.minus(BigInt.fromI32(1))
+  loan.save()
+
+  if(loan.totalAssets.equals(BigInt.fromI32(0))) {
+    loan.status = BigInt.fromI32(LoanStatus.PAID)
+    loan.save()
+  }
+
+  const totalCount = getOrCreateTotalCount()
+  totalCount.totalCount = totalCount.totalCount.minus(BigInt.fromI32(1))
+  totalCount.save()
 }
 
 export function handleMarketBuyNow(event: MarketBuyNowEvent): void {
@@ -153,6 +179,7 @@ export function handleMarketBuyNow(event: MarketBuyNowEvent): void {
 
   const order = getOrCreateOrder(event.params.orderId.toHexString())
   order.status = BigInt.fromI32(OrderStatus.BOUGHT)
+  order.date = event.block.timestamp
   order.buyer = event.params.user
   order.buyerAmount = event.params.amount
   order.save()
@@ -167,7 +194,27 @@ export function handleMarketBuyNow(event: MarketBuyNowEvent): void {
     loan.save()
     asset.loan = loan.id
     asset.save()
+
+    const totalCount = getOrCreateTotalCount()
+    totalCount.totalCount = totalCount.totalCount.plus(BigInt.fromI32(1))
+    totalCount.save()
+
+    loan.totalAssets = loan.totalAssets.plus(BigInt.fromI32(1))
+    loan.save()
   } else { 
     store.remove('LoanCreated', event.transaction.hash.toHexString())
   }
+
+  const loan = getOrCreateLoan(event.params.loanId.toHexString())
+  loan.totalAssets = loan.totalAssets.minus(BigInt.fromI32(1))
+  loan.save()
+
+  if(loan.totalAssets.equals(BigInt.fromI32(0))) {
+    loan.status = BigInt.fromI32(LoanStatus.PAID)
+    loan.save()
+  }
+
+  const totalCount = getOrCreateTotalCount()
+  totalCount.totalCount = totalCount.totalCount.minus(BigInt.fromI32(1))
+  totalCount.save()
 }

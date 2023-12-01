@@ -2,11 +2,10 @@ import {
     Sold as SoldEvent,
 } from "../../generated/sellNow/SellNow"
 import {getOrCreateAccount} from "../helpers/account"
-import {getOrCreateBorrow, getOrCreateLoan} from "../helpers/action"
+import {getOrCreateLoan} from "../helpers/action"
 import {store, BigInt} from "@graphprotocol/graph-ts";
 import { getOrCreateSell } from "../helpers/sell";
-import { getOrCreateOrder, getOrderId } from "../helpers/market";
-import { OrderStatus } from "../utils/constants";
+import { LoanStatus } from "../utils/constants";
 
 export function handleSold(event: SoldEvent): void {
     const sell = getOrCreateSell(event.transaction.hash.toHexString())
@@ -29,6 +28,11 @@ export function handleSold(event: SoldEvent): void {
     loan.totalAssets = loan.totalAssets.minus(BigInt.fromI32(1))
     loan.amount = loan.amount.minus(event.params.amount)
     loan.save()
+
+    if(loan.totalAssets.equals(BigInt.fromI32(0))) {
+        loan.status = BigInt.fromI32(LoanStatus.PAID)
+        loan.save()
+    }
 
     const borrowedAmount = account.amountBorrowed.minus(event.params.amount)
     const newTotalAssets = account.totalAssets.minus(BigInt.fromI32(1))

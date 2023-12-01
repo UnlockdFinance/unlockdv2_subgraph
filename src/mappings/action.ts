@@ -8,6 +8,7 @@ import {getAssetId, getOrCreateAsset, getOrCreateBorrow, getOrCreateLoan, getOrC
 import {ethereum, store, BigInt} from "@graphprotocol/graph-ts";
 import {getTxnInputDataToDecode} from "../utils/dataToDecode";
 import { LoanStatus } from "../utils/constants";
+import { getOrCreateTotalCount } from "../helpers/totalCount";
 
 export function handleBorrow(event: BorrowEvent): void {
     const account = getOrCreateAccount(event.params.user.toHexString())
@@ -31,14 +32,15 @@ export function handleBorrow(event: BorrowEvent): void {
     loan.id = event.params.loanId.toHexString()
     loan.user = event.params.user.toHexString()
     loan.status = BigInt.fromI32(LoanStatus.BORROWED)
-    loan.amount = event.params.amount    
-    loan.totalAssets  = event.params.totalAssets
+    loan.amount = event.params.amount     
     loan.uToken = event.params.token
+    loan.totalAssets = event.params.totalAssets
 
     // ASSETS
     const dataToDecode = getTxnInputDataToDecode(event)
     const decoded = ethereum.decode('(address,uint256,(address,uint256)[],SignAction,EIP712Signature)', dataToDecode);
     const assets = decoded!.toTuple()[2].toArray()
+    const totalCount = getOrCreateTotalCount()
     for (let index = 0; index < assets.length; index++) {
         const _asset = assets[index]
         const id = getAssetId(_asset.toTuple()[0].toAddress(), _asset.toTuple()[1].toBigInt())
@@ -48,8 +50,11 @@ export function handleBorrow(event: BorrowEvent): void {
         asset.loan = loan.id
 
         asset.save()
+
+        totalCount.totalCount = totalCount.totalCount.plus(BigInt.fromI32(1))
     }
 
+    totalCount.save()
     loan.save()
 
     // ACCOUNT
@@ -67,26 +72,35 @@ export function handleRepay(event: RepayEvent): void {
     const account = getOrCreateAccount(event.params.user.toHexString())
     const repay = getOrCreateRepay(event.transaction.hash.toHexString())
     const loan = getOrCreateLoan(event.params.loanId.toHexString())
+    const totalCount = getOrCreateTotalCount()
 
     repay.user = event.params.user
     repay.loanId = event.params.loanId
     repay.amount = event.params.amount
     repay.assets = event.params.assets
-
-    for (let index = 0; index < event.params.assets.length; index++) {
-        const assetId = event.params.assets[index]
-        store.remove('Asset', assetId.toHexString().toLowerCase())
-    }
-
+    
     repay.blockNumber = event.block.number
     repay.blockTimestamp = event.block.timestamp
     repay.transactionHash = event.transaction.hash
     repay.transactionInput = event.transaction.input
+
+    for (let index = 0; index < event.params.assets.length; index++) {
+        const assetId = event.params.assets[index]
+        store.remove('Asset', assetId.toHexString().toLowerCase())
+        totalCount.totalCount = totalCount.totalCount.minus(BigInt.fromI32(1))
+        loan.totalAssets = loan.totalAssets.minus(BigInt.fromI32(1))
+    }
+
+    totalCount.save()
     repay.save()
     
-    loan.totalAssets = loan.totalAssets.minus(BigInt.fromI32(event.params.assets.length))
     loan.amount = loan.amount.minus(repay.amount)
-    loan.save()
+    loan.save() 
+
+    if(loan.totalAssets.equals(BigInt.fromI32(0))) {
+        loan.status = BigInt.fromI32(LoanStatus.PAID)
+        loan.save()
+    }
 
     const borrowedAmount = account.amountBorrowed.minus(repay.amount)
     const newTotalAssets = account.totalAssets.minus(BigInt.fromI32(event.params.assets.length))

@@ -1,8 +1,11 @@
+import { Bytes } from '@graphprotocol/graph-ts';
 import {
     AuctionBid,
     AuctionRedeem,
     AuctionFinalize
 } from '../../generated/schema';
+import { Auction, Auction__getOrderAuctionResultValue0Struct } from '../../generated/auction/Auction';
+import { UNLOCK_AUCTION_ADDRESS } from '../utils/constants';
 
 export function getOrCreateAuctionBid(
     id: String,
@@ -48,3 +51,12 @@ export function getOrCreateAuctionFinalize(
 
     return finalize as AuctionFinalize;
 }
+
+export function getOrderAuction(
+    orderId: Bytes
+  ): Auction__getOrderAuctionResultValue0Struct {
+    const contract = Auction.bind(UNLOCK_AUCTION_ADDRESS)
+    const callResult = contract.try_getOrderAuction(orderId)
+  
+    return callResult.value
+  }

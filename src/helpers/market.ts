@@ -101,6 +101,7 @@ export function getOrCreateOrder(
         order = new Order(id);
         order.status = BIGINT_ZERO;
         order.market = BIGINT_ZERO;
+        order.date = BIGINT_ZERO;
         order.debtToSell = BIGINT_ZERO;
         order.startAmount = BIGINT_ZERO;
         order.endAmount = BIGINT_ZERO;

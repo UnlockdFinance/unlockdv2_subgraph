@@ -229,6 +229,7 @@ type Order @entity(immutable: false) {
   market: BigInt!
   status: BigInt!
   orderType: String!
+  date: BigInt!
   assetId: Bytes! # bytes32
   collection: Bytes! # address
   tokenId: BigInt!
@@ -246,6 +247,7 @@ type Order @entity(immutable: false) {
   buyer: Bytes! # address
   buyerAmount: BigInt!
   bids: [Bid!]! @derivedFrom(field: "order")
+  loan: Loan!
 }
 
 type MarketCreated @entity(immutable: false) {
@@ -402,4 +404,18 @@ type SetLoanId @entity(immutable: false) {
   blockTimestamp: BigInt!
   transactionHash: Bytes!
   transactionInput: Bytes!
+}
+
+type TotalCount @entity(immutable: false) {
+  id: ID!
+  totalCount: BigInt!
+}
+
+type Collection @entity(immutable: false) {
+  id: ID!
+  isAllowed: Boolean!
+
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
 }
