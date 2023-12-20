@@ -34,7 +34,6 @@ export function handleMarketCreated(event: MarketCreatedEvent): void {
   const asset = getOrCreateAsset(event.params.assetId.toHexString())
   const loan = getOrCreateLoan(event.params.loanId.toHexString())
   order.status = BigInt.fromI32(OrderStatus.ACTIVE)
-  order.market = BigInt.fromI32(Market.DEBT)
   order.date = event.block.timestamp
   order.orderType = onchainOrder.orderType.toString()
   order.assetId = event.params.assetId

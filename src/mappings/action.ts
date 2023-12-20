@@ -34,8 +34,11 @@ export function handleBorrow(event: BorrowEvent): void {
     loan.status = BigInt.fromI32(LoanStatus.BORROWED)
     loan.amount = event.params.amount     
     loan.uToken = event.params.token
-    loan.totalAssets = event.params.totalAssets
-
+    
+    if(event.params.totalAssets.gt(BigInt.fromI32(0))) {
+        loan.totalAssets = event.params.totalAssets
+    }
+    
     // ASSETS
     const dataToDecode = getTxnInputDataToDecode(event)
     const decoded = ethereum.decode('(address,uint256,(address,uint256)[],SignAction,EIP712Signature)', dataToDecode);
@@ -50,7 +53,6 @@ export function handleBorrow(event: BorrowEvent): void {
         asset.loan = loan.id
 
         asset.save()
-
         totalCount.totalCount = totalCount.totalCount.plus(BigInt.fromI32(1))
     }
 
@@ -84,17 +86,20 @@ export function handleRepay(event: RepayEvent): void {
     repay.transactionHash = event.transaction.hash
     repay.transactionInput = event.transaction.input
 
+    let totalAssets = loan.totalAssets
+
     for (let index = 0; index < event.params.assets.length; index++) {
         const assetId = event.params.assets[index]
         store.remove('Asset', assetId.toHexString().toLowerCase())
         totalCount.totalCount = totalCount.totalCount.minus(BigInt.fromI32(1))
-        loan.totalAssets = loan.totalAssets.minus(BigInt.fromI32(1))
+        totalAssets = totalAssets.minus(BigInt.fromI32(1))
     }
 
     totalCount.save()
     repay.save()
     
     loan.amount = loan.amount.minus(repay.amount)
+    loan.totalAssets = totalAssets
     loan.save() 
 
     if(loan.totalAssets.equals(BigInt.fromI32(0))) {

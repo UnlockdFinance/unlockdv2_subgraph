@@ -2,7 +2,6 @@ import {
     AuctionBid as AuctionBidEvent,
     AuctionRedeem as AuctionRedeemEvent,
     AuctionFinalize as AuctionFinalizeEvent,
-    Auction__getOrderAuctionResultValue0Struct,
   } from "../../generated/auction/Auction";
 import { getOrCreateAsset, getOrCreateLoan } from "../helpers/action";
 import { getOrCreateAuctionBid, getOrCreateAuctionFinalize, getOrCreateAuctionRedeem, getOrderAuction } from "../helpers/auction";
@@ -11,7 +10,6 @@ import { getOrCreateLoanCreated } from "../helpers/orderLogic";
 import { getOrCreateTotalCount } from "../helpers/totalCount";
 import { LoanStatus, Market, OrderStatus, ZERO_ADDRESS } from "../utils/constants";
 import { BigInt, Bytes, ethereum, store } from "@graphprotocol/graph-ts";
-import { getTxnInputDataToDecode } from "../utils/dataToDecode";
 
 export function handleAuctionBid(event: AuctionBidEvent): void {
     const auctionBid = getOrCreateAuctionBid(event.transaction.hash.toHexString())
@@ -28,29 +26,34 @@ export function handleAuctionBid(event: AuctionBidEvent): void {
     auctionBid.save()
   
     const order = getOrCreateOrder(event.params.orderId.toHexString())
-    const onchainOrder = getOrderAuction(event.params.orderId) as Auction__getOrderAuctionResultValue0Struct
+    const onchainOrder = getOrderAuction(event.params.orderId)
+    const asset = getOrCreateAsset(event.params.assetId.toHexString())
+    asset.isOnAuction = true
+    asset.save()
+    
+    // end time from function
     order.status = BigInt.fromI32(OrderStatus.ACTIVE)
-    order.market = BigInt.fromI32(Market.AUCTION)
-    order.orderType = onchainOrder.orderType.toString()
-    order.lastBidder = order.bidder
-    order.lastBidAmount = order.bidAmount
-    order.bidder = event.params.user
-    order.bidAmount = event.params.amount
     order.date = event.block.timestamp
+    order.orderType = "0"
+    order.assetId = event.params.assetId
+    order.collection = asset.collection
+    order.tokenId = asset.tokenId
+    order.seller = onchainOrder.owner
+    order.loanId = onchainOrder.offer.loanId
+    order.lastBidder = order.bidder
+    order.lastBidAmount = order.bidAmount  
+    order.bidder = onchainOrder.bid.buyer
+    order.bidAmount = onchainOrder.bid.amountToPay.plus(onchainOrder.bid.amountOfDebt)
+    order.loan = onchainOrder.offer.loanId.toHexString()
+    order.endTime = onchainOrder.timeframe.endTime
     order.save()
     
     const bid = getOrCreateBid(event.transaction.hash.toHexString())
     bid.bidder = event.params.user
     bid.bidAmount = event.params.amount
     bid.order = order.id
-    
-    const dataToDecode = getTxnInputDataToDecode(event)
-    const decoded = ethereum.decode('(uint128,uint128,SignAuction,EIP712Signature)', dataToDecode);
-    const amountToPay = decoded!.toTuple()[0].toBigInt()
-    const amountOfDebt = decoded!.toTuple()[1].toBigInt()
-    bid.amountToPay = amountToPay
-    bid.amountOfDebt = amountOfDebt
-    bid.save()
+    bid.amountToPay = onchainOrder.bid.amountToPay
+    bid.amountOfDebt = onchainOrder.bid.amountOfDebt
     bid.save()
 
     const loanCreated = getOrCreateLoanCreated(event.transaction.hash.toHexString())

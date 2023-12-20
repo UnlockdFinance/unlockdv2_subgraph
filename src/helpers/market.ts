@@ -100,9 +100,9 @@ export function getOrCreateOrder(
         // @ts-ignore: assign wrapper object to primitive
         order = new Order(id);
         order.status = BIGINT_ZERO;
-        order.market = BIGINT_ZERO;
         order.date = BIGINT_ZERO;
         order.debtToSell = BIGINT_ZERO;
+        order.loanId = Bytes.fromHexString(ZERO_ADDRESS);
         order.startAmount = BIGINT_ZERO;
         order.endAmount = BIGINT_ZERO;
         order.startTime = BIGINT_ZERO;

@@ -60,7 +60,6 @@ type Deposit @entity {
   transactionHash: Bytes!
 }
 
-
 type Mint @entity {
   id: ID!
   from: Bytes!
@@ -185,6 +184,7 @@ type Asset @entity {
     id: ID!
     collection: Bytes!
     tokenId: BigInt!
+    isOnAuction: Boolean!
     loan: Loan!
 }
 
@@ -226,7 +226,6 @@ type Bid @entity {
 
 type Order @entity(immutable: false) {
   id: ID!
-  market: BigInt!
   status: BigInt!
   orderType: String!
   date: BigInt!
@@ -329,7 +328,7 @@ type ProxyCreated @entity(immutable: false) {
   transactionInput: Bytes!
 }
 
-type Loan @entity {
+type Loan @entity(immutable: false) {
   id: ID!
   status: BigInt!
   user: Account! # address
@@ -418,4 +417,18 @@ type Collection @entity(immutable: false) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+}
+
+type ForceSold @entity(immutable: false) {
+  id: ID!
+  loanId: Bytes! # bytes32
+  assetId: Bytes! # bytes32
+  collection: Bytes! # address
+  tokenId: BigInt!
+  marketPrice: BigInt!
+
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  transactionInput: Bytes!
 }

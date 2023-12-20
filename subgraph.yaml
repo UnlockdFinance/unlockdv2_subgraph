@@ -7,9 +7,9 @@ dataSources:
     name: uToken
     network: sepolia
     source:
-      address: "0x30447bC12A2a17E4e3a44e61dF0EC6c2Ad8D8363"
+      address: "0x3040B8EaA6F68cD914FE0808fa393d83d6B4a002"
       abi: uToken
-      startBlock: 4712722
+      startBlock: 4871695
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -36,9 +36,9 @@ dataSources:
     name: action
     network: sepolia
     source:
-      address: "0x29d8529B9602D7f0be30dAc78F30FCe6b0452811"
+      address: "0x598Ed8D60f7dBca23DFF871be27EF069c6479561"
       abi: Action
-      startBlock: 4712722 #4437551
+      startBlock: 4871695 #4437551
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -64,9 +64,9 @@ dataSources:
     name: allowedControllers
     network: sepolia
     source:
-      address: "0xf5c49ede8198d50715198e7d6813bf11728e4ce7"
+      address: "0x893e9bf1fdecba8b62c261d93b0b6106d8001dd3"
       abi: AllowedControllers
-      startBlock: 4712722 #4437551
+      startBlock: 4871695 #4437551
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -84,9 +84,9 @@ dataSources:
     name: sellNow
     network: sepolia
     source:
-      address: "0x29d8529B9602D7f0be30dAc78F30FCe6b0452811"
+      address: "0x598Ed8D60f7dBca23DFF871be27EF069c6479561"
       abi: SellNow
-      startBlock: 4712722 #4437551
+      startBlock: 4871695 #4437551
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -99,14 +99,16 @@ dataSources:
       eventHandlers:
         - event: Sold(bytes32,bytes32,address,uint256,uint256)
           handler: handleSold
+        - event: ForceSold(bytes32,bytes32,address,uint256,uint256)
+          handler: handleForceSold
       file: ./src/mappings.ts
   - kind: ethereum
     name: market
     network: sepolia
     source:
-      address: "0x29d8529B9602D7f0be30dAc78F30FCe6b0452811"
+      address: "0x598Ed8D60f7dBca23DFF871be27EF069c6479561"
       abi: Market
-      startBlock: 4712722 #4437551
+      startBlock: 4871695 #4437551
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -137,9 +139,9 @@ dataSources:
     name: auction
     network: sepolia
     source:
-      address: "0x29d8529B9602D7f0be30dAc78F30FCe6b0452811"
+      address: "0x598Ed8D60f7dBca23DFF871be27EF069c6479561"
       abi: Auction
-      startBlock: 4712722 #4437551
+      startBlock: 4871695 #4437551
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -163,9 +165,9 @@ dataSources:
     name: unlockd
     network: sepolia
     source:
-      address: "0x29d8529B9602D7f0be30dAc78F30FCe6b0452811"
+      address: "0x598Ed8D60f7dBca23DFF871be27EF069c6479561"
       abi: Unlockd
-      startBlock: 4712722 #4437551
+      startBlock: 4871695 #4437551
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -183,9 +185,9 @@ dataSources:
     name: orderLogic
     network: sepolia
     source:
-      address: "0x29d8529B9602D7f0be30dAc78F30FCe6b0452811"
+      address: "0x598Ed8D60f7dBca23DFF871be27EF069c6479561"
       abi: OrderLogic
-      startBlock: 4712722 #4437551
+      startBlock: 4871695 #4437551
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -205,9 +207,9 @@ dataSources:
     name: ProtocolOwner
     network: sepolia
     source:
-      address: "0x5896400630Eeb098dBba653BF2b258E17E260d8F"
+      address: "0x026cda993Edb5a1CD3df7DE374AA0bB5955e32Bb"
       abi: ProtocolOwner
-      startBlock: 4712722 #4437551
+      startBlock: 4871695 #4437551
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -225,9 +227,9 @@ dataSources:
     name: CryptoPunks
     network: sepolia
     source:
-      address: "0x720b094Ab68D7306d1545AD615fDE974fA6D86D9"
+      address: "0x987EfDB241fE66275b3594481696f039a82a799e"
       abi: CryptoPunks
-      startBlock: 4712722 #4437551
+      startBlock: 4871695 #4437551
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

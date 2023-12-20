@@ -26,6 +26,7 @@ export {
 
 export {
     handleSold,
+    handleForceSold
 } from './mappings/sell';
 
 export {

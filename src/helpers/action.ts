@@ -72,6 +72,7 @@ export function getOrCreateAsset(
         // @ts-ignore: assign wrapper object to primitive{
         asset = new Asset(id);
         asset.tokenId = BIGINT_ZERO;
+        asset.isOnAuction = false;
     }
 
     return asset as Asset;
