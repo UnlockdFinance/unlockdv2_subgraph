@@ -16,7 +16,7 @@ export function handleBorrow(event: BorrowEvent): void {
     const loan = getOrCreateLoan(event.params.loanId.toHexString())
 
     // BORROW 
-    borrow.uToken = event.params.token
+    borrow.underlyingAsset = event.params.token
     borrow.loanId = event.params.loanId
     borrow.user = event.params.user
     borrow.amount = event.params.amount
@@ -33,7 +33,7 @@ export function handleBorrow(event: BorrowEvent): void {
     loan.user = event.params.user.toHexString()
     loan.status = BigInt.fromI32(LoanStatus.BORROWED)
     loan.amount = event.params.amount     
-    loan.uToken = event.params.token
+    loan.underlyingAsset = event.params.token
     
     if(event.params.totalAssets.gt(BigInt.fromI32(0))) {
         loan.totalAssets = event.params.totalAssets
@@ -41,8 +41,8 @@ export function handleBorrow(event: BorrowEvent): void {
     
     // ASSETS
     const dataToDecode = getTxnInputDataToDecode(event)
-    const decoded = ethereum.decode('(address,uint256,(address,uint256)[],SignAction,EIP712Signature)', dataToDecode);
-    const assets = decoded!.toTuple()[2].toArray()
+    const decoded = ethereum.decode('(uint256,(address,uint256)[],SignAction,EIP712Signature)', dataToDecode);
+    const assets = decoded!.toTuple()[1].toArray()
     const totalCount = getOrCreateTotalCount()
     for (let index = 0; index < assets.length; index++) {
         const _asset = assets[index]

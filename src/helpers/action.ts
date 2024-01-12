@@ -23,7 +23,7 @@ export function getOrCreateLoan(
         loan.user = ZERO_ADDRESS;
         loan.amount = BIGINT_ZERO;
         loan.totalAssets = BIGINT_ZERO;
-        loan.uToken = Bytes.fromHexString(ZERO_ADDRESS);
+        loan.underlyingAsset = Bytes.fromHexString(ZERO_ADDRESS);
     }
 
     return loan as Loan;
@@ -40,6 +40,8 @@ export function getOrCreateBorrow(
         // @ts-ignore: assign wrapper object to primitive
         borrow = new Borrow(id);
         borrow.amount = BIGINT_ZERO;
+        borrow.totalAssets = BIGINT_ZERO;
+        borrow.underlyingAsset = Bytes.fromHexString(ZERO_ADDRESS);
     }
 
     return borrow as Borrow;

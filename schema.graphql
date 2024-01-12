@@ -1,27 +1,4 @@
-type Approval @entity {
-  id: ID!
-  owner: Bytes!
-  spender: Bytes!
-  value: BigInt!
-
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type BalanceTransfer @entity {
-  id: ID!
-  from: Bytes!
-  to: Bytes!
-  value: BigInt!
-  index: BigInt!
-
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type BorrowOnBelhalf @entity {
+type UTokenBorrow @entity {
   id: ID!
   onBehalfOf: Bytes!
   iniciator: Bytes!
@@ -35,121 +12,27 @@ type BorrowOnBelhalf @entity {
   transactionHash: Bytes!
 }
 
-type Burn @entity {
+type UTokenRepay @entity {
   id: ID!
-  from: Bytes!
-  target: Bytes!
-  value: BigInt!
-  index: BigInt!
+  iniciator: Bytes!
+  loanId: Bytes!
+  underlyingAsset: Bytes!
+  amount: BigInt!
+  onBehalfOf: Bytes!
+  borrowRate: BigInt!
 
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
 }
 
-type Deposit @entity {
+type Supply @entity {
   id: ID!
   user: Bytes!
-  reserve: Bytes!
-  amount: BigInt!
   onBehalfOf: Bytes!
-  referral: BigInt!
-
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type Mint @entity {
-  id: ID!
-  from: Bytes!
-  value: BigInt!
-  index: BigInt!
-
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type Paused @entity {
-  id: ID!
-
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type PausedTimeUpdated @entity {
-  id: ID!
-  startTime: BigInt!
-  durationTime: BigInt!
-
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type RepayOnBelhalf @entity {
-  id: ID!
-  iniciator: Bytes!
-  loanId: Bytes!
   underlyingAsset: Bytes!
   amount: BigInt!
-  onBehalfOf: Bytes!
-  borrowRate: BigInt!
-
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type ReserveDataUpdated @entity {
-  id: ID!
-  reserve: Bytes!
-  liquidityRate: BigInt!
-  variableBorrowRate: BigInt!
-  liquidityIndex: BigInt!
-  variableBorrowIndex: BigInt!
-
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type Transfer @entity {
-  id: ID!
-  from: Bytes!
-  to: Bytes!
-  value: BigInt!
-
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type TreasuryAddressUpdated @entity {
-  id: ID!
-  _newTreasuryAddress: Bytes!
-
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type UTokenSwept @entity {
-  id: ID!
-  uToken: Bytes!
-  underlyingAsset: Bytes!
-  amount: BigInt!
-
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type Unpaused @entity {
-  id: ID!
-
+  
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -158,7 +41,7 @@ type Unpaused @entity {
 type Withdraw @entity {
   id: ID!
   user: Bytes!
-  reserve: Bytes!
+  underlyingAsset: Bytes!
   amount: BigInt!
   to: Bytes!
 
@@ -170,9 +53,10 @@ type Withdraw @entity {
 type Borrow @entity {
   id: ID!
   user: Bytes! # address
-  loanId: Bytes!
-  uToken: Bytes! # address
   amount: BigInt!
+  totalAssets: BigInt!
+  loanId: Bytes!
+  underlyingAsset: Bytes! # address
 
   blockNumber: BigInt!
   blockTimestamp: BigInt!
@@ -334,7 +218,7 @@ type Loan @entity(immutable: false) {
   user: Account! # address
   amount: BigInt!
   totalAssets: BigInt!
-  uToken: Bytes! # address
+  underlyingAsset: Bytes! # address
   assets: [Asset!]! @derivedFrom(field: "loan")
 }
 
@@ -382,11 +266,12 @@ type AuctionFinalize @entity(immutable: false) {
   transactionInput: Bytes!
 }
 
-type LoanCreated @entity(immutable: false) {
+type OrderCreated @entity(immutable: false) {
   id: ID!
   loanId: Bytes!
-  user: Bytes!
-  totalAssets: BigInt! 
+  owner: Bytes!
+  orderId: Bytes!
+  orderType: BigInt!
 
   blockNumber: BigInt!
   blockTimestamp: BigInt!

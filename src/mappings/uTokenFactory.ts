@@ -1,23 +1,20 @@
 import { 
-  BorrowOnBelhalf as BorrowOnBelhalfEvent,
-  Deposit as DepositEvent,
-  RepayOnBelhalf as RepayOnBelhalfEvent,
+  Borrow as BorrowEvent,
+  Supply as SupplyEvent,
+  Repay as RepayEvent,
   Withdraw as WithdrawEvent
-} from "../../generated/uToken/uToken"
-
+} from "../../generated/uTokenFactory/uTokenFactory"
 import {  
-  getOrCreateBorrowOnBelhalf,
-  getOrCreateDeposit,
-  getOrCreateRepayOnBelhalf,
+  getOrCreateUTokenBorrow,
+  getOrCreateSupply,
+  getOrCreateUTokenRepay,
   getOrCreateWithdraw 
-} from "../helpers/u-token"
-
-import { BIGINT_ZERO } from "../utils/constants"
+} from "../helpers/uTokenFactory"
 import { getOrCreateAccount } from "../helpers/account"
 
   // BorrowOnBelhalf
-  export function handleBorrowOnBelhalf(event: BorrowOnBelhalfEvent): void {
-    let borrowOnBelhalf = getOrCreateBorrowOnBelhalf(event.transaction.hash.toHexString())
+  export function handleUTokenBorrow(event: BorrowEvent): void {
+    let borrowOnBelhalf = getOrCreateUTokenBorrow(event.transaction.hash.toHexString())
     
     borrowOnBelhalf.onBehalfOf = event.params.onBehalfOf
     borrowOnBelhalf.iniciator = event.params.iniciator
@@ -34,15 +31,14 @@ import { getOrCreateAccount } from "../helpers/account"
   } 
 
   // Deposit  
-  export function handleDeposit(event: DepositEvent): void {
+  export function handleSupply(event: SupplyEvent): void {
     const account = getOrCreateAccount(event.params.user.toHexString())
-    let deposit = getOrCreateDeposit(event.transaction.hash.toHexString())
+    let deposit = getOrCreateSupply(event.transaction.hash.toHexString())
 
     deposit.user = event.params.user
-    deposit.reserve = event.params.reserve
+    deposit.underlyingAsset = event.params.underlyingAsset
     deposit.amount = event.params.amount
     deposit.onBehalfOf = event.params.onBehalfOf
-    deposit.referral = BIGINT_ZERO // TODO: event.params.referral
 
     deposit.blockNumber = event.block.number
     deposit.blockTimestamp = event.block.timestamp
@@ -57,8 +53,8 @@ import { getOrCreateAccount } from "../helpers/account"
   }
 
   // RepayOnBelhalf
-  export function handleRepayOnBelhalf(event: RepayOnBelhalfEvent): void {
-    let repayOnBehalf = getOrCreateRepayOnBelhalf(event.transaction.hash.toHexString())
+  export function handleUTokenRepay(event: RepayEvent): void {
+    let repayOnBehalf = getOrCreateUTokenRepay(event.transaction.hash.toHexString())
 
     repayOnBehalf.iniciator = event.params.iniciator
     repayOnBehalf.loanId = event.params.loanId
@@ -80,7 +76,7 @@ import { getOrCreateAccount } from "../helpers/account"
     let withdraw = getOrCreateWithdraw(event.transaction.hash.toHexString())
 
     withdraw.user = event.params.user
-    withdraw.reserve = event.params.reserve
+    withdraw.underlyingAsset = event.params.underlyingAsset
     withdraw.amount = event.params.amount
     withdraw.to = event.params.to
 

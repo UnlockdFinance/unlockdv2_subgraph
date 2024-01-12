@@ -1,23 +1,24 @@
 import { Bytes, BigInt } from '@graphprotocol/graph-ts';
 import {
-    LoanCreated,
+    OrderCreated,
 } from '../../generated/schema';
 import { ZERO_ADDRESS } from '../utils/constants';
 
-export function getOrCreateLoanCreated(
+export function getOrCreateOrderCreated(
     id: String,
     createIfNotFound: boolean = true,
-): LoanCreated {
+): OrderCreated {
     // @ts-ignore: assign wrapper object to primitive
-    let created = LoanCreated.load(id);
+    let created = OrderCreated.load(id);
 
     if (created == null && createIfNotFound) {
         // @ts-ignore: assign wrapper object to primitive
-        created = new LoanCreated(id);
+        created = new OrderCreated(id);
         created.loanId = Bytes.fromHexString(ZERO_ADDRESS);
-        created.user = Bytes.fromHexString(ZERO_ADDRESS);
-        created.totalAssets = BigInt.fromI32(0);
+        created.owner = Bytes.fromHexString(ZERO_ADDRESS);
+        created.orderId = Bytes.fromHexString(ZERO_ADDRESS);
+        created.orderType = BigInt.fromI32(0);
     }
 
-    return created as LoanCreated;
+    return created as OrderCreated;
 }

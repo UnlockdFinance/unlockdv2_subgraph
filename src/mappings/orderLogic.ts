@@ -1,15 +1,17 @@
 import { Action, Action__getLoanResultValue0Struct } from "../../generated/action/Action";
 import {
-    LoanCreated as LoanCreatedEvent, 
+    OrderCreated as OrderCreatedEvent, 
 } from "../../generated/orderLogic/OrderLogic";
 import { getLoan, getOrCreateLoan } from "../helpers/action";
-import { getOrCreateLoanCreated } from "../helpers/orderLogic";
+import { getOrCreateOrderCreated } from "../helpers/orderLogic";
+import {BigInt} from "@graphprotocol/graph-ts";
 
-export function handleLoanCreated(event: LoanCreatedEvent): void {
-    const loanCreated = getOrCreateLoanCreated(event.transaction.hash.toHexString())
+export function handleLoanCreated(event: OrderCreatedEvent): void {
+    const loanCreated = getOrCreateOrderCreated(event.transaction.hash.toHexString())
     loanCreated.loanId = event.params.loanId
-    loanCreated.user = event.params.user
-    loanCreated.totalAssets = event.params.totalAssets
+    loanCreated.owner = event.params.owner
+    loanCreated.orderId = event.params.orderId
+    loanCreated.orderType = BigInt.fromI32(event.params.orderType)
 
     loanCreated.blockNumber = event.block.number
     loanCreated.blockTimestamp = event.block.timestamp
@@ -21,6 +23,6 @@ export function handleLoanCreated(event: LoanCreatedEvent): void {
     const loan = getOrCreateLoan(event.params.loanId.toHexString())
     loan.user = onChainLoan.owner.toHexString()
     loan.totalAssets = onChainLoan.totalAssets
-    loan.uToken = onChainLoan.uToken
+    loan.underlyingAsset = onChainLoan.underlyingAsset
     loan.save()
 }

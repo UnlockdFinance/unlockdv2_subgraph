@@ -6,7 +6,7 @@ import {
 import { getOrCreateAsset, getOrCreateLoan } from "../helpers/action";
 import { getOrCreateAuctionBid, getOrCreateAuctionFinalize, getOrCreateAuctionRedeem, getOrderAuction } from "../helpers/auction";
 import { getOrCreateBid, getOrCreateOrder } from "../helpers/market";
-import { getOrCreateLoanCreated } from "../helpers/orderLogic";
+import { getOrCreateOrderCreated } from "../helpers/orderLogic";
 import { getOrCreateTotalCount } from "../helpers/totalCount";
 import { LoanStatus, Market, OrderStatus, ZERO_ADDRESS } from "../utils/constants";
 import { BigInt, Bytes, ethereum, store } from "@graphprotocol/graph-ts";
@@ -56,7 +56,7 @@ export function handleAuctionBid(event: AuctionBidEvent): void {
     bid.amountOfDebt = onchainOrder.bid.amountOfDebt
     bid.save()
 
-    const loanCreated = getOrCreateLoanCreated(event.transaction.hash.toHexString())
+    const loanCreated = getOrCreateOrderCreated(event.transaction.hash.toHexString())
     if(loanCreated.loanId != Bytes.fromHexString(ZERO_ADDRESS)) {
       const loan = getOrCreateLoan(loanCreated.loanId.toHexString())
       loan.status = BigInt.fromI32(LoanStatus.PENDING)
@@ -111,7 +111,7 @@ export function handleAuctionFinalize(event: AuctionFinalizeEvent): void {
   const asset = getOrCreateAsset(event.params.assetId.toHexString())
   store.remove('Asset', event.params.assetId.toHexString().toLowerCase())
 
-  const loanCreated = getOrCreateLoanCreated(event.transaction.hash.toHexString())
+  const loanCreated = getOrCreateOrderCreated(event.transaction.hash.toHexString())
   if(loanCreated.loanId != Bytes.fromHexString(ZERO_ADDRESS)) {
     const loan = getOrCreateLoan(loanCreated.loanId.toHexString())
     loan.status = BigInt.fromI32(LoanStatus.BORROWED)
@@ -126,7 +126,7 @@ export function handleAuctionFinalize(event: AuctionFinalizeEvent): void {
     loan.totalAssets = loan.totalAssets.plus(BigInt.fromI32(1))
     loan.save()
   } else { 
-    store.remove('LoanCreated', event.transaction.hash.toHexString())
+    store.remove('OrderCreated', event.transaction.hash.toHexString())
   }
 
   const loan = getOrCreateLoan(event.params.loanId.toHexString())

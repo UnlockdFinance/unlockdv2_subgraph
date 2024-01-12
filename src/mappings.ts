@@ -1,9 +1,9 @@
 export {
-    handleBorrowOnBelhalf,
-    handleDeposit,
-    handleRepayOnBelhalf,
+    handleUTokenBorrow,
+    handleSupply,
+    handleUTokenRepay,
     handleWithdraw,
-} from './mappings/u-token';
+} from './mappings/uTokenFactory';
 
 export {
     handleBorrow,

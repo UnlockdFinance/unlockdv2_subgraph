@@ -11,7 +11,7 @@ import { LoanStatus, Market, OrderStatus, ZERO_ADDRESS } from "../utils/constant
 import {BigInt, Bytes, ethereum, store, log} from "@graphprotocol/graph-ts";
 import { getTxnInputDataToDecode } from "../utils/dataToDecode";
 import { getAssetId, getOrCreateAsset, getOrCreateLoan } from "../helpers/action";
-import { getOrCreateLoanCreated } from "../helpers/orderLogic";
+import { getOrCreateOrderCreated } from "../helpers/orderLogic";
 import { getOrCreateSetLoanId } from "../helpers/protocolOwner";
 import { getOrCreateTotalCount } from "../helpers/totalCount";
   
@@ -92,7 +92,7 @@ export function handleMarketBid(event: MarketBidEvent): void {
   bid.save()
 
   //status from 0 to 1
-  const loanCreated = getOrCreateLoanCreated(event.transaction.hash.toHexString())
+  const loanCreated = getOrCreateOrderCreated(event.transaction.hash.toHexString())
   if(loanCreated.loanId != Bytes.fromHexString(ZERO_ADDRESS)) {
     const loan = getOrCreateLoan(loanCreated.loanId.toHexString())
     loan.status = BigInt.fromI32(LoanStatus.PENDING)
@@ -186,7 +186,7 @@ export function handleMarketBuyNow(event: MarketBuyNowEvent): void {
   const asset = getOrCreateAsset(event.params.assetId.toHexString())
   store.remove('Asset', event.params.assetId.toHexString().toLowerCase())
 
-  const loanCreated = getOrCreateLoanCreated(event.transaction.hash.toHexString())
+  const loanCreated = getOrCreateOrderCreated(event.transaction.hash.toHexString())
   if(loanCreated.loanId != Bytes.fromHexString(ZERO_ADDRESS)) {
     const loan = getOrCreateLoan(loanCreated.loanId.toHexString())
     loan.status = BigInt.fromI32(LoanStatus.BORROWED)
