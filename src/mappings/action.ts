@@ -44,6 +44,7 @@ export function handleBorrow(event: BorrowEvent): void {
     const decoded = ethereum.decode('(uint256,(address,uint256)[],SignAction,EIP712Signature)', dataToDecode);
     const assets = decoded!.toTuple()[1].toArray()
     const totalCount = getOrCreateTotalCount()
+    
     for (let index = 0; index < assets.length; index++) {
         const _asset = assets[index]
         const id = getAssetId(_asset.toTuple()[0].toAddress(), _asset.toTuple()[1].toBigInt())
@@ -54,6 +55,7 @@ export function handleBorrow(event: BorrowEvent): void {
 
         asset.save()
         totalCount.totalCount = totalCount.totalCount.plus(BigInt.fromI32(1))
+        loan.totalAssets = loan.totalAssets.plus(BigInt.fromI32(1))
     }
 
     totalCount.save()

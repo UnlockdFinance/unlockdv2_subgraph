@@ -1,6 +1,6 @@
 import { 
   Borrow as BorrowEvent,
-  Supply as SupplyEvent,
+  Deposit as SupplyEvent,
   Repay as RepayEvent,
   Withdraw as WithdrawEvent
 } from "../../generated/uTokenFactory/uTokenFactory"

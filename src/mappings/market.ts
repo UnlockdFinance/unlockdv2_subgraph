@@ -7,10 +7,10 @@ import {
     MarketBuyNow as MarketBuyNowEvent
   } from "../../generated/market/Market";
 import { getOrCreateBid, getOrCreateMarketBid, getOrCreateMarketBuyNow, getOrCreateMarketClaim, getOrCreateMarketCreated, getOrCreateOrder, getOrder } from "../helpers/market";
-import { LoanStatus, Market, OrderStatus, ZERO_ADDRESS } from "../utils/constants";
+import { LoanStatus, OrderStatus, ZERO_ADDRESS } from "../utils/constants";
 import {BigInt, Bytes, ethereum, store, log} from "@graphprotocol/graph-ts";
 import { getTxnInputDataToDecode } from "../utils/dataToDecode";
-import { getAssetId, getOrCreateAsset, getOrCreateLoan } from "../helpers/action";
+import { getOrCreateAsset, getOrCreateLoan } from "../helpers/action";
 import { getOrCreateOrderCreated } from "../helpers/orderLogic";
 import { getOrCreateSetLoanId } from "../helpers/protocolOwner";
 import { getOrCreateTotalCount } from "../helpers/totalCount";
@@ -31,22 +31,29 @@ export function handleMarketCreated(event: MarketCreatedEvent): void {
 
   const order = getOrCreateOrder(event.params.orderId.toHexString())
   const onchainOrder = getOrder(event.params.orderId) as Market__getOrderResultValue0Struct
+  const orderCreated = getOrCreateOrderCreated(event.transaction.hash.toHexString())
   const asset = getOrCreateAsset(event.params.assetId.toHexString())
-  const loan = getOrCreateLoan(event.params.loanId.toHexString())
+
   order.status = BigInt.fromI32(OrderStatus.ACTIVE)
   order.date = event.block.timestamp
-  order.orderType = onchainOrder.orderType.toString()
   order.assetId = event.params.assetId
   order.collection = asset.collection
   order.tokenId = asset.tokenId
-  order.seller = onchainOrder.owner
   order.loanId = event.params.loanId
+  order.seller = onchainOrder.owner
+
+  order.orderType = onchainOrder.orderType.toString()
   order.debtToSell = onchainOrder.offer.debtToSell
   order.startAmount = onchainOrder.offer.startAmount
   order.endAmount = onchainOrder.offer.endAmount
   order.startTime = onchainOrder.timeframe.startTime
   order.endTime = onchainOrder.timeframe.endTime
-  order.loan = loan.id
+  order.loan = event.params.loanId.toHexString()
+
+  if(onchainOrder.owner == Bytes.fromHexString(ZERO_ADDRESS)) {
+    order.orderType = orderCreated.orderType.toString()
+  }
+
   order.save()
 }
 
@@ -145,7 +152,7 @@ export function handleMarketClaim(event: MarketClaimEvent): void {
     loan.totalAssets = loan.totalAssets.plus(BigInt.fromI32(1))
     loan.save()
   } else { 
-    store.remove('LoanCreated', event.transaction.hash.toHexString())
+    store.remove('OrderCreated', event.transaction.hash.toHexString())
   }
 
   const loan = getOrCreateLoan(event.params.loanId.toHexString())
@@ -201,7 +208,7 @@ export function handleMarketBuyNow(event: MarketBuyNowEvent): void {
     loan.totalAssets = loan.totalAssets.plus(BigInt.fromI32(1))
     loan.save()
   } else { 
-    store.remove('LoanCreated', event.transaction.hash.toHexString())
+    store.remove('OrderCreated', event.transaction.hash.toHexString())
   }
 
   const loan = getOrCreateLoan(event.params.loanId.toHexString())

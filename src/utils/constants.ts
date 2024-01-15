@@ -10,10 +10,10 @@ export let BIGDECIMAL_ZERO = new BigDecimal(BIGINT_ZERO);
 export let BIGDECIMAL_ONE = toDecimal(BigInt.fromI32(10).pow(18));
 export let BIGDECIMAL_HUNDRED = toDecimal(BigInt.fromI32(10).pow(20));
 export const UNLOCK_HELPER_ADDRESS = Address.fromString('0xd186e00f3ad162c0f2b44e7fdc2c5697331a6c5c')
-export const UNLOCK_MARKET_ADDRESS = Address.fromString('0x74ee7899468617b46d872157306fb6ff45b894ca')
-export const UNLOCK_ACTION_ADDRESS = Address.fromString('0xee9903eec2c4020de169e7b8b2c6afdac92e844e')
-export const UNLOCK_PROTOCOL_OWNER_ADDRESS = Address.fromString('0x9174eab1f40898663d058bfc0400edbc2054adb2')
-export const UNLOCK_AUCTION_ADDRESS = Address.fromString('0x62c806e32411fe7d8db987ffb67ae6eb8e88add2')
+export const UNLOCK_MARKET_ADDRESS = Address.fromString('0x8f9533F8a93771341165cAf6494A00eD614d2D5c') // 5
+export const UNLOCK_ACTION_ADDRESS = Address.fromString('0xAef780762E52B76063889F7e66642347673D1aAf') // 3
+export const UNLOCK_PROTOCOL_OWNER_ADDRESS = Address.fromString('0x9eddf2f97618bbe4eeaebf4bafc64044c04244f3')
+export const UNLOCK_AUCTION_ADDRESS = Address.fromString('0xe794Bf9A2599168273DD3381706A9Fb555b991EE') // 4
 
 export enum OrderStatus {
     ACTIVE = 0,

@@ -6,7 +6,7 @@ import { getLoan, getOrCreateLoan } from "../helpers/action";
 import { getOrCreateOrderCreated } from "../helpers/orderLogic";
 import {BigInt} from "@graphprotocol/graph-ts";
 
-export function handleLoanCreated(event: OrderCreatedEvent): void {
+export function handleOrderCreated(event: OrderCreatedEvent): void {
     const loanCreated = getOrCreateOrderCreated(event.transaction.hash.toHexString())
     loanCreated.loanId = event.params.loanId
     loanCreated.owner = event.params.owner

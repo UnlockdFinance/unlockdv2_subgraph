@@ -40,7 +40,7 @@ export {
 } from './mappings/unlockd';
 
 export {  
-    handleLoanCreated
+    handleOrderCreated
 } from './mappings/orderLogic';
 
 export {  
