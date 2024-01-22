@@ -53,10 +53,11 @@ type Withdraw @entity {
 type Borrow @entity {
   id: ID!
   user: Bytes! # address
+  loanId: Bytes!
   amount: BigInt!
   totalAssets: BigInt!
-  loanId: Bytes!
-  underlyingAsset: Bytes! # address
+  token: Bytes! # address
+  asset: [Asset!]! @derivedFrom(field: "borrow")
 
   blockNumber: BigInt!
   blockTimestamp: BigInt!
@@ -70,6 +71,7 @@ type Asset @entity {
     tokenId: BigInt!
     isOnAuction: Boolean!
     loan: Loan!
+    borrow: Borrow!
 }
 
 type Repay @entity {
@@ -149,11 +151,13 @@ type MarketCreated @entity(immutable: false) {
 
 type MarketBid @entity(immutable: false) {
   id: ID!
-  user: Bytes!
   loanId: Bytes! # bytes32
-  assetId: Bytes! # bytes32
   orderId: Bytes! # bytes32
-  amount: BigInt! # address
+  assetId: Bytes! # bytes32
+  amountToPay: BigInt! # address
+  amountOfDebt: BigInt!
+  amount: BigInt!
+  user: Bytes!
 
   blockNumber: BigInt!
   blockTimestamp: BigInt!
@@ -224,12 +228,14 @@ type Loan @entity(immutable: false) {
 
 type AuctionBid @entity(immutable: false) {
   id: ID!
-  user: Bytes!
   loanId: Bytes! # bytes32
-  assetId: Bytes! # bytes32
   orderId: Bytes! # bytes32
+  assetId: Bytes! # bytes32
+  amountToPay: BigInt!
+  amountOfDebt: BigInt!
   amount: BigInt! # address
-
+  user: Bytes!
+  
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -238,11 +244,9 @@ type AuctionBid @entity(immutable: false) {
 
 type AuctionRedeem @entity(immutable: false) {
   id: ID!
-  user: Bytes!
   loanId: Bytes! # bytes32
-  assetId: Bytes! # bytes32
-  orderId: Bytes! # bytes32
-  amount: BigInt! # address
+  amount: BigInt!
+  user: Bytes! # address 
 
   blockNumber: BigInt!
   blockTimestamp: BigInt!

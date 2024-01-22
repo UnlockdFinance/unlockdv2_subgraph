@@ -89,7 +89,7 @@
       {
         "name": "params",
         "type": "tuple",
-        "internalType": "struct IUTokenFactory.CreateMarketParams",
+        "internalType": "struct IUTokenVault.CreateMarketParams",
         "components": [
           {
             "name": "interestRateAddress",
@@ -153,6 +153,19 @@
       },
       {
         "name": "onBehalfOf",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "disableStrategy",
+    "inputs": [
+      {
+        "name": "underlyingAsset",
         "type": "address",
         "internalType": "address"
       }
@@ -720,6 +733,24 @@
   },
   {
     "type": "function",
+    "name": "updateReserveStrategy",
+    "inputs": [
+      {
+        "name": "underlyingAsset",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "newStrategy",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "updateState",
     "inputs": [
       {
@@ -917,6 +948,19 @@
   },
   {
     "type": "event",
+    "name": "DisableReserveStrategy",
+    "inputs": [
+      {
+        "name": "underlyingAsset",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
     "name": "Initialized",
     "inputs": [
       {
@@ -1053,6 +1097,44 @@
   },
   {
     "type": "event",
+    "name": "UpdateReserveState",
+    "inputs": [
+      {
+        "name": "underlyingAsset",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "newState",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "UpdateReserveStrategy",
+    "inputs": [
+      {
+        "name": "underlyingAsset",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "newStrategy",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
     "name": "Upgraded",
     "inputs": [
       {
@@ -1118,6 +1200,11 @@
   {
     "type": "error",
     "name": "ReserveNotActive",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "StrategyNotEmpty",
     "inputs": []
   },
   {

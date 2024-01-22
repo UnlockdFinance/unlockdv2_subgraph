@@ -39,9 +39,11 @@ export function getOrCreateBorrow(
     if (borrow == null && createIfNotFound) {
         // @ts-ignore: assign wrapper object to primitive
         borrow = new Borrow(id);
+        borrow.user = Bytes.fromHexString(ZERO_ADDRESS);
+        borrow.loanId = Bytes.fromHexString(ZERO_ADDRESS);
         borrow.amount = BIGINT_ZERO;
         borrow.totalAssets = BIGINT_ZERO;
-        borrow.underlyingAsset = Bytes.fromHexString(ZERO_ADDRESS);
+        borrow.token = Bytes.fromHexString(ZERO_ADDRESS);
     }
 
     return borrow as Borrow;

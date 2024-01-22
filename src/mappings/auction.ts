@@ -13,12 +13,15 @@ import { BigInt, Bytes, ethereum, store } from "@graphprotocol/graph-ts";
 
 export function handleAuctionBid(event: AuctionBidEvent): void {
     const auctionBid = getOrCreateAuctionBid(event.transaction.hash.toHexString())
-    auctionBid.user = event.params.user
+    
     auctionBid.loanId = event.params.loanId
-    auctionBid.assetId = event.params.assetId
     auctionBid.orderId = event.params.orderId
+    auctionBid.assetId = event.params.assetId
+    auctionBid.amountToPay = event.params.amountToPay
+    auctionBid.amountOfDebt = event.params.amountOfDebt
     auctionBid.amount = event.params.amount
-  
+    auctionBid.user = event.params.user
+
     auctionBid.blockNumber = event.block.number
     auctionBid.blockTimestamp = event.block.timestamp
     auctionBid.transactionHash = event.transaction.hash
@@ -43,7 +46,7 @@ export function handleAuctionBid(event: AuctionBidEvent): void {
     order.lastBidder = order.bidder
     order.lastBidAmount = order.bidAmount  
     order.bidder = onchainOrder.bid.buyer
-    order.bidAmount = onchainOrder.bid.amountToPay.plus(onchainOrder.bid.amountOfDebt)
+    order.bidAmount = event.params.amountToPay.plus(event.params.amountOfDebt)
     order.loan = onchainOrder.offer.loanId.toHexString()
     order.endTime = onchainOrder.timeframe.endTime
     order.save()
@@ -52,8 +55,8 @@ export function handleAuctionBid(event: AuctionBidEvent): void {
     bid.bidder = event.params.user
     bid.bidAmount = event.params.amount
     bid.order = order.id
-    bid.amountToPay = onchainOrder.bid.amountToPay
-    bid.amountOfDebt = onchainOrder.bid.amountOfDebt
+    bid.amountToPay = event.params.amountToPay
+    bid.amountOfDebt = event.params.amountOfDebt
     bid.save()
 
     const loanCreated = getOrCreateOrderCreated(event.transaction.hash.toHexString())
@@ -69,8 +72,6 @@ export function handleAuctionRedeem(event: AuctionRedeemEvent): void {
   const redeem = getOrCreateAuctionRedeem(event.transaction.hash.toHexString())
   redeem.user = event.params.user
   redeem.loanId = event.params.loanId
-  redeem.assetId = event.params.assetId
-  redeem.orderId = event.params.orderId
   redeem.amount = event.params.amount
 
   redeem.blockNumber = event.block.number
@@ -79,10 +80,11 @@ export function handleAuctionRedeem(event: AuctionRedeemEvent): void {
   redeem.transactionInput = event.transaction.input
   redeem.save()
 
-  const order = getOrCreateOrder(event.params.orderId.toHexString())
-  order.status = BigInt.fromI32(OrderStatus.REDEEMED)
-  order.date = event.block.timestamp
-  order.save()
+  // TODO: check if this is needed
+  //const order = getOrCreateOrder(event.params.orderId.toHexString())
+  //order.status = BigInt.fromI32(OrderStatus.REDEEMED)
+  //order.date = event.block.timestamp
+  //order.save()
 }
 
 export function handleAuctionFinalize(event: AuctionFinalizeEvent): void {

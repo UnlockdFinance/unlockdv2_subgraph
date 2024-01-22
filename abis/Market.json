@@ -851,7 +851,7 @@
         "internalType": "uint256"
       },
       {
-        "name": "aggLTV",
+        "name": "aggLtv",
         "type": "uint256",
         "internalType": "uint256"
       }
@@ -885,7 +885,7 @@
         "internalType": "uint256"
       },
       {
-        "name": "aggLTV",
+        "name": "aggLtv",
         "type": "uint256",
         "internalType": "uint256"
       }
@@ -953,6 +953,16 @@
             "name": "countBids",
             "type": "uint88",
             "internalType": "uint88"
+          },
+          {
+            "name": "bidderDebtPayed",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "bidderBonus",
+            "type": "uint256",
+            "internalType": "uint256"
           },
           {
             "name": "offer",
@@ -1113,6 +1123,18 @@
         "type": "bytes32",
         "indexed": true,
         "internalType": "bytes32"
+      },
+      {
+        "name": "amountToPay",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "amountOfDebt",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
       },
       {
         "name": "amount",

@@ -5,7 +5,7 @@ import {
 import {getOrCreateAccount} from "../helpers/account"
 
 import {getAssetId, getOrCreateAsset, getOrCreateBorrow, getOrCreateLoan, getOrCreateRepay} from "../helpers/action"
-import {ethereum, store, BigInt} from "@graphprotocol/graph-ts";
+import {ethereum, store, BigInt, Bytes} from "@graphprotocol/graph-ts";
 import {getTxnInputDataToDecode} from "../utils/dataToDecode";
 import { LoanStatus } from "../utils/constants";
 import { getOrCreateTotalCount } from "../helpers/totalCount";
@@ -16,17 +16,17 @@ export function handleBorrow(event: BorrowEvent): void {
     const loan = getOrCreateLoan(event.params.loanId.toHexString())
 
     // BORROW 
-    borrow.underlyingAsset = event.params.token
-    borrow.loanId = event.params.loanId
+    
     borrow.user = event.params.user
+    borrow.loanId = event.params.loanId
     borrow.amount = event.params.amount
-
+    borrow.totalAssets = event.params.totalAssets
+    borrow.token = event.params.token
+    
     borrow.blockNumber = event.block.number
     borrow.blockTimestamp = event.block.timestamp
     borrow.transactionHash = event.transaction.hash
     borrow.transactionInput = event.transaction.input
-
-    borrow.save()
 
     // LOAN
     loan.id = event.params.loanId.toHexString()
@@ -40,18 +40,19 @@ export function handleBorrow(event: BorrowEvent): void {
     }
     
     // ASSETS
-    const dataToDecode = getTxnInputDataToDecode(event)
-    const decoded = ethereum.decode('(uint256,(address,uint256)[],SignAction,EIP712Signature)', dataToDecode);
-    const assets = decoded!.toTuple()[1].toArray()
+    const decoded = ethereum.decode('(address,uint256)[]', event.params.assets);
+    const assets = decoded!.toTuple()[0].toArray()
     const totalCount = getOrCreateTotalCount()
     
     for (let index = 0; index < assets.length; index++) {
-        const _asset = assets[index]
-        const id = getAssetId(_asset.toTuple()[0].toAddress(), _asset.toTuple()[1].toBigInt())
+        const collection = assets[index].toTuple()[0].toAddress()
+        const tokenId = assets[index].toTuple()[1].toBigInt()
+        const id = getAssetId(collection, tokenId)
         const asset = getOrCreateAsset(id.toHexString())
-        asset.collection = _asset.toTuple()[0].toAddress()
-        asset.tokenId = _asset.toTuple()[1].toBigInt()
+        asset.collection = collection
+        asset.tokenId = tokenId
         asset.loan = loan.id
+        asset.borrow = borrow.id
 
         asset.save()
         totalCount.totalCount = totalCount.totalCount.plus(BigInt.fromI32(1))
@@ -59,6 +60,7 @@ export function handleBorrow(event: BorrowEvent): void {
     }
 
     totalCount.save()
+    borrow.save()
     loan.save()
 
     // ACCOUNT

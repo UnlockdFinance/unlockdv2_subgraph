@@ -4,12 +4,12 @@ schema:
 
 dataSources:
   - kind: ethereum
-    name: uTokenFactory
+    name: uTokenVault
     network: sepolia
     source:
-      address: "0xce80f164bbfc5d3be9b5e6edb1157f51af022b41"
-      abi: uTokenFactory
-      startBlock: 5090405
+      address: "0xed0c72b10af9cd00919e240b02143d92bdc2a5cb"
+      abi: uTokenVault
+      startBlock: 5132406
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -20,8 +20,8 @@ dataSources:
         - RepayOnBelhalf
         - Withdraw
       abis:
-        - name: uTokenFactory
-          file: ./abis/uTokenFactory.json
+        - name: uTokenVault
+          file: ./abis/uTokenVault.json
       eventHandlers:
         - event: Borrow(indexed address,indexed address,indexed address,uint256,bytes32,uint256)
           handler: handleUTokenBorrow
@@ -36,9 +36,9 @@ dataSources:
     name: action
     network: sepolia
     source:
-      address: "0x63d798b19855d3285755c5c8280b92a1e9e85e3c"
+      address: "0xd5c775369f8455b06ea5488b8400e0e2d597b8e5"
       abi: Action
-      startBlock: 5090405 #4437551
+      startBlock: 5132406 #4437551
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -55,7 +55,7 @@ dataSources:
         - name: UnlockdHelper
           file: ./abis/UnlockdHelper.json
       eventHandlers:
-        - event: Borrow(indexed address,indexed bytes32,uint256,uint256,address)
+        - event: Borrow(indexed address,indexed bytes32,uint256,uint256,address,(indexed address,uint256)[])
           handler: handleBorrow
         - event: Repay(indexed address,indexed bytes32,uint256,bytes32[])
           handler: handleRepay
@@ -64,9 +64,9 @@ dataSources:
     name: allowedControllers
     network: sepolia
     source:
-      address: "0x79254b6b339399099d9656bb946169982972ba2d"
+      address: "0x4c4af24cf362f31be300434770cbcc58f31db84d"
       abi: AllowedControllers
-      startBlock: 5090405 #4437551
+      startBlock: 5132406 #4437551
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -84,9 +84,9 @@ dataSources:
     name: sellNow
     network: sepolia
     source:
-      address: "0x63d798b19855d3285755c5c8280b92a1e9e85e3c"
+      address: "0xd5c775369f8455b06ea5488b8400e0e2d597b8e5"
       abi: SellNow
-      startBlock: 5090405 #4437551
+      startBlock: 5132406 #4437551
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -106,9 +106,9 @@ dataSources:
     name: market
     network: sepolia
     source:
-      address: "0x63d798b19855d3285755c5c8280b92a1e9e85e3c"
+      address: "0xd5c775369f8455b06ea5488b8400e0e2d597b8e5"
       abi: Market
-      startBlock: 5090405 #4437551
+      startBlock: 5132406 #4437551
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -128,7 +128,7 @@ dataSources:
           handler: handleMarketCreated
         - event: MarketCancelAuction(indexed bytes32,indexed bytes32,address)
           handler: handleMarketCancel
-        - event: MarketBid(indexed bytes32,indexed bytes32,indexed bytes32,uint256,address)
+        - event: MarketBid(indexed bytes32,indexed bytes32,indexed bytes32,uint256,uint256,uint256,address)
           handler: handleMarketBid
         - event: MarketClaim(indexed bytes32,indexed bytes32,indexed bytes32,uint256,address)
           handler: handleMarketClaim
@@ -139,9 +139,9 @@ dataSources:
     name: auction
     network: sepolia
     source:
-      address: "0x63d798b19855d3285755c5c8280b92a1e9e85e3c"
+      address: "0xd5c775369f8455b06ea5488b8400e0e2d597b8e5"
       abi: Auction
-      startBlock: 5090405 #4437551
+      startBlock: 5132406 #4437551
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -154,9 +154,9 @@ dataSources:
         - name: Auction
           file: ./abis/Auction.json
       eventHandlers:
-        - event: AuctionBid(indexed bytes32,indexed bytes32,indexed bytes32,uint256,address)
+        - event: AuctionBid(indexed bytes32,indexed bytes32,indexed bytes32,uint256,uint256,uint256,address)
           handler: handleAuctionBid
-        - event: AuctionRedeem(indexed bytes32,indexed bytes32,indexed bytes32,uint256,address)
+        - event: AuctionRedeem(indexed bytes32,indexed uint256,indexed address)
           handler: handleAuctionRedeem
         - event: AuctionFinalize(indexed bytes32,indexed bytes32,indexed bytes32,uint256,uint256,address,address)
           handler: handleAuctionFinalize
@@ -165,9 +165,9 @@ dataSources:
     name: unlockd
     network: sepolia
     source:
-      address: "0x63d798b19855d3285755c5c8280b92a1e9e85e3c"
+      address: "0xd5c775369f8455b06ea5488b8400e0e2d597b8e5"
       abi: Unlockd
-      startBlock: 5090405 #4437551
+      startBlock: 5132406 #4437551
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -185,9 +185,9 @@ dataSources:
     name: orderLogic
     network: sepolia
     source:
-      address: "0x63d798b19855d3285755c5c8280b92a1e9e85e3c"
+      address: "0xd5c775369f8455b06ea5488b8400e0e2d597b8e5"
       abi: OrderLogic
-      startBlock: 5090405 #4437551
+      startBlock: 5132406 #4437551
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -207,9 +207,9 @@ dataSources:
     name: ProtocolOwner
     network: sepolia
     source:
-      address: "0x9eddf2f97618bbe4eeaebf4bafc64044c04244f3"
+      address: "0x28fb73f263b968fe41876484d0524756c3f25a90"
       abi: ProtocolOwner
-      startBlock: 5090405 #4437551
+      startBlock: 5132406 #4437551
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -229,7 +229,7 @@ dataSources:
     source:
       address: "0x987EfDB241fE66275b3594481696f039a82a799e"
       abi: CryptoPunks
-      startBlock: 5090405 #4437551
+      startBlock: 5132406 #4437551
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

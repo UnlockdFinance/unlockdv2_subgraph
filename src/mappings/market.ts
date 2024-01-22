@@ -66,11 +66,14 @@ export function handleMarketCancel(event: MarketCancelEvent): void {
 
 export function handleMarketBid(event: MarketBidEvent): void {
   const marketBid = getOrCreateMarketBid(event.transaction.hash.toHexString())
-  marketBid.user = event.params.user
+  
   marketBid.loanId = event.params.loanId
-  marketBid.assetId = event.params.assetId
   marketBid.orderId = event.params.orderId
+  marketBid.assetId = event.params.assetId
+  marketBid.amountToPay = event.params.amountToPay
+  marketBid.amountOfDebt = event.params.amountOfDebt
   marketBid.amount = event.params.amount
+  marketBid.user = event.params.user
 
   marketBid.blockNumber = event.block.number
   marketBid.blockTimestamp = event.block.timestamp
@@ -89,13 +92,8 @@ export function handleMarketBid(event: MarketBidEvent): void {
   bid.bidder = event.params.user
   bid.bidAmount = event.params.amount
   bid.order = order.id
-  
-  const dataToDecode = getTxnInputDataToDecode(event)
-  const decoded = ethereum.decode('(bytes32,uint128,uint128,SignMarket,EIP712Signature)', dataToDecode);
-  const amountToPay = decoded!.toTuple()[1].toBigInt()
-  const amountOfDebt = decoded!.toTuple()[2].toBigInt()
-  bid.amountToPay = amountToPay
-  bid.amountOfDebt = amountOfDebt
+  bid.amountToPay = event.params.amountToPay
+  bid.amountOfDebt = event.params.amountOfDebt
   bid.save()
 
   //status from 0 to 1
@@ -104,7 +102,7 @@ export function handleMarketBid(event: MarketBidEvent): void {
     const loan = getOrCreateLoan(loanCreated.loanId.toHexString())
     loan.status = BigInt.fromI32(LoanStatus.PENDING)
     loan.user = event.params.user.toHexString()
-    loan.amount = amountOfDebt
+    loan.amount = event.params.amountOfDebt
     loan.save()
   }
 }

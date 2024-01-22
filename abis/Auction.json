@@ -409,71 +409,34 @@
     "name": "getAmountToReedem",
     "inputs": [
       {
-        "name": "params",
-        "type": "tuple",
-        "internalType": "struct IAuctionModule.AmountToRedeemParams",
-        "components": [
-          {
-            "name": "underlyingAsset",
-            "type": "address",
-            "internalType": "address"
-          },
-          {
-            "name": "loanId",
-            "type": "bytes32",
-            "internalType": "bytes32"
-          },
-          {
-            "name": "owner",
-            "type": "address",
-            "internalType": "address"
-          },
-          {
-            "name": "aggLoanPrice",
-            "type": "uint256",
-            "internalType": "uint256"
-          },
-          {
-            "name": "aggLtv",
-            "type": "uint256",
-            "internalType": "uint256"
-          },
-          {
-            "name": "countBids",
-            "type": "uint256",
-            "internalType": "uint256"
-          },
-          {
-            "name": "totalAmountBid",
-            "type": "uint256",
-            "internalType": "uint256"
-          },
-          {
-            "name": "startAmount",
-            "type": "uint256",
-            "internalType": "uint256"
-          }
-        ]
+        "name": "loanId",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "owner",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "assets",
+        "type": "bytes32[]",
+        "internalType": "bytes32[]"
       }
     ],
     "outputs": [
       {
-        "name": "totalAmount",
+        "name": "",
         "type": "uint256",
         "internalType": "uint256"
       },
       {
-        "name": "totalDebt",
+        "name": "",
         "type": "uint256",
         "internalType": "uint256"
       },
       {
-        "name": "minDebt",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "bidderBonus",
+        "name": "",
         "type": "uint256",
         "internalType": "uint256"
       }
@@ -485,14 +448,19 @@
     "name": "getMinBidPriceAuction",
     "inputs": [
       {
-        "name": "orderId",
+        "name": "loanId",
         "type": "bytes32",
         "internalType": "bytes32"
       },
       {
-        "name": "underlyingAsset",
-        "type": "address",
-        "internalType": "address"
+        "name": "assetId",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "assetPrice",
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
         "name": "aggLoanPrice",
@@ -500,7 +468,7 @@
         "internalType": "uint256"
       },
       {
-        "name": "aggLTV",
+        "name": "aggLtv",
         "type": "uint256",
         "internalType": "uint256"
       }
@@ -568,6 +536,16 @@
             "name": "countBids",
             "type": "uint88",
             "internalType": "uint88"
+          },
+          {
+            "name": "bidderDebtPayed",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "bidderBonus",
+            "type": "uint256",
+            "internalType": "uint256"
           },
           {
             "name": "offer",
@@ -681,14 +659,14 @@
     "name": "redeem",
     "inputs": [
       {
-        "name": "orderId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
         "name": "amount",
         "type": "uint256",
         "internalType": "uint256"
+      },
+      {
+        "name": "assets",
+        "type": "bytes32[]",
+        "internalType": "bytes32[]"
       },
       {
         "name": "signAuction",
@@ -833,6 +811,18 @@
         "internalType": "bytes32"
       },
       {
+        "name": "amountToPay",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "amountOfDebt",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
         "name": "amount",
         "type": "uint256",
         "indexed": false,
@@ -907,27 +897,15 @@
         "internalType": "bytes32"
       },
       {
-        "name": "orderId",
-        "type": "bytes32",
-        "indexed": true,
-        "internalType": "bytes32"
-      },
-      {
-        "name": "assetId",
-        "type": "bytes32",
-        "indexed": true,
-        "internalType": "bytes32"
-      },
-      {
         "name": "amount",
         "type": "uint256",
-        "indexed": false,
+        "indexed": true,
         "internalType": "uint256"
       },
       {
         "name": "user",
         "type": "address",
-        "indexed": false,
+        "indexed": true,
         "internalType": "address"
       }
     ],
@@ -1027,6 +1005,11 @@
   {
     "type": "error",
     "name": "InvalidAmount",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InvalidAssets",
     "inputs": []
   },
   {
