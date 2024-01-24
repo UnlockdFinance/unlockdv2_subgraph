@@ -463,6 +463,37 @@
   },
   {
     "type": "event",
+    "name": "AddCollateral",
+    "inputs": [
+      {
+        "name": "loanId",
+        "type": "bytes32",
+        "indexed": true,
+        "internalType": "bytes32"
+      },
+      {
+        "name": "collection",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "tokenId",
+        "type": "uint256",
+        "indexed": true,
+        "internalType": "uint256"
+      },
+      {
+        "name": "assetId",
+        "type": "bytes32",
+        "indexed": false,
+        "internalType": "bytes32"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
     "name": "Borrow",
     "inputs": [
       {
@@ -494,24 +525,6 @@
         "type": "address",
         "indexed": false,
         "internalType": "address"
-      },
-      {
-        "name": "assets",
-        "type": "tuple[]",
-        "indexed": true,
-        "internalType": "struct DataTypes.Asset[]",
-        "components": [
-          {
-            "name": "collection",
-            "type": "address",
-            "internalType": "address"
-          },
-          {
-            "name": "tokenId",
-            "type": "uint256",
-            "internalType": "uint256"
-          }
-        ]
       }
     ],
     "anonymous": false

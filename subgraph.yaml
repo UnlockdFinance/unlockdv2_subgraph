@@ -49,16 +49,19 @@ dataSources:
         - Borrow
         - Repay
         - Asset
+        - AddCollateral
       abis:
         - name: Action
           file: ./abis/Action.json
         - name: UnlockdHelper
           file: ./abis/UnlockdHelper.json
       eventHandlers:
-        - event: Borrow(indexed address,indexed bytes32,uint256,uint256,address,(indexed address,uint256)[])
+        - event: Borrow(indexed address,indexed bytes32,uint256,uint256,address)
           handler: handleBorrow
         - event: Repay(indexed address,indexed bytes32,uint256,bytes32[])
           handler: handleRepay
+        - event: AddCollateral(indexed bytes32,indexed address,indexed uint256,bytes32)
+          handler: handleAddCollateral
       file: ./src/mappings.ts
   - kind: ethereum
     name: allowedControllers
@@ -154,12 +157,14 @@ dataSources:
         - name: Auction
           file: ./abis/Auction.json
       eventHandlers:
-        - event: AuctionBid(indexed bytes32,indexed bytes32,indexed bytes32,uint256,uint256,uint256,address)
+        - event:  AuctionBid(indexed bytes32,indexed bytes32,indexed bytes32,uint256,uint256,address)
           handler: handleAuctionBid
         - event: AuctionRedeem(indexed bytes32,indexed uint256,indexed address)
           handler: handleAuctionRedeem
         - event: AuctionFinalize(indexed bytes32,indexed bytes32,indexed bytes32,uint256,uint256,address,address)
           handler: handleAuctionFinalize
+        - event: AuctionOrderRedeemed(indexed bytes32,indexed bytes32,uint256,uint256,uint256,uint256)
+          handler: handleAuctionOrderRedeemed
       file: ./src/mappings.ts
   - kind: ethereum
     name: unlockd

@@ -3,6 +3,7 @@ import {
     Borrow,
     Repay,
     Asset,
+    AddCollateral,
 } from '../../generated/schema';
 import {Address, BigInt, Bytes} from "@graphprotocol/graph-ts";
 import {UNLOCK_HELPER_ADDRESS,BIGINT_ZERO, UNLOCK_ACTION_ADDRESS, LoanStatus, ZERO_ADDRESS} from "../utils/constants";
@@ -63,6 +64,22 @@ export function getOrCreateRepay(
     }
 
     return repay as Repay;
+}
+
+export function getOrCreateAddCollateral(
+    id: String,
+    createIfNotFound: boolean = true,
+): AddCollateral {
+    // @ts-ignore: assign wrapper object to primitive
+    let addCollateral = AddCollateral.load(id);
+
+    if (addCollateral == null && createIfNotFound) {
+        // @ts-ignore: assign wrapper object to primitive{
+        addCollateral = new AddCollateral(id);
+        addCollateral.tokenId = BIGINT_ZERO;
+    }
+
+    return addCollateral as AddCollateral;
 }
 
 export function getOrCreateAsset(

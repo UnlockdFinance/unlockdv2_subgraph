@@ -57,7 +57,18 @@ type Borrow @entity {
   amount: BigInt!
   totalAssets: BigInt!
   token: Bytes! # address
-  asset: [Asset!]! @derivedFrom(field: "borrow")
+
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  transactionInput: Bytes!
+}
+
+type AddCollateral @entity {
+  id: ID! # assetId
+  loanId: Bytes! # address
+  collection: Bytes!
+  tokenId: BigInt!
 
   blockNumber: BigInt!
   blockTimestamp: BigInt!
@@ -70,8 +81,7 @@ type Asset @entity {
     collection: Bytes!
     tokenId: BigInt!
     isOnAuction: Boolean!
-    loan: Loan!
-    borrow: Borrow!
+    loan: Loan! 
 }
 
 type Repay @entity {
@@ -226,6 +236,21 @@ type Loan @entity(immutable: false) {
   assets: [Asset!]! @derivedFrom(field: "loan")
 }
 
+type AuctionOrderRedeemed @entity(immutable: false) {
+  id: ID! 
+  loanId: Bytes! # bytes32
+  orderId: Bytes! # bytes32
+  amountOfDebt: BigInt! 
+  amountToPay: BigInt! 
+  bonus: BigInt! 
+  countBids: BigInt! 
+
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  transactionInput: Bytes!
+}
+
 type AuctionBid @entity(immutable: false) {
   id: ID!
   loanId: Bytes! # bytes32
@@ -233,7 +258,6 @@ type AuctionBid @entity(immutable: false) {
   assetId: Bytes! # bytes32
   amountToPay: BigInt!
   amountOfDebt: BigInt!
-  amount: BigInt! # address
   user: Bytes!
   
   blockNumber: BigInt!

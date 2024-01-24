@@ -2,10 +2,26 @@ import { Bytes } from '@graphprotocol/graph-ts';
 import {
     AuctionBid,
     AuctionRedeem,
-    AuctionFinalize
+    AuctionFinalize,
+    AuctionOrderRedeemed,
 } from '../../generated/schema';
 import { Auction, Auction__getOrderAuctionResultValue0Struct } from '../../generated/auction/Auction';
 import { UNLOCK_AUCTION_ADDRESS } from '../utils/constants';
+
+export function getOrCreateAuctionOrderRedeemed(
+    id: String,
+    createIfNotFound: boolean = true,
+): AuctionOrderRedeemed {
+    // @ts-ignore: assign wrapper object to primitive
+    let orderRedeemed = AuctionOrderRedeemed.load(id);
+
+    if (orderRedeemed == null && createIfNotFound) {
+        // @ts-ignore: assign wrapper object to primitive
+        orderRedeemed = new AuctionOrderRedeemed(id);
+    }
+
+    return orderRedeemed as AuctionOrderRedeemed;
+}
 
 export function getOrCreateAuctionBid(
     id: String,

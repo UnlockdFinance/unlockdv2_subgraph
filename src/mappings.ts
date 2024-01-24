@@ -8,6 +8,7 @@ export {
 export {
     handleBorrow,
     handleRepay,
+    handleAddCollateral,
 } from './mappings/action';
 
 export {

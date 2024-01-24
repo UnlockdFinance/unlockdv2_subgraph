@@ -2,9 +2,10 @@ import {
     AuctionBid as AuctionBidEvent,
     AuctionRedeem as AuctionRedeemEvent,
     AuctionFinalize as AuctionFinalizeEvent,
+    AuctionOrderRedeemed as AuctionOrderRedeemedEvent,
   } from "../../generated/auction/Auction";
 import { getOrCreateAsset, getOrCreateLoan } from "../helpers/action";
-import { getOrCreateAuctionBid, getOrCreateAuctionFinalize, getOrCreateAuctionRedeem, getOrderAuction } from "../helpers/auction";
+import { getOrCreateAuctionBid, getOrCreateAuctionFinalize, getOrCreateAuctionOrderRedeemed, getOrCreateAuctionRedeem, getOrderAuction } from "../helpers/auction";
 import { getOrCreateBid, getOrCreateOrder } from "../helpers/market";
 import { getOrCreateOrderCreated } from "../helpers/orderLogic";
 import { getOrCreateTotalCount } from "../helpers/totalCount";
@@ -19,7 +20,6 @@ export function handleAuctionBid(event: AuctionBidEvent): void {
     auctionBid.assetId = event.params.assetId
     auctionBid.amountToPay = event.params.amountToPay
     auctionBid.amountOfDebt = event.params.amountOfDebt
-    auctionBid.amount = event.params.amount
     auctionBid.user = event.params.user
 
     auctionBid.blockNumber = event.block.number
@@ -53,7 +53,7 @@ export function handleAuctionBid(event: AuctionBidEvent): void {
     
     const bid = getOrCreateBid(event.transaction.hash.toHexString())
     bid.bidder = event.params.user
-    bid.bidAmount = event.params.amount
+    bid.bidAmount = event.params.amountToPay.plus(event.params.amountOfDebt)
     bid.order = order.id
     bid.amountToPay = event.params.amountToPay
     bid.amountOfDebt = event.params.amountOfDebt
@@ -79,12 +79,31 @@ export function handleAuctionRedeem(event: AuctionRedeemEvent): void {
   redeem.transactionHash = event.transaction.hash
   redeem.transactionInput = event.transaction.input
   redeem.save()
+}
 
-  // TODO: check if this is needed
-  //const order = getOrCreateOrder(event.params.orderId.toHexString())
-  //order.status = BigInt.fromI32(OrderStatus.REDEEMED)
-  //order.date = event.block.timestamp
-  //order.save()
+export function handleAuctionOrderRedeemed(event: AuctionOrderRedeemedEvent): void {
+  const orderRedeemed = getOrCreateAuctionOrderRedeemed(event.transaction.hash.toHexString())
+  orderRedeemed.loanId = event.params.loanId
+  orderRedeemed.orderId = event.params.orderId
+  orderRedeemed.amountOfDebt = event.params.amountOfDebt
+  orderRedeemed.amountToPay = event.params.amountToPay
+  orderRedeemed.bonus = event.params.bonus
+  orderRedeemed.countBids = event.params.countBids
+
+  orderRedeemed.blockNumber = event.block.number
+  orderRedeemed.blockTimestamp = event.block.timestamp
+  orderRedeemed.transactionHash = event.transaction.hash
+  orderRedeemed.transactionInput = event.transaction.input
+  orderRedeemed.save()
+
+  const order = getOrCreateOrder(event.params.orderId.toHexString())
+  order.status = BigInt.fromI32(OrderStatus.REDEEMED)
+  order.date = event.block.timestamp
+  order.save()
+
+  const asset = getOrCreateAsset(order.assetId.toHexString())
+  asset.isOnAuction = false
+  asset.save()
 }
 
 export function handleAuctionFinalize(event: AuctionFinalizeEvent): void {

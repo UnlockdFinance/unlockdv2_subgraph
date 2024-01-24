@@ -1,14 +1,16 @@
 import {
+    AddCollateral as AddCollateralEvent,
     Borrow as BorrowEvent,
     Repay as RepayEvent
 } from "../../generated/action/Action"
 import {getOrCreateAccount} from "../helpers/account"
 
-import {getAssetId, getOrCreateAsset, getOrCreateBorrow, getOrCreateLoan, getOrCreateRepay} from "../helpers/action"
-import {ethereum, store, BigInt, Bytes} from "@graphprotocol/graph-ts";
+import {getAssetId, getOrCreateAddCollateral, getOrCreateAsset, getOrCreateBorrow, getOrCreateLoan, getOrCreateRepay} from "../helpers/action"
+import {ethereum, store, BigInt, Bytes, ByteArray} from "@graphprotocol/graph-ts";
 import {getTxnInputDataToDecode} from "../utils/dataToDecode";
 import { LoanStatus } from "../utils/constants";
 import { getOrCreateTotalCount } from "../helpers/totalCount";
+import { AddCollateral } from "../../generated/schema";
 
 export function handleBorrow(event: BorrowEvent): void {
     const account = getOrCreateAccount(event.params.user.toHexString())
@@ -28,6 +30,8 @@ export function handleBorrow(event: BorrowEvent): void {
     borrow.transactionHash = event.transaction.hash
     borrow.transactionInput = event.transaction.input
 
+    borrow.save()
+    
     // LOAN
     loan.id = event.params.loanId.toHexString()
     loan.user = event.params.user.toHexString()
@@ -36,31 +40,9 @@ export function handleBorrow(event: BorrowEvent): void {
     loan.underlyingAsset = event.params.token
     
     if(event.params.totalAssets.gt(BigInt.fromI32(0))) {
-        loan.totalAssets = event.params.totalAssets
-    }
-    
-    // ASSETS
-    const decoded = ethereum.decode('(address,uint256)[]', event.params.assets);
-    const assets = decoded!.toTuple()[0].toArray()
-    const totalCount = getOrCreateTotalCount()
-    
-    for (let index = 0; index < assets.length; index++) {
-        const collection = assets[index].toTuple()[0].toAddress()
-        const tokenId = assets[index].toTuple()[1].toBigInt()
-        const id = getAssetId(collection, tokenId)
-        const asset = getOrCreateAsset(id.toHexString())
-        asset.collection = collection
-        asset.tokenId = tokenId
-        asset.loan = loan.id
-        asset.borrow = borrow.id
-
-        asset.save()
-        totalCount.totalCount = totalCount.totalCount.plus(BigInt.fromI32(1))
-        loan.totalAssets = loan.totalAssets.plus(BigInt.fromI32(1))
+        loan.totalAssets = loan.totalAssets.plus(event.params.totalAssets)
     }
 
-    totalCount.save()
-    borrow.save()
     loan.save()
 
     // ACCOUNT
@@ -72,6 +54,34 @@ export function handleBorrow(event: BorrowEvent): void {
     account.totalAssets = totalAssets
 
     account.save()
+}
+
+export function handleAddCollateral(event: AddCollateralEvent): void {
+    const assetId = event.params.assetId
+    const addCollateral = getOrCreateAddCollateral(event.transaction.hash.toHexString())
+
+    addCollateral.loanId = event.params.loanId
+    addCollateral.collection = event.params.collection
+    addCollateral.tokenId = event.params.tokenId
+
+    addCollateral.blockNumber = event.block.number
+    addCollateral.blockTimestamp = event.block.timestamp
+    addCollateral.transactionHash = event.transaction.hash
+    addCollateral.transactionInput = event.transaction.input
+
+    addCollateral.save()
+
+    const asset = getOrCreateAsset(assetId.toHexString())
+
+    asset.collection = event.params.collection
+    asset.tokenId = event.params.tokenId
+    asset.isOnAuction = false
+    asset.loan = event.params.loanId.toHexString()  
+    asset.save()
+
+    const totalCount = getOrCreateTotalCount()
+    totalCount.totalCount = totalCount.totalCount.plus(BigInt.fromI32(1))
+    totalCount.save()
 }
 
 export function handleRepay(event: RepayEvent): void {
