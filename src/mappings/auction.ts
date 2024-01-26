@@ -147,7 +147,7 @@ export function handleAuctionFinalize(event: AuctionFinalizeEvent): void {
     loan.totalAssets = loan.totalAssets.plus(BigInt.fromI32(1))
     loan.save()
   } else { 
-    store.remove('OrderCreated', event.transaction.hash.toHexString())
+    store.remove('LoanCreated', event.transaction.hash.toHexString())
   }
 
   const loan = getOrCreateLoan(event.params.loanId.toHexString())

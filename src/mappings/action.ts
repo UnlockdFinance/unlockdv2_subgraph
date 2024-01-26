@@ -38,21 +38,14 @@ export function handleBorrow(event: BorrowEvent): void {
     loan.status = BigInt.fromI32(LoanStatus.BORROWED)
     loan.amount = event.params.amount     
     loan.underlyingAsset = event.params.token
-    
-    if(event.params.totalAssets.gt(BigInt.fromI32(0))) {
-        loan.totalAssets = loan.totalAssets.plus(event.params.totalAssets)
-    }
-
+    loan.totalAssets = event.params.totalAssets
     loan.save()
 
     // ACCOUNT
     const borrowed = account.amountBorrowed.plus(event.params.amount)
-    const totalAssets = account.totalAssets.plus(loan.totalAssets)
-
     account.amountBorrowed = borrowed
     account.user = event.params.user
-    account.totalAssets = totalAssets
-
+    account.totalAssets = loan.totalAssets
     account.save()
 }
 

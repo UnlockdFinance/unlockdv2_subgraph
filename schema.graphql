@@ -307,6 +307,18 @@ type OrderCreated @entity(immutable: false) {
   transactionInput: Bytes!
 }
 
+type LoanCreated @entity(immutable: false) {
+  id: ID!
+  user: Bytes!
+  loanId: Bytes!
+  totalAssets: BigInt!
+
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  transactionInput: Bytes!
+}
+
 type SetLoanId @entity(immutable: false) {
   id: ID!
   index: Bytes!

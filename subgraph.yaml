@@ -7,7 +7,7 @@ dataSources:
     name: uTokenVault
     network: sepolia
     source:
-      address: "0xed0c72b10af9cd00919e240b02143d92bdc2a5cb"
+      address: "0x5f2e4afd4797b9dae86fedfd65010d0252061898"
       abi: uTokenVault
       startBlock: 5132406
     mapping:
@@ -36,7 +36,7 @@ dataSources:
     name: action
     network: sepolia
     source:
-      address: "0xd5c775369f8455b06ea5488b8400e0e2d597b8e5"
+      address: "0x2923146abb3abb4ec5a722b4ef231e93aa93ed39"
       abi: Action
       startBlock: 5132406 #4437551
     mapping:
@@ -67,7 +67,7 @@ dataSources:
     name: allowedControllers
     network: sepolia
     source:
-      address: "0x4c4af24cf362f31be300434770cbcc58f31db84d"
+      address: "0x35ef5ee0ab6f493e4cf9c669a6dd134efa55f80b"
       abi: AllowedControllers
       startBlock: 5132406 #4437551
     mapping:
@@ -87,7 +87,7 @@ dataSources:
     name: sellNow
     network: sepolia
     source:
-      address: "0xd5c775369f8455b06ea5488b8400e0e2d597b8e5"
+      address: "0x2923146abb3abb4ec5a722b4ef231e93aa93ed39"
       abi: SellNow
       startBlock: 5132406 #4437551
     mapping:
@@ -109,7 +109,7 @@ dataSources:
     name: market
     network: sepolia
     source:
-      address: "0xd5c775369f8455b06ea5488b8400e0e2d597b8e5"
+      address: "0x2923146abb3abb4ec5a722b4ef231e93aa93ed39"
       abi: Market
       startBlock: 5132406 #4437551
     mapping:
@@ -142,7 +142,7 @@ dataSources:
     name: auction
     network: sepolia
     source:
-      address: "0xd5c775369f8455b06ea5488b8400e0e2d597b8e5"
+      address: "0x2923146abb3abb4ec5a722b4ef231e93aa93ed39"
       abi: Auction
       startBlock: 5132406 #4437551
     mapping:
@@ -170,7 +170,7 @@ dataSources:
     name: unlockd
     network: sepolia
     source:
-      address: "0xd5c775369f8455b06ea5488b8400e0e2d597b8e5"
+      address: "0x2923146abb3abb4ec5a722b4ef231e93aa93ed39"
       abi: Unlockd
       startBlock: 5132406 #4437551
     mapping:
@@ -190,7 +190,7 @@ dataSources:
     name: orderLogic
     network: sepolia
     source:
-      address: "0xd5c775369f8455b06ea5488b8400e0e2d597b8e5"
+      address: "0x2923146abb3abb4ec5a722b4ef231e93aa93ed39"
       abi: OrderLogic
       startBlock: 5132406 #4437551
     mapping:
@@ -209,10 +209,32 @@ dataSources:
           handler: handleOrderCreated
       file: ./src/mappings.ts
   - kind: ethereum
+    name: LoanLogic
+    network: sepolia
+    source:
+      address: "0x2923146abb3abb4ec5a722b4ef231e93aa93ed39"
+      abi: LoanLogic
+      startBlock: 5132406 #4437551
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - LoanCreated
+      abis:
+        - name: LoanLogic
+          file: ./abis/LoanLogic.json
+        - name: Action
+          file: ./abis/Action.json
+      eventHandlers:
+        - event: LoanCreated(indexed address,indexed bytes32,uint256)
+          handler: handleLoanCreated
+      file: ./src/mappings.ts
+  - kind: ethereum
     name: ProtocolOwner
     network: sepolia
     source:
-      address: "0x28fb73f263b968fe41876484d0524756c3f25a90"
+      address: "0x45fa637fcecbc44566fdc9c3bddf11385e3cf79f"
       abi: ProtocolOwner
       startBlock: 5132406 #4437551
     mapping:

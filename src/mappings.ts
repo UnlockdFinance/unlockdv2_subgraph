@@ -45,6 +45,10 @@ export {
 } from './mappings/orderLogic';
 
 export {  
+    handleLoanCreated
+} from './mappings/loanLogic';
+
+export {  
     handleSetLoanId
 } from './mappings/protocolOwner';
 

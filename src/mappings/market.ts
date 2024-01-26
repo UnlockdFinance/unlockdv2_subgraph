@@ -8,12 +8,12 @@ import {
   } from "../../generated/market/Market";
 import { getOrCreateBid, getOrCreateMarketBid, getOrCreateMarketBuyNow, getOrCreateMarketClaim, getOrCreateMarketCreated, getOrCreateOrder, getOrder } from "../helpers/market";
 import { LoanStatus, OrderStatus, ZERO_ADDRESS } from "../utils/constants";
-import {BigInt, Bytes, ethereum, store, log} from "@graphprotocol/graph-ts";
-import { getTxnInputDataToDecode } from "../utils/dataToDecode";
+import {BigInt, Bytes, store} from "@graphprotocol/graph-ts";
 import { getOrCreateAsset, getOrCreateLoan } from "../helpers/action";
 import { getOrCreateOrderCreated } from "../helpers/orderLogic";
 import { getOrCreateSetLoanId } from "../helpers/protocolOwner";
 import { getOrCreateTotalCount } from "../helpers/totalCount";
+import { getOrCreateLoanCreated } from "../helpers/loanCreated";
   
 export function handleMarketCreated(event: MarketCreatedEvent): void {
   const marketCreated = getOrCreateMarketCreated(event.transaction.hash.toHexString())
@@ -191,7 +191,7 @@ export function handleMarketBuyNow(event: MarketBuyNowEvent): void {
   const asset = getOrCreateAsset(event.params.assetId.toHexString())
   store.remove('Asset', event.params.assetId.toHexString().toLowerCase())
 
-  const loanCreated = getOrCreateOrderCreated(event.transaction.hash.toHexString())
+  const loanCreated = getOrCreateLoanCreated(event.transaction.hash.toHexString())
   if(loanCreated.loanId != Bytes.fromHexString(ZERO_ADDRESS)) {
     const loan = getOrCreateLoan(loanCreated.loanId.toHexString())
     loan.status = BigInt.fromI32(LoanStatus.BORROWED)
@@ -206,7 +206,7 @@ export function handleMarketBuyNow(event: MarketBuyNowEvent): void {
     loan.totalAssets = loan.totalAssets.plus(BigInt.fromI32(1))
     loan.save()
   } else { 
-    store.remove('OrderCreated', event.transaction.hash.toHexString())
+    store.remove('LoanCreated', event.transaction.hash.toHexString())
   }
 
   const loan = getOrCreateLoan(event.params.loanId.toHexString())
