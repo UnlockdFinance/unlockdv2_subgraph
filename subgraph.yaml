@@ -7,7 +7,7 @@ dataSources:
     name: uTokenVault
     network: sepolia
     source:
-      address: "0x5f2e4afd4797b9dae86fedfd65010d0252061898"
+      address: "0x0e27a0aba612d0d3bb5e90327077628eeff4769a"
       abi: uTokenVault
       startBlock: 5132406
     mapping:
@@ -33,41 +33,10 @@ dataSources:
           handler: handleWithdraw
       file: ./src/mappings.ts
   - kind: ethereum
-    name: action
-    network: sepolia
-    source:
-      address: "0x2923146abb3abb4ec5a722b4ef231e93aa93ed39"
-      abi: Action
-      startBlock: 5132406 #4437551
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - Loan
-        - TotalCount
-        - Borrow
-        - Repay
-        - Asset
-        - AddCollateral
-      abis:
-        - name: Action
-          file: ./abis/Action.json
-        - name: UnlockdHelper
-          file: ./abis/UnlockdHelper.json
-      eventHandlers:
-        - event: Borrow(indexed address,indexed bytes32,uint256,uint256,address)
-          handler: handleBorrow
-        - event: Repay(indexed address,indexed bytes32,uint256,bytes32[])
-          handler: handleRepay
-        - event: AddCollateral(indexed bytes32,indexed address,indexed uint256,bytes32)
-          handler: handleAddCollateral
-      file: ./src/mappings.ts
-  - kind: ethereum
     name: allowedControllers
     network: sepolia
     source:
-      address: "0x35ef5ee0ab6f493e4cf9c669a6dd134efa55f80b"
+      address: "0xbd3f90bc76f9c437493fb02bfd44bd6ef9ecdb73"
       abi: AllowedControllers
       startBlock: 5132406 #4437551
     mapping:
@@ -84,157 +53,10 @@ dataSources:
           handler: handleCollection
       file: ./src/mappings.ts
   - kind: ethereum
-    name: sellNow
-    network: sepolia
-    source:
-      address: "0x2923146abb3abb4ec5a722b4ef231e93aa93ed39"
-      abi: SellNow
-      startBlock: 5132406 #4437551
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - Sold
-      abis:
-        - name: SellNow
-          file: ./abis/SellNow.json
-      eventHandlers:
-        - event: Sold(bytes32,bytes32,address,uint256,uint256)
-          handler: handleSold
-        - event: ForceSold(bytes32,bytes32,address,uint256,uint256)
-          handler: handleForceSold
-      file: ./src/mappings.ts
-  - kind: ethereum
-    name: market
-    network: sepolia
-    source:
-      address: "0x2923146abb3abb4ec5a722b4ef231e93aa93ed39"
-      abi: Market
-      startBlock: 5132406 #4437551
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - MarketCreated
-        - MarketBid
-        - MarketClaim
-        - MarketBuyNow
-        - Order
-        - Bid
-      abis:
-        - name: Market
-          file: ./abis/Market.json
-      eventHandlers:
-        - event: MarketCreated(indexed bytes32,indexed bytes32,indexed bytes32,address,uint256)
-          handler: handleMarketCreated
-        - event: MarketCancelAuction(indexed bytes32,indexed bytes32,address)
-          handler: handleMarketCancel
-        - event: MarketBid(indexed bytes32,indexed bytes32,indexed bytes32,uint256,uint256,uint256,address)
-          handler: handleMarketBid
-        - event: MarketClaim(indexed bytes32,indexed bytes32,indexed bytes32,uint256,address)
-          handler: handleMarketClaim
-        - event: MarketBuyNow(indexed bytes32,indexed bytes32,indexed bytes32,uint256,address)
-          handler: handleMarketBuyNow
-      file: ./src/mappings.ts
-  - kind: ethereum
-    name: auction
-    network: sepolia
-    source:
-      address: "0x2923146abb3abb4ec5a722b4ef231e93aa93ed39"
-      abi: Auction
-      startBlock: 5132406 #4437551
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - AuctionBid
-        - AuctionRedeem
-        - AuctionFinalize
-      abis:
-        - name: Auction
-          file: ./abis/Auction.json
-      eventHandlers:
-        - event:  AuctionBid(indexed bytes32,indexed bytes32,indexed bytes32,uint256,uint256,address)
-          handler: handleAuctionBid
-        - event: AuctionRedeem(indexed bytes32,indexed uint256,indexed address)
-          handler: handleAuctionRedeem
-        - event: AuctionFinalize(indexed bytes32,indexed bytes32,indexed bytes32,uint256,uint256,address,address)
-          handler: handleAuctionFinalize
-        - event: AuctionOrderRedeemed(indexed bytes32,indexed bytes32,uint256,uint256,uint256,uint256)
-          handler: handleAuctionOrderRedeemed
-      file: ./src/mappings.ts
-  - kind: ethereum
-    name: unlockd
-    network: sepolia
-    source:
-      address: "0x2923146abb3abb4ec5a722b4ef231e93aa93ed39"
-      abi: Unlockd
-      startBlock: 5132406 #4437551
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - ProxyCreated
-      abis:
-        - name: Unlockd
-          file: ./abis/Unlockd.json
-      eventHandlers:
-        - event: ProxyCreated(indexed address,uint256)
-          handler: handleProxyCreated
-      file: ./src/mappings.ts
-  - kind: ethereum
-    name: orderLogic
-    network: sepolia
-    source:
-      address: "0x2923146abb3abb4ec5a722b4ef231e93aa93ed39"
-      abi: OrderLogic
-      startBlock: 5132406 #4437551
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - OrderCreated
-      abis:
-        - name: OrderLogic
-          file: ./abis/OrderLogic.json
-        - name: Action
-          file: ./abis/Action.json
-      eventHandlers:
-        - event: OrderCreated(indexed address,indexed bytes32,indexed bytes32,uint8)
-          handler: handleOrderCreated
-      file: ./src/mappings.ts
-  - kind: ethereum
-    name: LoanLogic
-    network: sepolia
-    source:
-      address: "0x2923146abb3abb4ec5a722b4ef231e93aa93ed39"
-      abi: LoanLogic
-      startBlock: 5132406 #4437551
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - LoanCreated
-      abis:
-        - name: LoanLogic
-          file: ./abis/LoanLogic.json
-        - name: Action
-          file: ./abis/Action.json
-      eventHandlers:
-        - event: LoanCreated(indexed address,indexed bytes32,uint256)
-          handler: handleLoanCreated
-      file: ./src/mappings.ts
-  - kind: ethereum
     name: ProtocolOwner
     network: sepolia
     source:
-      address: "0x45fa637fcecbc44566fdc9c3bddf11385e3cf79f"
+      address: "0x12d08b92d7c7806da7222c52bb0eba9dbfde3a47"
       abi: ProtocolOwner
       startBlock: 5132406 #4437551
     mapping:
@@ -277,3 +99,182 @@ dataSources:
         - event: Assign(indexed address,uint256)
           handler: handleAssign
       file: ./src/mappings.ts
+  - kind: ethereum
+    name: action
+    network: sepolia
+    source:
+      address: "0xc4b665f019bdf18a8a558f1a7254bb7142453c2b"
+      abi: Action
+      startBlock: 5132406 #4437551
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Loan
+        - TotalCount
+        - Borrow
+        - Repay
+        - Asset
+        - AddCollateral
+      abis:
+        - name: Action
+          file: ./abis/Action.json
+        - name: UnlockdHelper
+          file: ./abis/UnlockdHelper.json
+      eventHandlers:
+        - event: Borrow(indexed address,indexed bytes32,uint256,uint256,address)
+          handler: handleBorrow
+        - event: Repay(indexed address,indexed bytes32,uint256,bytes32[])
+          handler: handleRepay
+        - event: AddCollateral(indexed bytes32,indexed address,indexed uint256,bytes32)
+          handler: handleAddCollateral
+      file: ./src/mappings.ts
+  - kind: ethereum
+    name: sellNow
+    network: sepolia
+    source:
+      address: "0xc4b665f019bdf18a8a558f1a7254bb7142453c2b"
+      abi: SellNow
+      startBlock: 5132406 #4437551
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Sold
+      abis:
+        - name: SellNow
+          file: ./abis/SellNow.json
+      eventHandlers:
+        - event: Sold(bytes32,bytes32,address,uint256,uint256)
+          handler: handleSold
+        - event: ForceSold(bytes32,bytes32,address,uint256,uint256)
+          handler: handleForceSold
+      file: ./src/mappings.ts
+  - kind: ethereum
+    name: market
+    network: sepolia
+    source:
+      address: "0xc4b665f019bdf18a8a558f1a7254bb7142453c2b"
+      abi: Market
+      startBlock: 5132406 #4437551
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - MarketCreated
+        - MarketBid
+        - MarketClaim
+        - MarketBuyNow
+        - Order
+        - Bid
+      abis:
+        - name: Market
+          file: ./abis/Market.json
+      eventHandlers:
+        - event: MarketCreated(indexed bytes32,indexed bytes32,indexed bytes32,address,uint256)
+          handler: handleMarketCreated
+        - event: MarketCancelAuction(indexed bytes32,indexed bytes32,address)
+          handler: handleMarketCancel
+        - event: MarketBid(indexed bytes32,indexed bytes32,indexed bytes32,uint256,uint256,uint256,address)
+          handler: handleMarketBid
+        - event: MarketClaim(indexed bytes32,indexed bytes32,indexed bytes32,uint256,address)
+          handler: handleMarketClaim
+        - event: MarketBuyNow(indexed bytes32,indexed bytes32,indexed bytes32,uint256,address)
+          handler: handleMarketBuyNow
+      file: ./src/mappings.ts
+  - kind: ethereum
+    name: auction
+    network: sepolia
+    source:
+      address: "0xc4b665f019bdf18a8a558f1a7254bb7142453c2b"
+      abi: Auction
+      startBlock: 5132406 #4437551
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - AuctionBid
+        - AuctionRedeem
+        - AuctionFinalize
+      abis:
+        - name: Auction
+          file: ./abis/Auction.json
+      eventHandlers:
+        - event:  AuctionBid(indexed bytes32,indexed bytes32,indexed bytes32,uint256,uint256,address)
+          handler: handleAuctionBid
+        - event: AuctionRedeem(indexed bytes32,indexed uint256,indexed address)
+          handler: handleAuctionRedeem
+        - event: AuctionFinalize(indexed bytes32,indexed bytes32,indexed bytes32,uint256,uint256,address,address)
+          handler: handleAuctionFinalize
+        - event: AuctionOrderRedeemed(indexed bytes32,indexed bytes32,uint256,uint256,uint256,uint256)
+          handler: handleAuctionOrderRedeemed
+      file: ./src/mappings.ts
+  - kind: ethereum
+    name: unlockd
+    network: sepolia
+    source:
+      address: "0xc4b665f019bdf18a8a558f1a7254bb7142453c2b"
+      abi: Unlockd
+      startBlock: 5132406 #4437551
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - ProxyCreated
+      abis:
+        - name: Unlockd
+          file: ./abis/Unlockd.json
+      eventHandlers:
+        - event: ProxyCreated(indexed address,uint256)
+          handler: handleProxyCreated
+      file: ./src/mappings.ts
+  - kind: ethereum
+    name: orderLogic
+    network: sepolia
+    source:
+      address: "0xc4b665f019bdf18a8a558f1a7254bb7142453c2b"
+      abi: OrderLogic
+      startBlock: 5132406 #4437551
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - OrderCreated
+      abis:
+        - name: OrderLogic
+          file: ./abis/OrderLogic.json
+        - name: Action
+          file: ./abis/Action.json
+      eventHandlers:
+        - event: OrderCreated(indexed address,indexed bytes32,indexed bytes32,uint8)
+          handler: handleOrderCreated
+      file: ./src/mappings.ts
+  - kind: ethereum
+    name: LoanLogic
+    network: sepolia
+    source:
+      address: "0xc4b665f019bdf18a8a558f1a7254bb7142453c2b"
+      abi: LoanLogic
+      startBlock: 5132406 #4437551
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - LoanCreated
+      abis:
+        - name: LoanLogic
+          file: ./abis/LoanLogic.json
+        - name: Action
+          file: ./abis/Action.json
+      eventHandlers:
+        - event: LoanCreated(indexed address,indexed bytes32,uint256)
+          handler: handleLoanCreated
+      file: ./src/mappings.ts
+  
