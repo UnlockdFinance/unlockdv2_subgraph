@@ -14,6 +14,7 @@ import { getOrCreateOrderCreated } from "../helpers/orderLogic";
 import { getOrCreateSetLoanId } from "../helpers/protocolOwner";
 import { getOrCreateTotalCount } from "../helpers/totalCount";
 import { getOrCreateLoanCreated } from "../helpers/loanCreated";
+import { getOrCreateAccount } from "../helpers/account";
   
 export function handleMarketCreated(event: MarketCreatedEvent): void {
   const marketCreated = getOrCreateMarketCreated(event.transaction.hash.toHexString())
@@ -97,13 +98,16 @@ export function handleMarketBid(event: MarketBidEvent): void {
   bid.save()
 
   //status from 0 to 1
-  const loanCreated = getOrCreateOrderCreated(event.transaction.hash.toHexString())
-  if(loanCreated.loanId != Bytes.fromHexString(ZERO_ADDRESS)) {
-    const loan = getOrCreateLoan(loanCreated.loanId.toHexString())
+  if(event.params.amountOfDebt.gt(BigInt.fromI32(0))) {
+    const loan = getOrCreateLoan(event.params.loanId.toHexString())
     loan.status = BigInt.fromI32(LoanStatus.PENDING)
     loan.user = event.params.user.toHexString()
     loan.amount = event.params.amountOfDebt
     loan.save()
+
+    const account = getOrCreateAccount(event.params.user.toHexString())
+    account.amountBorrowed = account.amountBorrowed.plus(event.params.amountOfDebt)
+    account.save()
   }
 }
 
@@ -146,11 +150,8 @@ export function handleMarketClaim(event: MarketClaimEvent): void {
     const totalCount = getOrCreateTotalCount()
     totalCount.totalCount = totalCount.totalCount.plus(BigInt.fromI32(1))
     totalCount.save()
-
-    loan.totalAssets = loan.totalAssets.plus(BigInt.fromI32(1))
-    loan.save()
   } else { 
-    store.remove('OrderCreated', event.transaction.hash.toHexString())
+    store.remove('LoanCreated', event.transaction.hash.toHexString())
   }
 
   const loan = getOrCreateLoan(event.params.loanId.toHexString())
