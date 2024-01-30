@@ -9,7 +9,7 @@ dataSources:
     source:
       address: "0x0e27a0aba612d0d3bb5e90327077628eeff4769a"
       abi: uTokenVault
-      startBlock: 5132406
+      startBlock: 5184787
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -38,7 +38,7 @@ dataSources:
     source:
       address: "0xbd3f90bc76f9c437493fb02bfd44bd6ef9ecdb73"
       abi: AllowedControllers
-      startBlock: 5132406 #4437551
+      startBlock: 5184787 #4437551
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -53,32 +53,12 @@ dataSources:
           handler: handleCollection
       file: ./src/mappings.ts
   - kind: ethereum
-    name: ProtocolOwner
-    network: sepolia
-    source:
-      address: "0x4de61fc720c32740531ace588881e94011dbd0c5"
-      abi: ProtocolOwner
-      startBlock: 5132406 #4437551
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - SetLoanId
-      abis:
-        - name: ProtocolOwner
-          file: ./abis/ProtocolOwner.json
-      eventHandlers:
-        - event: SetLoanId(bytes32,bytes32)
-          handler: handleSetLoanId
-      file: ./src/mappings.ts
-  - kind: ethereum
     name: CryptoPunks
     network: sepolia
     source:
       address: "0x987EfDB241fE66275b3594481696f039a82a799e"
       abi: CryptoPunks
-      startBlock: 5132406 #4437551
+      startBlock: 5184787 #4437551
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -105,7 +85,7 @@ dataSources:
     source:
       address: "0xc4b665f019bdf18a8a558f1a7254bb7142453c2b"
       abi: Action
-      startBlock: 5132406 #4437551
+      startBlock: 5184787 #4437551
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -125,7 +105,7 @@ dataSources:
       eventHandlers:
         - event: Borrow(indexed address,indexed bytes32,uint256,uint256,address)
           handler: handleBorrow
-        - event: Repay(indexed address,indexed bytes32,uint256,bytes32[])
+        - event: Repay(indexed address,indexed bytes32,uint256,bytes32[],uint256) 
           handler: handleRepay
         - event: AddCollateral(indexed bytes32,indexed address,indexed uint256,bytes32)
           handler: handleAddCollateral
@@ -136,7 +116,7 @@ dataSources:
     source:
       address: "0xc4b665f019bdf18a8a558f1a7254bb7142453c2b"
       abi: SellNow
-      startBlock: 5132406 #4437551
+      startBlock: 5184787 #4437551
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -158,7 +138,7 @@ dataSources:
     source:
       address: "0xc4b665f019bdf18a8a558f1a7254bb7142453c2b"
       abi: Market
-      startBlock: 5132406 #4437551
+      startBlock: 5184787 #4437551
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -170,6 +150,7 @@ dataSources:
         - MarketBuyNow
         - Order
         - Bid
+        - Buyer
       abis:
         - name: Market
           file: ./abis/Market.json
@@ -180,7 +161,7 @@ dataSources:
           handler: handleMarketCancel
         - event: MarketBid(indexed bytes32,indexed bytes32,indexed bytes32,uint256,uint256,uint256,address)
           handler: handleMarketBid
-        - event: MarketClaim(indexed bytes32,indexed bytes32,indexed bytes32,uint256,address)
+        - event: MarketClaim(indexed bytes32,indexed bytes32,indexed bytes32,uint256,address,address,address)
           handler: handleMarketClaim
         - event: MarketBuyNow(indexed bytes32,indexed bytes32,indexed bytes32,uint256,address)
           handler: handleMarketBuyNow
@@ -191,7 +172,7 @@ dataSources:
     source:
       address: "0xc4b665f019bdf18a8a558f1a7254bb7142453c2b"
       abi: Auction
-      startBlock: 5132406 #4437551
+      startBlock: 5184787 #4437551
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -200,6 +181,7 @@ dataSources:
         - AuctionBid
         - AuctionRedeem
         - AuctionFinalize
+        - AuctionOrderRedeemed
       abis:
         - name: Auction
           file: ./abis/Auction.json
@@ -219,7 +201,7 @@ dataSources:
     source:
       address: "0xc4b665f019bdf18a8a558f1a7254bb7142453c2b"
       abi: Unlockd
-      startBlock: 5132406 #4437551
+      startBlock: 5184787 #4437551
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -239,7 +221,7 @@ dataSources:
     source:
       address: "0xc4b665f019bdf18a8a558f1a7254bb7142453c2b"
       abi: OrderLogic
-      startBlock: 5132406 #4437551
+      startBlock: 5184787 #4437551
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -261,7 +243,7 @@ dataSources:
     source:
       address: "0xc4b665f019bdf18a8a558f1a7254bb7142453c2b"
       abi: LoanLogic
-      startBlock: 5132406 #4437551
+      startBlock: 5184787 #4437551
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

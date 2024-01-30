@@ -1,5 +1,5 @@
 import { 
-    Account
+    Account,
   } from '../../generated/schema';
 import { BIGINT_ZERO } from '../utils/constants';
   
@@ -20,4 +20,3 @@ export function getOrCreateAccount(
   
   return account as Account;
 }
-

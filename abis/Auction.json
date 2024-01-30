@@ -1,1099 +1,1099 @@
 [
   {
-    "type": "constructor",
     "inputs": [
       {
+        "internalType": "uint256",
         "name": "moduleId_",
-        "type": "uint256",
-        "internalType": "uint256"
+        "type": "uint256"
       },
       {
+        "internalType": "bytes32",
         "name": "moduleVersion_",
-        "type": "bytes32",
-        "internalType": "bytes32"
+        "type": "bytes32"
       }
     ],
-    "stateMutability": "nonpayable"
+    "stateMutability": "nonpayable",
+    "type": "constructor"
   },
   {
-    "type": "function",
-    "name": "DOMAIN_SEPARATOR",
     "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "bid",
-    "inputs": [
-      {
-        "name": "amountToPay",
-        "type": "uint128",
-        "internalType": "uint128"
-      },
-      {
-        "name": "amountOfDebt",
-        "type": "uint128",
-        "internalType": "uint128"
-      },
-      {
-        "name": "signAuction",
-        "type": "tuple",
-        "internalType": "struct DataTypes.SignAuction",
-        "components": [
-          {
-            "name": "loan",
-            "type": "tuple",
-            "internalType": "struct DataTypes.SignLoanConfig",
-            "components": [
-              {
-                "name": "loanId",
-                "type": "bytes32",
-                "internalType": "bytes32"
-              },
-              {
-                "name": "aggLoanPrice",
-                "type": "uint256",
-                "internalType": "uint256"
-              },
-              {
-                "name": "aggLtv",
-                "type": "uint256",
-                "internalType": "uint256"
-              },
-              {
-                "name": "aggLiquidationThreshold",
-                "type": "uint256",
-                "internalType": "uint256"
-              },
-              {
-                "name": "totalAssets",
-                "type": "uint88",
-                "internalType": "uint88"
-              },
-              {
-                "name": "nonce",
-                "type": "uint256",
-                "internalType": "uint256"
-              },
-              {
-                "name": "deadline",
-                "type": "uint256",
-                "internalType": "uint256"
-              }
-            ]
-          },
-          {
-            "name": "assets",
-            "type": "bytes32[]",
-            "internalType": "bytes32[]"
-          },
-          {
-            "name": "assetPrice",
-            "type": "uint256",
-            "internalType": "uint256"
-          },
-          {
-            "name": "assetLtv",
-            "type": "uint256",
-            "internalType": "uint256"
-          },
-          {
-            "name": "endTime",
-            "type": "uint40",
-            "internalType": "uint40"
-          },
-          {
-            "name": "nonce",
-            "type": "uint256",
-            "internalType": "uint256"
-          },
-          {
-            "name": "deadline",
-            "type": "uint256",
-            "internalType": "uint256"
-          }
-        ]
-      },
-      {
-        "name": "sig",
-        "type": "tuple",
-        "internalType": "struct DataTypes.EIP712Signature",
-        "components": [
-          {
-            "name": "v",
-            "type": "uint8",
-            "internalType": "uint8"
-          },
-          {
-            "name": "r",
-            "type": "bytes32",
-            "internalType": "bytes32"
-          },
-          {
-            "name": "s",
-            "type": "bytes32",
-            "internalType": "bytes32"
-          },
-          {
-            "name": "deadline",
-            "type": "uint256",
-            "internalType": "uint256"
-          }
-        ]
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "calculateDigest",
-    "inputs": [
-      {
-        "name": "nonce",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "signAuction",
-        "type": "tuple",
-        "internalType": "struct DataTypes.SignAuction",
-        "components": [
-          {
-            "name": "loan",
-            "type": "tuple",
-            "internalType": "struct DataTypes.SignLoanConfig",
-            "components": [
-              {
-                "name": "loanId",
-                "type": "bytes32",
-                "internalType": "bytes32"
-              },
-              {
-                "name": "aggLoanPrice",
-                "type": "uint256",
-                "internalType": "uint256"
-              },
-              {
-                "name": "aggLtv",
-                "type": "uint256",
-                "internalType": "uint256"
-              },
-              {
-                "name": "aggLiquidationThreshold",
-                "type": "uint256",
-                "internalType": "uint256"
-              },
-              {
-                "name": "totalAssets",
-                "type": "uint88",
-                "internalType": "uint88"
-              },
-              {
-                "name": "nonce",
-                "type": "uint256",
-                "internalType": "uint256"
-              },
-              {
-                "name": "deadline",
-                "type": "uint256",
-                "internalType": "uint256"
-              }
-            ]
-          },
-          {
-            "name": "assets",
-            "type": "bytes32[]",
-            "internalType": "bytes32[]"
-          },
-          {
-            "name": "assetPrice",
-            "type": "uint256",
-            "internalType": "uint256"
-          },
-          {
-            "name": "assetLtv",
-            "type": "uint256",
-            "internalType": "uint256"
-          },
-          {
-            "name": "endTime",
-            "type": "uint40",
-            "internalType": "uint40"
-          },
-          {
-            "name": "nonce",
-            "type": "uint256",
-            "internalType": "uint256"
-          },
-          {
-            "name": "deadline",
-            "type": "uint256",
-            "internalType": "uint256"
-          }
-        ]
-      }
-    ],
-    "outputs": [
-      {
-        "name": "digest",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "finalize",
-    "inputs": [
-      {
-        "name": "claimOnUWallet",
-        "type": "bool",
-        "internalType": "bool"
-      },
-      {
-        "name": "orderId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "asset",
-        "type": "tuple",
-        "internalType": "struct DataTypes.Asset",
-        "components": [
-          {
-            "name": "collection",
-            "type": "address",
-            "internalType": "address"
-          },
-          {
-            "name": "tokenId",
-            "type": "uint256",
-            "internalType": "uint256"
-          }
-        ]
-      },
-      {
-        "name": "signAuction",
-        "type": "tuple",
-        "internalType": "struct DataTypes.SignAuction",
-        "components": [
-          {
-            "name": "loan",
-            "type": "tuple",
-            "internalType": "struct DataTypes.SignLoanConfig",
-            "components": [
-              {
-                "name": "loanId",
-                "type": "bytes32",
-                "internalType": "bytes32"
-              },
-              {
-                "name": "aggLoanPrice",
-                "type": "uint256",
-                "internalType": "uint256"
-              },
-              {
-                "name": "aggLtv",
-                "type": "uint256",
-                "internalType": "uint256"
-              },
-              {
-                "name": "aggLiquidationThreshold",
-                "type": "uint256",
-                "internalType": "uint256"
-              },
-              {
-                "name": "totalAssets",
-                "type": "uint88",
-                "internalType": "uint88"
-              },
-              {
-                "name": "nonce",
-                "type": "uint256",
-                "internalType": "uint256"
-              },
-              {
-                "name": "deadline",
-                "type": "uint256",
-                "internalType": "uint256"
-              }
-            ]
-          },
-          {
-            "name": "assets",
-            "type": "bytes32[]",
-            "internalType": "bytes32[]"
-          },
-          {
-            "name": "assetPrice",
-            "type": "uint256",
-            "internalType": "uint256"
-          },
-          {
-            "name": "assetLtv",
-            "type": "uint256",
-            "internalType": "uint256"
-          },
-          {
-            "name": "endTime",
-            "type": "uint40",
-            "internalType": "uint40"
-          },
-          {
-            "name": "nonce",
-            "type": "uint256",
-            "internalType": "uint256"
-          },
-          {
-            "name": "deadline",
-            "type": "uint256",
-            "internalType": "uint256"
-          }
-        ]
-      },
-      {
-        "name": "sig",
-        "type": "tuple",
-        "internalType": "struct DataTypes.EIP712Signature",
-        "components": [
-          {
-            "name": "v",
-            "type": "uint8",
-            "internalType": "uint8"
-          },
-          {
-            "name": "r",
-            "type": "bytes32",
-            "internalType": "bytes32"
-          },
-          {
-            "name": "s",
-            "type": "bytes32",
-            "internalType": "bytes32"
-          },
-          {
-            "name": "deadline",
-            "type": "uint256",
-            "internalType": "uint256"
-          }
-        ]
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "getAmountToReedem",
-    "inputs": [
-      {
-        "name": "loanId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "assets",
-        "type": "bytes32[]",
-        "internalType": "bytes32[]"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "getMinBidPriceAuction",
-    "inputs": [
-      {
-        "name": "loanId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "assetId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "assetPrice",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "aggLoanPrice",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "aggLtv",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "minBid",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "getNonce",
-    "inputs": [
-      {
-        "name": "sender",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "getOrderAuction",
-    "inputs": [
-      {
-        "name": "orderId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "tuple",
-        "internalType": "struct DataTypes.Order",
-        "components": [
-          {
-            "name": "orderId",
-            "type": "bytes32",
-            "internalType": "bytes32"
-          },
-          {
-            "name": "owner",
-            "type": "address",
-            "internalType": "address"
-          },
-          {
-            "name": "orderType",
-            "type": "uint8",
-            "internalType": "enum Constants.OrderType"
-          },
-          {
-            "name": "countBids",
-            "type": "uint88",
-            "internalType": "uint88"
-          },
-          {
-            "name": "bidderDebtPayed",
-            "type": "uint256",
-            "internalType": "uint256"
-          },
-          {
-            "name": "bidderBonus",
-            "type": "uint256",
-            "internalType": "uint256"
-          },
-          {
-            "name": "offer",
-            "type": "tuple",
-            "internalType": "struct DataTypes.OfferItem",
-            "components": [
-              {
-                "name": "loanId",
-                "type": "bytes32",
-                "internalType": "bytes32"
-              },
-              {
-                "name": "assetId",
-                "type": "bytes32",
-                "internalType": "bytes32"
-              },
-              {
-                "name": "startAmount",
-                "type": "uint128",
-                "internalType": "uint128"
-              },
-              {
-                "name": "endAmount",
-                "type": "uint128",
-                "internalType": "uint128"
-              },
-              {
-                "name": "debtToSell",
-                "type": "uint128",
-                "internalType": "uint128"
-              }
-            ]
-          },
-          {
-            "name": "timeframe",
-            "type": "tuple",
-            "internalType": "struct DataTypes.Timeframe",
-            "components": [
-              {
-                "name": "startTime",
-                "type": "uint40",
-                "internalType": "uint40"
-              },
-              {
-                "name": "endTime",
-                "type": "uint40",
-                "internalType": "uint40"
-              }
-            ]
-          },
-          {
-            "name": "bid",
-            "type": "tuple",
-            "internalType": "struct DataTypes.Bid",
-            "components": [
-              {
-                "name": "loanId",
-                "type": "bytes32",
-                "internalType": "bytes32"
-              },
-              {
-                "name": "buyer",
-                "type": "address",
-                "internalType": "address"
-              },
-              {
-                "name": "amountToPay",
-                "type": "uint128",
-                "internalType": "uint128"
-              },
-              {
-                "name": "amountOfDebt",
-                "type": "uint128",
-                "internalType": "uint128"
-              }
-            ]
-          }
-        ]
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "moduleId",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "moduleVersion",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "redeem",
-    "inputs": [
-      {
-        "name": "amount",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "assets",
-        "type": "bytes32[]",
-        "internalType": "bytes32[]"
-      },
-      {
-        "name": "signAuction",
-        "type": "tuple",
-        "internalType": "struct DataTypes.SignAuction",
-        "components": [
-          {
-            "name": "loan",
-            "type": "tuple",
-            "internalType": "struct DataTypes.SignLoanConfig",
-            "components": [
-              {
-                "name": "loanId",
-                "type": "bytes32",
-                "internalType": "bytes32"
-              },
-              {
-                "name": "aggLoanPrice",
-                "type": "uint256",
-                "internalType": "uint256"
-              },
-              {
-                "name": "aggLtv",
-                "type": "uint256",
-                "internalType": "uint256"
-              },
-              {
-                "name": "aggLiquidationThreshold",
-                "type": "uint256",
-                "internalType": "uint256"
-              },
-              {
-                "name": "totalAssets",
-                "type": "uint88",
-                "internalType": "uint88"
-              },
-              {
-                "name": "nonce",
-                "type": "uint256",
-                "internalType": "uint256"
-              },
-              {
-                "name": "deadline",
-                "type": "uint256",
-                "internalType": "uint256"
-              }
-            ]
-          },
-          {
-            "name": "assets",
-            "type": "bytes32[]",
-            "internalType": "bytes32[]"
-          },
-          {
-            "name": "assetPrice",
-            "type": "uint256",
-            "internalType": "uint256"
-          },
-          {
-            "name": "assetLtv",
-            "type": "uint256",
-            "internalType": "uint256"
-          },
-          {
-            "name": "endTime",
-            "type": "uint40",
-            "internalType": "uint40"
-          },
-          {
-            "name": "nonce",
-            "type": "uint256",
-            "internalType": "uint256"
-          },
-          {
-            "name": "deadline",
-            "type": "uint256",
-            "internalType": "uint256"
-          }
-        ]
-      },
-      {
-        "name": "sig",
-        "type": "tuple",
-        "internalType": "struct DataTypes.EIP712Signature",
-        "components": [
-          {
-            "name": "v",
-            "type": "uint8",
-            "internalType": "uint8"
-          },
-          {
-            "name": "r",
-            "type": "bytes32",
-            "internalType": "bytes32"
-          },
-          {
-            "name": "s",
-            "type": "bytes32",
-            "internalType": "bytes32"
-          },
-          {
-            "name": "deadline",
-            "type": "uint256",
-            "internalType": "uint256"
-          }
-        ]
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "event",
-    "name": "AuctionBid",
-    "inputs": [
-      {
-        "name": "loanId",
-        "type": "bytes32",
-        "indexed": true,
-        "internalType": "bytes32"
-      },
-      {
-        "name": "orderId",
-        "type": "bytes32",
-        "indexed": true,
-        "internalType": "bytes32"
-      },
-      {
-        "name": "assetId",
-        "type": "bytes32",
-        "indexed": true,
-        "internalType": "bytes32"
-      },
-      {
-        "name": "amountToPay",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      },
-      {
-        "name": "amountOfDebt",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      },
-      {
-        "name": "user",
-        "type": "address",
-        "indexed": false,
-        "internalType": "address"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "event",
-    "name": "AuctionFinalize",
-    "inputs": [
-      {
-        "name": "loanId",
-        "type": "bytes32",
-        "indexed": true,
-        "internalType": "bytes32"
-      },
-      {
-        "name": "orderId",
-        "type": "bytes32",
-        "indexed": true,
-        "internalType": "bytes32"
-      },
-      {
-        "name": "assetId",
-        "type": "bytes32",
-        "indexed": true,
-        "internalType": "bytes32"
-      },
-      {
-        "name": "debtAmount",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      },
-      {
-        "name": "amount",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      },
-      {
-        "name": "winner",
-        "type": "address",
-        "indexed": false,
-        "internalType": "address"
-      },
-      {
-        "name": "owner",
-        "type": "address",
-        "indexed": false,
-        "internalType": "address"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "event",
-    "name": "AuctionOrderRedeemed",
-    "inputs": [
-      {
-        "name": "loanId",
-        "type": "bytes32",
-        "indexed": true,
-        "internalType": "bytes32"
-      },
-      {
-        "name": "orderId",
-        "type": "bytes32",
-        "indexed": true,
-        "internalType": "bytes32"
-      },
-      {
-        "name": "amountOfDebt",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      },
-      {
-        "name": "amountToPay",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      },
-      {
-        "name": "bonus",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      },
-      {
-        "name": "countBids",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "event",
-    "name": "AuctionRedeem",
-    "inputs": [
-      {
-        "name": "loanId",
-        "type": "bytes32",
-        "indexed": true,
-        "internalType": "bytes32"
-      },
-      {
-        "name": "amount",
-        "type": "uint256",
-        "indexed": true,
-        "internalType": "uint256"
-      },
-      {
-        "name": "user",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "event",
-    "name": "Genesis",
-    "inputs": [],
-    "anonymous": false
-  },
-  {
-    "type": "event",
-    "name": "InstallerInstallModule",
-    "inputs": [
-      {
-        "name": "moduleId",
-        "type": "uint256",
-        "indexed": true,
-        "internalType": "uint256"
-      },
-      {
-        "name": "moduleImpl",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
-      },
-      {
-        "name": "moduleVersion",
-        "type": "bytes32",
-        "indexed": false,
-        "internalType": "bytes32"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "event",
-    "name": "ProxyCreated",
-    "inputs": [
-      {
-        "name": "proxy",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
-      },
-      {
-        "name": "moduleId",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "event",
-    "name": "Repay",
-    "inputs": [
-      {
-        "name": "user",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
-      },
-      {
-        "name": "loanId",
-        "type": "bytes32",
-        "indexed": true,
-        "internalType": "bytes32"
-      },
-      {
-        "name": "amount",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      },
-      {
-        "name": "debt",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "error",
     "name": "AmountExceedsDebt",
-    "inputs": []
+    "type": "error"
   },
   {
-    "type": "error",
+    "inputs": [],
     "name": "AssetsMismatch",
-    "inputs": []
+    "type": "error"
   },
   {
-    "type": "error",
+    "inputs": [],
     "name": "HealtyLoan",
-    "inputs": []
+    "type": "error"
   },
   {
-    "type": "error",
+    "inputs": [],
     "name": "InvalidAmount",
-    "inputs": []
+    "type": "error"
   },
   {
-    "type": "error",
+    "inputs": [],
     "name": "InvalidAssets",
-    "inputs": []
+    "type": "error"
   },
   {
-    "type": "error",
+    "inputs": [],
     "name": "InvalidBidAmount",
-    "inputs": []
+    "type": "error"
   },
   {
-    "type": "error",
+    "inputs": [],
     "name": "InvalidCurrentLiquidationThreshold",
-    "inputs": []
+    "type": "error"
   },
   {
-    "type": "error",
+    "inputs": [],
     "name": "InvalidCurrentLtv",
-    "inputs": []
+    "type": "error"
   },
   {
-    "type": "error",
+    "inputs": [],
     "name": "InvalidLoanId",
-    "inputs": []
+    "type": "error"
   },
   {
-    "type": "error",
+    "inputs": [],
     "name": "InvalidOrderOwner",
-    "inputs": []
+    "type": "error"
   },
   {
-    "type": "error",
+    "inputs": [],
     "name": "InvalidRecoveredAddress",
-    "inputs": []
+    "type": "error"
   },
   {
-    "type": "error",
+    "inputs": [],
     "name": "InvalidTotalAmount",
-    "inputs": []
+    "type": "error"
   },
   {
-    "type": "error",
+    "inputs": [],
     "name": "InvalidWalletOwner",
-    "inputs": []
+    "type": "error"
   },
   {
-    "type": "error",
+    "inputs": [],
     "name": "LoanNotUpdated",
-    "inputs": []
+    "type": "error"
   },
   {
-    "type": "error",
+    "inputs": [],
     "name": "NotEqualDeadline",
-    "inputs": []
+    "type": "error"
   },
   {
-    "type": "error",
+    "inputs": [],
     "name": "OrderNotAllowed",
-    "inputs": []
+    "type": "error"
   },
   {
-    "type": "error",
+    "inputs": [],
     "name": "ProtocolOwnerZeroAddress",
-    "inputs": []
+    "type": "error"
   },
   {
-    "type": "error",
+    "inputs": [],
     "name": "SenderZeroAddress",
-    "inputs": []
+    "type": "error"
   },
   {
-    "type": "error",
+    "inputs": [],
     "name": "UnlockdWalletNotFound",
-    "inputs": []
+    "type": "error"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "loanId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "orderId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "assetId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amountToPay",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amountOfDebt",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      }
+    ],
+    "name": "AuctionBid",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "loanId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "orderId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "assetId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "debtAmount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "winner",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      }
+    ],
+    "name": "AuctionFinalize",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "loanId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "orderId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amountOfDebt",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amountToPay",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "bonus",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "countBids",
+        "type": "uint256"
+      }
+    ],
+    "name": "AuctionOrderRedeemed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "loanId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      }
+    ],
+    "name": "AuctionRedeem",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [],
+    "name": "Genesis",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "moduleId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "moduleImpl",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "moduleVersion",
+        "type": "bytes32"
+      }
+    ],
+    "name": "InstallerInstallModule",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "proxy",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "moduleId",
+        "type": "uint256"
+      }
+    ],
+    "name": "ProxyCreated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "loanId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "debt",
+        "type": "uint256"
+      }
+    ],
+    "name": "Repay",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "DOMAIN_SEPARATOR",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint128",
+        "name": "amountToPay",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint128",
+        "name": "amountOfDebt",
+        "type": "uint128"
+      },
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "loanId",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "uint256",
+                "name": "aggLoanPrice",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "aggLtv",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "aggLiquidationThreshold",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint88",
+                "name": "totalAssets",
+                "type": "uint88"
+              },
+              {
+                "internalType": "uint256",
+                "name": "nonce",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "deadline",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct DataTypes.SignLoanConfig",
+            "name": "loan",
+            "type": "tuple"
+          },
+          {
+            "internalType": "bytes32[]",
+            "name": "assets",
+            "type": "bytes32[]"
+          },
+          {
+            "internalType": "uint256",
+            "name": "assetPrice",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "assetLtv",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint40",
+            "name": "endTime",
+            "type": "uint40"
+          },
+          {
+            "internalType": "uint256",
+            "name": "nonce",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "deadline",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct DataTypes.SignAuction",
+        "name": "signAuction",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint8",
+            "name": "v",
+            "type": "uint8"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "r",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "s",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint256",
+            "name": "deadline",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct DataTypes.EIP712Signature",
+        "name": "sig",
+        "type": "tuple"
+      }
+    ],
+    "name": "bid",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "nonce",
+        "type": "uint256"
+      },
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "loanId",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "uint256",
+                "name": "aggLoanPrice",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "aggLtv",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "aggLiquidationThreshold",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint88",
+                "name": "totalAssets",
+                "type": "uint88"
+              },
+              {
+                "internalType": "uint256",
+                "name": "nonce",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "deadline",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct DataTypes.SignLoanConfig",
+            "name": "loan",
+            "type": "tuple"
+          },
+          {
+            "internalType": "bytes32[]",
+            "name": "assets",
+            "type": "bytes32[]"
+          },
+          {
+            "internalType": "uint256",
+            "name": "assetPrice",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "assetLtv",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint40",
+            "name": "endTime",
+            "type": "uint40"
+          },
+          {
+            "internalType": "uint256",
+            "name": "nonce",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "deadline",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct DataTypes.SignAuction",
+        "name": "signAuction",
+        "type": "tuple"
+      }
+    ],
+    "name": "calculateDigest",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "digest",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bool",
+        "name": "claimOnUWallet",
+        "type": "bool"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "orderId",
+        "type": "bytes32"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "collection",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "tokenId",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct DataTypes.Asset",
+        "name": "asset",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "loanId",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "uint256",
+                "name": "aggLoanPrice",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "aggLtv",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "aggLiquidationThreshold",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint88",
+                "name": "totalAssets",
+                "type": "uint88"
+              },
+              {
+                "internalType": "uint256",
+                "name": "nonce",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "deadline",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct DataTypes.SignLoanConfig",
+            "name": "loan",
+            "type": "tuple"
+          },
+          {
+            "internalType": "bytes32[]",
+            "name": "assets",
+            "type": "bytes32[]"
+          },
+          {
+            "internalType": "uint256",
+            "name": "assetPrice",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "assetLtv",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint40",
+            "name": "endTime",
+            "type": "uint40"
+          },
+          {
+            "internalType": "uint256",
+            "name": "nonce",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "deadline",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct DataTypes.SignAuction",
+        "name": "signAuction",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint8",
+            "name": "v",
+            "type": "uint8"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "r",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "s",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint256",
+            "name": "deadline",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct DataTypes.EIP712Signature",
+        "name": "sig",
+        "type": "tuple"
+      }
+    ],
+    "name": "finalize",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "loanId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32[]",
+        "name": "assets",
+        "type": "bytes32[]"
+      }
+    ],
+    "name": "getAmountToReedem",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "loanId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "assetId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256",
+        "name": "assetPrice",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "aggLoanPrice",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "aggLtv",
+        "type": "uint256"
+      }
+    ],
+    "name": "getMinBidPriceAuction",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "minBid",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      }
+    ],
+    "name": "getNonce",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "orderId",
+        "type": "bytes32"
+      }
+    ],
+    "name": "getOrderAuction",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "orderId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "address",
+            "name": "owner",
+            "type": "address"
+          },
+          {
+            "internalType": "enum Constants.OrderType",
+            "name": "orderType",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint88",
+            "name": "countBids",
+            "type": "uint88"
+          },
+          {
+            "internalType": "uint256",
+            "name": "bidderDebtPayed",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "bidderBonus",
+            "type": "uint256"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "loanId",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "assetId",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "uint128",
+                "name": "startAmount",
+                "type": "uint128"
+              },
+              {
+                "internalType": "uint128",
+                "name": "endAmount",
+                "type": "uint128"
+              },
+              {
+                "internalType": "uint128",
+                "name": "debtToSell",
+                "type": "uint128"
+              }
+            ],
+            "internalType": "struct DataTypes.OfferItem",
+            "name": "offer",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint40",
+                "name": "startTime",
+                "type": "uint40"
+              },
+              {
+                "internalType": "uint40",
+                "name": "endTime",
+                "type": "uint40"
+              }
+            ],
+            "internalType": "struct DataTypes.Timeframe",
+            "name": "timeframe",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "loanId",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "address",
+                "name": "buyer",
+                "type": "address"
+              },
+              {
+                "internalType": "uint128",
+                "name": "amountToPay",
+                "type": "uint128"
+              },
+              {
+                "internalType": "uint128",
+                "name": "amountOfDebt",
+                "type": "uint128"
+              }
+            ],
+            "internalType": "struct DataTypes.Bid",
+            "name": "bid",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct DataTypes.Order",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "moduleId",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "moduleVersion",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes32[]",
+        "name": "assets",
+        "type": "bytes32[]"
+      },
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "loanId",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "uint256",
+                "name": "aggLoanPrice",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "aggLtv",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "aggLiquidationThreshold",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint88",
+                "name": "totalAssets",
+                "type": "uint88"
+              },
+              {
+                "internalType": "uint256",
+                "name": "nonce",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "deadline",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct DataTypes.SignLoanConfig",
+            "name": "loan",
+            "type": "tuple"
+          },
+          {
+            "internalType": "bytes32[]",
+            "name": "assets",
+            "type": "bytes32[]"
+          },
+          {
+            "internalType": "uint256",
+            "name": "assetPrice",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "assetLtv",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint40",
+            "name": "endTime",
+            "type": "uint40"
+          },
+          {
+            "internalType": "uint256",
+            "name": "nonce",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "deadline",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct DataTypes.SignAuction",
+        "name": "signAuction",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint8",
+            "name": "v",
+            "type": "uint8"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "r",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "s",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint256",
+            "name": "deadline",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct DataTypes.EIP712Signature",
+        "name": "sig",
+        "type": "tuple"
+      }
+    ],
+    "name": "redeem",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
   }
 ]

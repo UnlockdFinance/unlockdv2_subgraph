@@ -4,7 +4,8 @@ import {
     MarketBid,
     MarketClaim,
     MarketBuyNow,
-    Bid
+    Bid,
+    Buyer
 } from '../../generated/schema';
 import {Address, BigInt, Bytes} from "@graphprotocol/graph-ts";
 import {Market, Market__getOrderResultValue0Struct} from "../../generated/market/Market";
@@ -120,6 +121,21 @@ export function getOrCreateOrder(
 
     return order as Order;
 }
+
+export function getOrCreateBuyer(
+    id: String,
+    createIfNotFound: boolean = true,
+  ): Buyer {
+    // @ts-ignore: assign wrapper object to primitive
+    let buyer = Buyer.load(id);
+    
+    if (buyer == null && createIfNotFound) {
+      // @ts-ignore: assign wrapper object to primitive
+      buyer = new Buyer(id);
+    }
+    
+    return buyer as Buyer;
+  }
 
 export function getOrder(
     orderId: Bytes

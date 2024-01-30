@@ -1,5 +1,11 @@
+# Each Event will have its own type in order to track the events (Marketing)
+# Then I created the Private Entities to manage the front-end needs.
+
+#------------------------------------------------------------------------------------
+#                               UTOKEN
+#------------------------------------------------------------------------------------
 type UTokenBorrow @entity {
-  id: ID!
+  id: ID! # Transaction Hash
   onBehalfOf: Bytes!
   iniciator: Bytes!
   amount: BigInt!
@@ -13,7 +19,7 @@ type UTokenBorrow @entity {
 }
 
 type UTokenRepay @entity {
-  id: ID!
+  id: ID! # Transaction Hash
   iniciator: Bytes!
   loanId: Bytes!
   underlyingAsset: Bytes!
@@ -27,7 +33,7 @@ type UTokenRepay @entity {
 }
 
 type Supply @entity {
-  id: ID!
+  id: ID! # Transaction Hash
   user: Bytes!
   onBehalfOf: Bytes!
   underlyingAsset: Bytes!
@@ -39,7 +45,7 @@ type Supply @entity {
 }
 
 type Withdraw @entity {
-  id: ID!
+  id: ID! # Transaction Hash
   user: Bytes!
   underlyingAsset: Bytes!
   amount: BigInt!
@@ -50,8 +56,12 @@ type Withdraw @entity {
   transactionHash: Bytes!
 }
 
+#------------------------------------------------------------------------------------
+#                               ACTION
+#------------------------------------------------------------------------------------
+
 type Borrow @entity {
-  id: ID!
+  id: ID! # Transaction Hash
   user: Bytes! # address
   loanId: Bytes!
   amount: BigInt!
@@ -69,6 +79,7 @@ type AddCollateral @entity {
   loanId: Bytes! # address
   collection: Bytes!
   tokenId: BigInt!
+  assetId: Bytes!
 
   blockNumber: BigInt!
   blockTimestamp: BigInt!
@@ -76,20 +87,13 @@ type AddCollateral @entity {
   transactionInput: Bytes!
 }
 
-type Asset @entity {
-    id: ID!
-    collection: Bytes!
-    tokenId: BigInt!
-    isOnAuction: Boolean!
-    loan: Loan! 
-}
-
 type Repay @entity {
-  id: ID!
+  id: ID! # Transaction Hash
   user: Bytes! # address
   loanId: Bytes!
   amount: BigInt!
   assets: [Bytes!]! # assetIds
+  totalAssets: BigInt!
 
   blockNumber: BigInt!
   blockTimestamp: BigInt!
@@ -97,8 +101,234 @@ type Repay @entity {
   transactionInput: Bytes!
 }
 
-type Account @entity {
+#------------------------------------------------------------------------------------
+#                               Market
+#------------------------------------------------------------------------------------
+
+type MarketCreated @entity(immutable: false) {
+  id: ID! # Transaction Hash
+  loanId: Bytes! # bytes32
+  assetId: Bytes! # bytes32
+  orderId: Bytes! # bytes32
+  collection: Bytes! # address
+  tokenId: BigInt!
+
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  transactionInput: Bytes!
+}
+
+type MarketBid @entity(immutable: false) {
+  id: ID! # Transaction Hash
+  loanId: Bytes! # bytes32
+  orderId: Bytes! # bytes32
+  assetId: Bytes! # bytes32
+  amountToPay: BigInt! # address
+  amountOfDebt: BigInt!
+  amount: BigInt!
+  user: Bytes!
+
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  transactionInput: Bytes!
+}
+
+type MarketClaim @entity(immutable: false) {
+  id: ID! # Transaction Hash
+  loanId: Bytes! # bytes32
+  assetId: Bytes! # bytes32
+  orderId: Bytes! # bytes32
+  amount: BigInt! # uint256
+  bidder: Bytes! # address
+  receiver: Bytes! # address
+  user: Bytes! # address
+
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  transactionInput: Bytes!
+}
+
+type MarketBuyNow @entity(immutable: false) {
+  id: ID! # Transaction Hash
+  loanId: Bytes! # bytes32
+  assetId: Bytes! # bytes32
+  orderId: Bytes! # bytes32
+  amount: BigInt! # uint256
+  user: Bytes! # address
+
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  transactionInput: Bytes!
+}
+
+#------------------------------------------------------------------------------------
+#                               AUCTION
+#------------------------------------------------------------------------------------
+
+type AuctionOrderRedeemed @entity(immutable: false) {
+  id: ID!  # Transaction Hash
+  loanId: Bytes! # bytes32
+  orderId: Bytes! # bytes32
+  amountOfDebt: BigInt! 
+  amountToPay: BigInt! 
+  bonus: BigInt! 
+  countBids: BigInt! 
+
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  transactionInput: Bytes!
+}
+
+type AuctionBid @entity(immutable: false) {
+  id: ID! # Transaction Hash
+  loanId: Bytes! # bytes32
+  orderId: Bytes! # bytes32
+  assetId: Bytes! # bytes32
+  amountToPay: BigInt!
+  amountOfDebt: BigInt!
+  user: Bytes!
+  
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  transactionInput: Bytes!
+}
+
+type AuctionFinalize @entity(immutable: false) {
+  id: ID! # Transaction Hash
+  loanId: Bytes! # bytes32
+  orderId: Bytes! # bytes32
+  assetId: Bytes! # bytes32
+  debtAmount: BigInt! # address
+  amount: BigInt! # address
+  winner: Bytes! # address
+  owner: Bytes! # address
+
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  transactionInput: Bytes!
+}
+
+type  AuctionRedeem @entity(immutable: false) { 
+  id: ID! # Transaction Hash
+  loanId: Bytes!
+  amount: BigInt!
+  user: Bytes!
+
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  transactionInput: Bytes! 
+}
+#------------------------------------------------------------------------------------
+#                               SELLNOW
+#------------------------------------------------------------------------------------
+
+type Sold @entity(immutable: false) {
+  id: ID! # Transaction Hash
+  assetId: Bytes! # bytes32
+  collection: Bytes! # address
+  tokenId: BigInt!
+  amount: BigInt!
+
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  transactionInput: Bytes!
+}
+
+type ForceSold @entity(immutable: false) {
+  id: ID! # Transaction Hash
+  loanId: Bytes! # bytes32
+  assetId: Bytes! # bytes32
+  collection: Bytes! # address
+  tokenId: BigInt!
+  marketPrice: BigInt!
+
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  transactionInput: Bytes!
+}
+
+#------------------------------------------------------------------------------------
+#                               UNLOCKD
+#------------------------------------------------------------------------------------
+
+type ProxyCreated @entity(immutable: false) {
+  id: ID! # Transaction Hash
+  proxy: Bytes! # address
+
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  transactionInput: Bytes!
+}
+
+#------------------------------------------------------------------------------------
+#                               ORDER LOGIC
+#------------------------------------------------------------------------------------
+
+type OrderCreated @entity(immutable: false) {
+  id: ID! # Transaction Hash
+  loanId: Bytes!
+  owner: Bytes!
+  orderId: Bytes!
+  orderType: BigInt!
+
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  transactionInput: Bytes!
+}
+
+#------------------------------------------------------------------------------------
+#                               LOAN LOGIC
+#------------------------------------------------------------------------------------
+
+type LoanCreated @entity(immutable: false) {
+  id: ID! # Transaction Hash
+  user: Bytes!
+  loanId: Bytes!
+  totalAssets: BigInt!
+
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  transactionInput: Bytes!
+}
+
+#------------------------------------------------------------------------------------
+#                              CRYPTO PUNKS
+#------------------------------------------------------------------------------------
+
+type Punk @entity(immutable: false) {
   id: ID!
+  owner: Bytes! # address
+}
+
+#------------------------------------------------------------------------------------
+#                              PRIVATE ENTITIES
+#------------------------------------------------------------------------------------
+
+# To be used with the MarketBid in order to store the newBuyer
+type Buyer @entity(immutable: false) {
+  id: ID! # event.params.assetId.toHexString().concat(event.params.user.toHexString())
+  loanId: Bytes! # bytes32
+  assetId: Bytes! # bytes32
+  orderId: Bytes! # bytes32
+  user: Bytes! # address
+}
+
+# Stores the user account that have/had a loan in the protocol
+type Account @entity {
+  id: ID! # user address
   user: Bytes! # address
   amountDeposited: BigInt!
   amountBorrowed: BigInt!
@@ -106,22 +336,45 @@ type Account @entity {
   borrows: [Loan!]! @derivedFrom(field: "user")
 }
 
-type Punk @entity(immutable: false) {
+# Counts the total amount of NFTs in the protocol
+type TotalCount @entity(immutable: false) {
   id: ID!
-  owner: Bytes! # address
+  totalCount: BigInt!
 }
 
-type Bid @entity {
-  id: ID!
-  bidder: Bytes! # address
-  bidAmount: BigInt!
-  amountOfDebt: BigInt!
-  amountToPay: BigInt!
-  order: Order!
+# Stores the allowed collection in the protocol
+type Collection @entity(immutable: false) {
+  id: ID! # collection address
+  isAllowed: Boolean!
+
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
 }
 
+# Manages the Loans in the protocol, shouldn't be deleted
+type Loan @entity(immutable: false) {
+  id: ID! # loanId
+  status: BigInt!
+  user: Account! # address
+  amount: BigInt!
+  totalAssets: BigInt!
+  underlyingAsset: Bytes! # address
+  assets: [Asset!]! @derivedFrom(field: "loan")
+}
+
+# Manages the Assets in the protocol this should change as the owner changes.
+type Asset @entity {
+    id: ID! # assetId
+    collection: Bytes!
+    tokenId: BigInt!
+    isOnAuction: Boolean!
+    loan: Loan! 
+}
+
+# Manages the Orders in the protocol, shouldn't be deleted
 type Order @entity(immutable: false) {
-  id: ID!
+  id: ID! # orderId
   status: BigInt!
   orderType: String!
   date: BigInt!
@@ -145,215 +398,12 @@ type Order @entity(immutable: false) {
   loan: Loan!
 }
 
-type MarketCreated @entity(immutable: false) {
-  id: ID!
-  loanId: Bytes! # bytes32
-  assetId: Bytes! # bytes32
-  orderId: Bytes! # bytes32
-  collection: Bytes! # address
-  tokenId: BigInt!
-
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-  transactionInput: Bytes!
-}
-
-type MarketBid @entity(immutable: false) {
-  id: ID!
-  loanId: Bytes! # bytes32
-  orderId: Bytes! # bytes32
-  assetId: Bytes! # bytes32
-  amountToPay: BigInt! # address
-  amountOfDebt: BigInt!
-  amount: BigInt!
-  user: Bytes!
-
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-  transactionInput: Bytes!
-}
-
-type MarketClaim @entity(immutable: false) {
-  id: ID!
-  user: Bytes!
-  loanId: Bytes! # bytes32
-  assetId: Bytes! # bytes32
-  orderId: Bytes! # bytes32
-  amount: BigInt! # address
-
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-  transactionInput: Bytes!
-}
-
-type MarketBuyNow @entity(immutable: false) {
-  id: ID!
-  user: Bytes!
-  loanId: Bytes! # bytes32
-  assetId: Bytes! # bytes32
-  orderId: Bytes! # bytes32
-  amount: BigInt! # address
-
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-  transactionInput: Bytes!
-}
-
-type Sold @entity(immutable: false) {
-  id: ID!
-  assetId: Bytes! # bytes32
-  collection: Bytes! # address
-  tokenId: BigInt!
-  amount: BigInt!
-
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-  transactionInput: Bytes!
-}
-
-type ProxyCreated @entity(immutable: false) {
-  id: ID!
-  proxy: Bytes! # address
-
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-  transactionInput: Bytes!
-}
-
-type Loan @entity(immutable: false) {
-  id: ID!
-  status: BigInt!
-  user: Account! # address
-  amount: BigInt!
-  totalAssets: BigInt!
-  underlyingAsset: Bytes! # address
-  assets: [Asset!]! @derivedFrom(field: "loan")
-}
-
-type AuctionOrderRedeemed @entity(immutable: false) {
+# Manages the Bids in the orders, shouldn't be deleted
+type Bid @entity {
   id: ID! 
-  loanId: Bytes! # bytes32
-  orderId: Bytes! # bytes32
-  amountOfDebt: BigInt! 
-  amountToPay: BigInt! 
-  bonus: BigInt! 
-  countBids: BigInt! 
-
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-  transactionInput: Bytes!
-}
-
-type AuctionBid @entity(immutable: false) {
-  id: ID!
-  loanId: Bytes! # bytes32
-  orderId: Bytes! # bytes32
-  assetId: Bytes! # bytes32
-  amountToPay: BigInt!
+  bidder: Bytes! # address
+  bidAmount: BigInt!
   amountOfDebt: BigInt!
-  user: Bytes!
-  
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-  transactionInput: Bytes!
-}
-
-type AuctionRedeem @entity(immutable: false) {
-  id: ID!
-  loanId: Bytes! # bytes32
-  amount: BigInt!
-  user: Bytes! # address 
-
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-  transactionInput: Bytes!
-}
-
-type AuctionFinalize @entity(immutable: false) {
-  id: ID!
-  loanId: Bytes! # bytes32
-  orderId: Bytes! # bytes32
-  assetId: Bytes! # bytes32
-  debtAmount: BigInt! # address
-  amount: BigInt! # address
-  winner: Bytes! # address
-  owner: Bytes! # address
-
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-  transactionInput: Bytes!
-}
-
-type OrderCreated @entity(immutable: false) {
-  id: ID!
-  loanId: Bytes!
-  owner: Bytes!
-  orderId: Bytes!
-  orderType: BigInt!
-
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-  transactionInput: Bytes!
-}
-
-type LoanCreated @entity(immutable: false) {
-  id: ID!
-  user: Bytes!
-  loanId: Bytes!
-  totalAssets: BigInt!
-
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-  transactionInput: Bytes!
-}
-
-type SetLoanId @entity(immutable: false) {
-  id: ID!
-  index: Bytes!
-  loanId: Bytes!
-
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-  transactionInput: Bytes!
-}
-
-type TotalCount @entity(immutable: false) {
-  id: ID!
-  totalCount: BigInt!
-}
-
-type Collection @entity(immutable: false) {
-  id: ID!
-  isAllowed: Boolean!
-
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type ForceSold @entity(immutable: false) {
-  id: ID!
-  loanId: Bytes! # bytes32
-  assetId: Bytes! # bytes32
-  collection: Bytes! # address
-  tokenId: BigInt!
-  marketPrice: BigInt!
-
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-  transactionInput: Bytes!
+  amountToPay: BigInt!
+  order: Order!
 }
