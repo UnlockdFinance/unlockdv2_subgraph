@@ -6,6 +6,7 @@ import {
   } from "../../generated/auction/Auction";
 import { getOrCreateAsset, getOrCreateLoan } from "../helpers/action";
 import { getOrCreateAuctionBid, getOrCreateAuctionFinalize, getOrCreateAuctionOrderRedeemed, getOrCreateAuctionRedeem, getOrderAuction } from "../helpers/auction";
+import { getOrCreateLoanCreated } from "../helpers/loanCreated";
 import { getOrCreateBid, getOrCreateOrder } from "../helpers/market";
 import { getOrCreateOrderCreated } from "../helpers/orderLogic";
 import { getOrCreateTotalCount } from "../helpers/totalCount";
@@ -59,7 +60,7 @@ export function handleAuctionBid(event: AuctionBidEvent): void {
     bid.amountOfDebt = event.params.amountOfDebt
     bid.save()
 
-    const loanCreated = getOrCreateOrderCreated(event.transaction.hash.toHexString())
+    const loanCreated = getOrCreateLoanCreated(event.transaction.hash.toHexString())
     if(loanCreated.loanId != Bytes.fromHexString(ZERO_ADDRESS)) {
       const loan = getOrCreateLoan(loanCreated.loanId.toHexString())
       loan.status = BigInt.fromI32(LoanStatus.PENDING)
