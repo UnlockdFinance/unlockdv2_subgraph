@@ -3,16 +3,16 @@ import {
     Borrow as BorrowEvent,
     Repay as RepayEvent
 } from "../../generated/action/Action"
-import {getOrCreateAccount} from "../helpers/account"
-import { getOrCreateAddCollateral, getOrCreateAsset, getOrCreateBorrow, getOrCreateLoan, getOrCreateRepay} from "../helpers/action"
+import { getOrCreateAccount } from "../helpers/account"
+import { getOrCreateAddCollateral, getOrCreateAsset, getOrCreateBorrow, getOrCreateLoan, getOrCreateRepay } from "../helpers/action"
 import { store, BigInt } from "@graphprotocol/graph-ts";
-import { LoanStatus } from "../utils/constants";
+import { BIGINT_ZERO, LoanStatus, ZERO_ADDRESS } from "../utils/constants";
 import { getOrCreateTotalCount } from "../helpers/totalCount";
 
 export function handleBorrow(event: BorrowEvent): void {
     // Save into Contract Entity
     const borrow = getOrCreateBorrow(event.transaction.hash.toHexString())
-    
+
     borrow.user = event.params.user
     borrow.loanId = event.params.loanId
     borrow.amount = event.params.amount
@@ -23,27 +23,32 @@ export function handleBorrow(event: BorrowEvent): void {
     borrow.transactionHash = event.transaction.hash
     borrow.transactionInput = event.transaction.input
     borrow.save()
-    
+
     // Save into Private Entities
     // Borrow in an entry point to create a Loan
     // We need to create an Account and a Loan (the asset is not emmitted in the event)
-    
+
     // LOAN
     const loan = getOrCreateLoan(event.params.loanId.toHexString())
-    
+
     loan.id = event.params.loanId.toHexString()
     loan.user = event.params.user.toHexString()
     loan.status = BigInt.fromI32(LoanStatus.BORROWED)
-    loan.amount = event.params.amount     
+    loan.amount = event.params.amount
     loan.underlyingAsset = event.params.token
     loan.totalAssets = event.params.totalAssets
+
+    if (loan.startDate = BIGINT_ZERO) {
+        loan.startDate = event.block.timestamp
+    }
+
     loan.save()
 
     // ACCOUNT
     const account = getOrCreateAccount(event.params.user.toHexString())
     const borrowed = account.amountBorrowed.plus(event.params.amount)
     const totalAssets = account.totalAssets.plus(event.params.totalAssets)
-    
+
     account.amountBorrowed = borrowed
     account.user = event.params.user
     account.totalAssets = totalAssets
@@ -71,7 +76,7 @@ export function handleAddCollateral(event: AddCollateralEvent): void {
     asset.collection = event.params.collection
     asset.tokenId = event.params.tokenId
     asset.isOnAuction = false
-    asset.loan = event.params.loanId.toHexString()  
+    asset.loan = event.params.loanId.toHexString()
     asset.save()
 
     // Count the total number of assets
@@ -83,7 +88,7 @@ export function handleAddCollateral(event: AddCollateralEvent): void {
 export function handleRepay(event: RepayEvent): void {
     // Save into Contract Entity
     const repay = getOrCreateRepay(event.transaction.hash.toHexString())
-    
+
     repay.user = event.params.user
     repay.loanId = event.params.loanId
     repay.amount = event.params.amount
@@ -100,7 +105,7 @@ export function handleRepay(event: RepayEvent): void {
     // totalCount should decrease the counter per asset removed
     const loan = getOrCreateLoan(event.params.loanId.toHexString())
     const totalCount = getOrCreateTotalCount()
-    
+
     let totalAssets = loan.totalAssets
     const assetsToRemove = totalAssets.minus(event.params.totalAssets)
 
@@ -115,11 +120,12 @@ export function handleRepay(event: RepayEvent): void {
 
     loan.amount = loan.amount.minus(repay.amount)
     loan.totalAssets = totalAssets
-    loan.save() 
+    loan.save()
 
-    if(totalAssets.equals(BigInt.fromI32(0))) {
+    if (totalAssets.equals(BigInt.fromI32(0))) {
         loan.status = BigInt.fromI32(LoanStatus.PAID)
         loan.save()
+        loan.endDate = BIGINT_ZERO
     }
 
     const account = getOrCreateAccount(event.params.user.toHexString())

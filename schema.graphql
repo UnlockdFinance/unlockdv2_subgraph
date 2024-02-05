@@ -361,6 +361,8 @@ type Loan @entity(immutable: false) {
   totalAssets: BigInt!
   underlyingAsset: Bytes! # address
   assets: [Asset!]! @derivedFrom(field: "loan")
+  startDate: BigInt! # blockTimeStamp from 1st Borrow
+  endDate: BigInt! # blockTimeStamp from the last repay (whole debt)
 }
 
 # Manages the Assets in the protocol this should change as the owner changes.

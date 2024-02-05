@@ -5,9 +5,9 @@ import {
     Asset,
     AddCollateral,
 } from '../../generated/schema';
-import {Address, BigInt, Bytes} from "@graphprotocol/graph-ts";
-import {UNLOCK_HELPER_ADDRESS,BIGINT_ZERO, UNLOCK_ACTION_ADDRESS, LoanStatus, ZERO_ADDRESS} from "../utils/constants";
-import {UnlockdHelper} from "../../generated/action/UnlockdHelper";
+import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts";
+import { UNLOCK_HELPER_ADDRESS, BIGINT_ZERO, UNLOCK_ACTION_ADDRESS, LoanStatus, ZERO_ADDRESS, BIGDECIMAL_ZERO } from "../utils/constants";
+import { UnlockdHelper } from "../../generated/action/UnlockdHelper";
 import { Action, Action__getLoanResultValue0Struct } from '../../generated/action/Action';
 
 export function getOrCreateLoan(
@@ -25,6 +25,8 @@ export function getOrCreateLoan(
         loan.amount = BIGINT_ZERO;
         loan.totalAssets = BIGINT_ZERO;
         loan.underlyingAsset = Bytes.fromHexString(ZERO_ADDRESS);
+        loan.startDate = BIGINT_ZERO;
+        loan.endDate = BIGINT_ZERO;
     }
 
     return loan as Loan;
