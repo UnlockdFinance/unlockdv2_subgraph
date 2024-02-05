@@ -7,8 +7,8 @@ import {
     Bid,
     Buyer
 } from '../../generated/schema';
-import {Address, BigInt, Bytes} from "@graphprotocol/graph-ts";
-import {Market, Market__getOrderResultValue0Struct} from "../../generated/market/Market";
+import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts";
+import { Market, Market__getOrderResultValue0Struct } from "../../generated/market/Market";
 import { BIGINT_ZERO, UNLOCK_HELPER_ADDRESS, UNLOCK_MARKET_ADDRESS, ZERO_ADDRESS } from '../utils/constants';
 import { UnlockdHelper } from '../../generated/action/UnlockdHelper';
 
@@ -125,17 +125,20 @@ export function getOrCreateOrder(
 export function getOrCreateBuyer(
     id: String,
     createIfNotFound: boolean = true,
-  ): Buyer {
+): Buyer {
     // @ts-ignore: assign wrapper object to primitive
     let buyer = Buyer.load(id);
-    
     if (buyer == null && createIfNotFound) {
-      // @ts-ignore: assign wrapper object to primitive
-      buyer = new Buyer(id);
+        // @ts-ignore: assign wrapper object to primitive
+        buyer = new Buyer(id);
+        buyer.loanId = Bytes.fromHexString(ZERO_ADDRESS);
+        buyer.assetId = Bytes.fromHexString(ZERO_ADDRESS);
+        buyer.orderId = Bytes.fromHexString(ZERO_ADDRESS);
+        buyer.user = Bytes.fromHexString(ZERO_ADDRESS);
     }
-    
+
     return buyer as Buyer;
-  }
+}
 
 export function getOrder(
     orderId: Bytes

@@ -1,26 +1,26 @@
-import { 
-  Borrow as BorrowEvent,
-  Deposit as SupplyEvent,
-  Repay as RepayEvent,
-  Withdraw as WithdrawEvent
-} from "../../generated/uTokenFactory/uTokenFactory"
-import {  
-  getOrCreateUTokenBorrow,
-  getOrCreateSupply,
-  getOrCreateUTokenRepay,
-  getOrCreateWithdraw 
+import {
+    Borrow as BorrowEvent,
+    Deposit as SupplyEvent,
+    Repay as RepayEvent,
+    Withdraw as WithdrawEvent
+} from "../../generated/uTokenVault/uTokenVault"
+import {
+    getOrCreateUTokenBorrow,
+    getOrCreateSupply,
+    getOrCreateUTokenRepay,
+    getOrCreateWithdraw
 } from "../helpers/uTokenFactory"
 import { getOrCreateAccount } from "../helpers/account"
 
-  // BorrowOnBelhalf
-  export function handleUTokenBorrow(event: BorrowEvent): void {
+// BorrowOnBelhalf
+export function handleUTokenBorrow(event: BorrowEvent): void {
     let borrowOnBelhalf = getOrCreateUTokenBorrow(event.transaction.hash.toHexString())
-    
+
     borrowOnBelhalf.onBehalfOf = event.params.onBehalfOf
     borrowOnBelhalf.iniciator = event.params.iniciator
     borrowOnBelhalf.amount = event.params.amount
     borrowOnBelhalf.loanId = event.params.loanId
-    borrowOnBelhalf.underlyingAsset = event.params.underlyingAsset 
+    borrowOnBelhalf.underlyingAsset = event.params.underlyingAsset
     borrowOnBelhalf.borrowRate = event.params.borrowRate
 
     borrowOnBelhalf.blockNumber = event.block.number
@@ -28,10 +28,10 @@ import { getOrCreateAccount } from "../helpers/account"
     borrowOnBelhalf.transactionHash = event.transaction.hash
 
     borrowOnBelhalf.save()
-  } 
+}
 
-  // Deposit  
-  export function handleSupply(event: SupplyEvent): void {
+// Deposit  
+export function handleSupply(event: SupplyEvent): void {
     const account = getOrCreateAccount(event.params.user.toHexString())
     let deposit = getOrCreateSupply(event.transaction.hash.toHexString())
 
@@ -50,10 +50,10 @@ import { getOrCreateAccount } from "../helpers/account"
     account.amountBorrowed = deposited
     account.user = event.params.user
     account.save()
-  }
+}
 
-  // RepayOnBelhalf
-  export function handleUTokenRepay(event: RepayEvent): void {
+// RepayOnBelhalf
+export function handleUTokenRepay(event: RepayEvent): void {
     let repayOnBehalf = getOrCreateUTokenRepay(event.transaction.hash.toHexString())
 
     repayOnBehalf.iniciator = event.params.iniciator
@@ -68,10 +68,10 @@ import { getOrCreateAccount } from "../helpers/account"
     repayOnBehalf.transactionHash = event.transaction.hash
 
     repayOnBehalf.save()
-  }
+}
 
-  // Withdraw
-  export function handleWithdraw(event: WithdrawEvent): void {
+// Withdraw
+export function handleWithdraw(event: WithdrawEvent): void {
     const account = getOrCreateAccount(event.params.user.toHexString())
     let withdraw = getOrCreateWithdraw(event.transaction.hash.toHexString())
 
@@ -90,6 +90,6 @@ import { getOrCreateAccount } from "../helpers/account"
     account.user = event.params.user
     account.amountBorrowed = Withdrawal
     account.save()
-  }
+}
 
-  
+
