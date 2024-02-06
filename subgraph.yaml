@@ -7,9 +7,9 @@ dataSources:
     name: uTokenVault
     network: sepolia
     source:
-      address: "0x0e27a0aba612d0d3bb5e90327077628eeff4769a"
+      address: "0xda38651119d23545a4264f07d63ac85d8780e5dd"
       abi: uTokenVault
-      startBlock: 5184787
+      startBlock: 5190392
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -36,9 +36,9 @@ dataSources:
     name: allowedControllers
     network: sepolia
     source:
-      address: "0xbd3f90bc76f9c437493fb02bfd44bd6ef9ecdb73"
+      address: "0x2372e92ffb4eefb3842049142db82bbd676421c9"
       abi: AllowedControllers
-      startBlock: 5184787 #4437551
+      startBlock: 5190392 #4437551
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -83,7 +83,7 @@ dataSources:
     name: action
     network: sepolia
     source:
-      address: "0xc4b665f019bdf18a8a558f1a7254bb7142453c2b"
+      address: "0x615b8ede4ee7f0838833c1a9f99442a75e46c9c2"
       abi: Action
       startBlock: 5184787 #4437551
     mapping:
@@ -114,7 +114,7 @@ dataSources:
     name: sellNow
     network: sepolia
     source:
-      address: "0xc4b665f019bdf18a8a558f1a7254bb7142453c2b"
+      address: "0x615b8ede4ee7f0838833c1a9f99442a75e46c9c2"
       abi: SellNow
       startBlock: 5184787 #4437551
     mapping:
@@ -136,7 +136,7 @@ dataSources:
     name: market
     network: sepolia
     source:
-      address: "0xc4b665f019bdf18a8a558f1a7254bb7142453c2b"
+      address: "0x615b8ede4ee7f0838833c1a9f99442a75e46c9c2"
       abi: Market
       startBlock: 5184787 #4437551
     mapping:
@@ -170,7 +170,7 @@ dataSources:
     name: auction
     network: sepolia
     source:
-      address: "0xc4b665f019bdf18a8a558f1a7254bb7142453c2b"
+      address: "0x615b8ede4ee7f0838833c1a9f99442a75e46c9c2"
       abi: Auction
       startBlock: 5184787 #4437551
     mapping:
@@ -199,7 +199,7 @@ dataSources:
     name: unlockd
     network: sepolia
     source:
-      address: "0xc4b665f019bdf18a8a558f1a7254bb7142453c2b"
+      address: "0x615b8ede4ee7f0838833c1a9f99442a75e46c9c2"
       abi: Unlockd
       startBlock: 5184787 #4437551
     mapping:
@@ -219,7 +219,7 @@ dataSources:
     name: orderLogic
     network: sepolia
     source:
-      address: "0xc4b665f019bdf18a8a558f1a7254bb7142453c2b"
+      address: "0x615b8ede4ee7f0838833c1a9f99442a75e46c9c2"
       abi: OrderLogic
       startBlock: 5184787 #4437551
     mapping:
@@ -241,7 +241,7 @@ dataSources:
     name: LoanLogic
     network: sepolia
     source:
-      address: "0xc4b665f019bdf18a8a558f1a7254bb7142453c2b"
+      address: "0x615b8ede4ee7f0838833c1a9f99442a75e46c9c2"
       abi: LoanLogic
       startBlock: 5184787 #4437551
     mapping:
