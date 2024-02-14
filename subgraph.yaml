@@ -30,7 +30,7 @@ dataSources:
         - event: Repay(indexed address,indexed address,indexed address,uint256,bytes32,uint256)
           handler: handleUTokenRepay
         - event: Withdraw(indexed address,indexed address,indexed address,uint256)
-          handler: handleWithdra
+          handler: handleWithdraw
       file: ./src/mappings.ts
   - kind: ethereum
     name: allowedControllers
