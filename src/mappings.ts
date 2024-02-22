@@ -22,6 +22,7 @@ export {
 export {
     handleAuctionBid,
     handleAuctionRedeem,
+    handleAuctionOrderRedeemed,
     handleAuctionFinalize
 } from './mappings/auction';
 
@@ -36,19 +37,19 @@ export {
     handlePunkTransfer
 } from './mappings/cryptoPunks';
 
-export {  
+export {
     handleProxyCreated
 } from './mappings/unlockd';
 
-export {  
+export {
     handleOrderCreated
 } from './mappings/orderLogic';
 
-export {  
+export {
     handleLoanCreated
 } from './mappings/loanLogic';
 
-export {  
+export {
     handleCollection
 } from './mappings/allowedController';
 
