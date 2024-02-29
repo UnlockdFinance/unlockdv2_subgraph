@@ -1,12 +1,14 @@
 import {
     AddCollateral as AddCollateralEvent,
     Borrow as BorrowEvent,
-    Repay as RepayEvent
+    Repay as RepayEvent,
+    Action__getLoanResultValue0Struct
 } from "../../generated/action/Action"
 import { getOrCreateAccount } from "../helpers/account"
-import { getOrCreateAddCollateral, getOrCreateAsset, getOrCreateBorrow, getOrCreateLoan, getOrCreateRepay } from "../helpers/action"
+import { getOrCreateAddCollateral, getOrCreateAsset, getOrCreateBorrow, getOrCreateLoan, getOrCreateRepay, getLoan } from "../helpers/action"
+import { getOrCreateOrder } from "../helpers/market"
 import { store, BigInt } from "@graphprotocol/graph-ts";
-import { BIGINT_ZERO, LoanStatus, ZERO_ADDRESS } from "../utils/constants";
+import { BIGINT_ZERO, ZERO_ADDRESS, LoanStatus, OrderStatus } from "../utils/constants";
 import { getOrCreateTotalCount } from "../helpers/totalCount";
 
 export function handleBorrow(event: BorrowEvent): void {
@@ -111,6 +113,16 @@ export function handleRepay(event: RepayEvent): void {
 
     for (let index = 0; BigInt.fromI32(index) < assetsToRemove; index++) {
         const assetId = event.params.assets[index]
+        const asset = getOrCreateAsset(assetId.toHexString())
+
+        if (asset.orderId.toHexString() != ZERO_ADDRESS) {
+            const orderId = asset.orderId
+            const order = getOrCreateOrder(orderId.toHexString())
+            order.status = BigInt.fromI32(OrderStatus.PAID)
+            order.loanStatus = BigInt.fromI32(LoanStatus.PAID)
+            order.save()
+        }
+
         store.remove('Asset', assetId.toHexString().toLowerCase())
         totalCount.totalCount = totalCount.totalCount.minus(BigInt.fromI32(1))
         totalAssets = totalAssets.minus(BigInt.fromI32(1))
@@ -120,12 +132,19 @@ export function handleRepay(event: RepayEvent): void {
 
     loan.amount = loan.amount.minus(repay.amount)
     loan.totalAssets = totalAssets
+
+    const cLoan = getLoan(event.params.loanId) as Action__getLoanResultValue0Struct
+    if (cLoan.state != 2) {
+        loan.isFrozen = false
+    }
+
     loan.save()
 
     if (totalAssets.equals(BigInt.fromI32(0))) {
         loan.status = BigInt.fromI32(LoanStatus.PAID)
-        loan.save()
         loan.endDate = BIGINT_ZERO
+        loan.isFrozen = false
+        loan.save()
     }
 
     const account = getOrCreateAccount(event.params.user.toHexString())

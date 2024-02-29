@@ -3,6 +3,9 @@ export {
     handleSupply,
     handleUTokenRepay,
     handleWithdraw,
+    handleFrozenVault,
+    handleActiveVault,
+    handlePausedVault
 } from './mappings/uTokenFactory';
 
 export {

@@ -21,6 +21,7 @@ export function getOrCreateLoan(
         // @ts-ignore: assign wrapper object to primitive
         loan = new Loan(id);
         loan.status = BigInt.fromI32(LoanStatus.PENDING);
+        loan.isFrozen = false;
         loan.user = ZERO_ADDRESS;
         loan.amount = BIGINT_ZERO;
         loan.totalAssets = BIGINT_ZERO;
@@ -97,6 +98,7 @@ export function getOrCreateAsset(
         asset = new Asset(id);
         asset.tokenId = BIGINT_ZERO;
         asset.isOnAuction = false;
+        asset.orderId = Bytes.fromHexString(ZERO_ADDRESS);
     }
 
     return asset as Asset;

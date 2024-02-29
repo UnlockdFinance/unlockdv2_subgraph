@@ -4,14 +4,15 @@ import {
     AuctionFinalize as AuctionFinalizeEvent,
     AuctionOrderRedeemed as AuctionOrderRedeemedEvent,
 } from "../../generated/auction/Auction";
-import { getOrCreateAsset, getOrCreateLoan } from "../helpers/action";
+import { Action__getLoanResultValue0Struct } from "../../generated/action/Action";
+import { getOrCreateAsset, getOrCreateLoan, getLoan } from "../helpers/action";
 import { getOrCreateAuctionBid, getOrCreateAuctionFinalize, getOrCreateAuctionOrderRedeemed, getOrCreateAuctionRedeem, getOrderAuction } from "../helpers/auction";
 import { getOrCreateLoanCreated } from "../helpers/loanCreated";
 import { getOrCreateBid, getOrCreateOrder } from "../helpers/market";
 import { getOrCreateOrderCreated } from "../helpers/orderLogic";
 import { getOrCreateTotalCount } from "../helpers/totalCount";
-import { LoanStatus, Market, OrderStatus, ZERO_ADDRESS } from "../utils/constants";
-import { BigInt, Bytes, ethereum, store } from "@graphprotocol/graph-ts";
+import { LoanStatus, OrderStatus, ZERO_ADDRESS } from "../utils/constants";
+import { BigInt, Bytes, store } from "@graphprotocol/graph-ts";
 
 export function handleAuctionBid(event: AuctionBidEvent): void {
     const auctionBid = getOrCreateAuctionBid(event.transaction.hash.toHexString())
@@ -33,6 +34,7 @@ export function handleAuctionBid(event: AuctionBidEvent): void {
     const onchainOrder = getOrderAuction(event.params.orderId)
     const asset = getOrCreateAsset(event.params.assetId.toHexString())
     asset.isOnAuction = true
+    asset.orderId = event.params.orderId
     asset.save()
 
     // end time from function
@@ -50,6 +52,12 @@ export function handleAuctionBid(event: AuctionBidEvent): void {
     order.bidAmount = event.params.amountToPay.plus(event.params.amountOfDebt)
     order.loan = onchainOrder.offer.loanId.toHexString()
     order.endTime = onchainOrder.timeframe.endTime
+
+    const loan = getOrCreateLoan(onchainOrder.offer.loanId.toHexString())
+    loan.isFrozen = true
+    loan.save()
+
+    order.loanStatus = loan.status
     order.save()
 
     const bid = getOrCreateBid(event.transaction.hash.toHexString())
@@ -80,6 +88,10 @@ export function handleAuctionRedeem(event: AuctionRedeemEvent): void {
     redeem.transactionHash = event.transaction.hash
     redeem.transactionInput = event.transaction.input
     redeem.save()
+
+    const loan = getOrCreateLoan(event.params.loanId.toHexString())
+    loan.isFrozen = false
+    loan.save()
 }
 
 export function handleAuctionOrderRedeemed(event: AuctionOrderRedeemedEvent): void {
@@ -104,6 +116,7 @@ export function handleAuctionOrderRedeemed(event: AuctionOrderRedeemedEvent): vo
 
     const asset = getOrCreateAsset(order.assetId.toHexString())
     asset.isOnAuction = false
+    asset.orderId = Bytes.fromHexString(ZERO_ADDRESS)
     asset.save()
 }
 
@@ -125,6 +138,7 @@ export function handleAuctionFinalize(event: AuctionFinalizeEvent): void {
 
     const order = getOrCreateOrder(event.params.orderId.toHexString())
     order.status = BigInt.fromI32(OrderStatus.CLAIMED)
+    order.loanStatus = BigInt.fromI32(LoanStatus.PAID)
     order.date = event.block.timestamp
     order.buyer = event.params.winner
     order.buyerAmount = event.params.amount
@@ -139,6 +153,7 @@ export function handleAuctionFinalize(event: AuctionFinalizeEvent): void {
         loan.status = BigInt.fromI32(LoanStatus.BORROWED)
         loan.save()
         asset.loan = loan.id
+        asset.orderId = Bytes.fromHexString(ZERO_ADDRESS)
         asset.save()
 
         const totalCount = getOrCreateTotalCount()
@@ -153,10 +168,16 @@ export function handleAuctionFinalize(event: AuctionFinalizeEvent): void {
 
     const loan = getOrCreateLoan(event.params.loanId.toHexString())
     loan.totalAssets = loan.totalAssets.minus(BigInt.fromI32(1))
+
+    const cLoan = getLoan(event.params.loanId) as Action__getLoanResultValue0Struct
+    if (cLoan.state != 2) {
+        loan.isFrozen = false
+    }
     loan.save()
 
     if (loan.totalAssets.equals(BigInt.fromI32(0))) {
         loan.status = BigInt.fromI32(LoanStatus.PAID)
+        loan.isFrozen = false
         loan.save()
     }
 

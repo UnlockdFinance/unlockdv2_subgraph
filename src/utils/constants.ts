@@ -20,6 +20,7 @@ export enum OrderStatus {
     REDEEMED = 2,
     BOUGHT = 3,
     CLAIMED = 4,
+    PAID = 5,
 }
 
 export enum Market {

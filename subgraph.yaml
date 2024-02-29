@@ -19,6 +19,9 @@ dataSources:
         - Deposit
         - RepayOnBelhalf
         - Withdraw
+        - FrozenVault
+        - ActiveVault
+        - PausedVault 
       abis:
         - name: uTokenVault
           file: ./abis/uTokenVault.json
@@ -31,6 +34,12 @@ dataSources:
           handler: handleUTokenRepay
         - event: Withdraw(indexed address,indexed address,indexed address,uint256)
           handler: handleWithdraw
+        - event: FrozenVault(indexed address,bool)
+          handler: handleFrozenVault
+        - event: ActiveVault(indexed address,bool)
+          handler: handleActiveVault
+        - event: PausedVault(indexed address,bool)
+          handler: handlePausedVault
       file: ./src/mappings.ts
   - kind: ethereum
     name: allowedControllers
@@ -185,6 +194,8 @@ dataSources:
       abis:
         - name: Auction
           file: ./abis/Auction.json
+        - name: Action
+          file: ./abis/Action.json
       eventHandlers:
         - event:  AuctionBid(indexed bytes32,indexed bytes32,indexed bytes32,uint256,uint256,address)
           handler: handleAuctionBid

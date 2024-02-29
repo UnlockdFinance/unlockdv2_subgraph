@@ -2,13 +2,19 @@ import {
     Borrow as BorrowEvent,
     Deposit as SupplyEvent,
     Repay as RepayEvent,
-    Withdraw as WithdrawEvent
+    Withdraw as WithdrawEvent,
+    FrozenVault as FrozenVaultEvent,
+    ActiveVault as ActiveVaultEvent,
+    PausedVault as PausedVaultEvent
 } from "../../generated/uTokenVault/uTokenVault"
 import {
     getOrCreateUTokenBorrow,
     getOrCreateSupply,
     getOrCreateUTokenRepay,
-    getOrCreateWithdraw
+    getOrCreateWithdraw,
+    getOrCreateFrozenVault,
+    getOrCreateActiveVault,
+    getOrCreatePausedVault
 } from "../helpers/uTokenFactory"
 import { getOrCreateAccount } from "../helpers/account"
 
@@ -90,6 +96,39 @@ export function handleWithdraw(event: WithdrawEvent): void {
     account.user = event.params.user
     account.amountBorrowed = Withdrawal
     account.save()
+}
+
+export function handleFrozenVault(event: FrozenVaultEvent): void {
+    let frozenVault = getOrCreateFrozenVault(event.params.underlyingAsset.toHexString())
+    frozenVault.isFrozen = event.params.isFrozen
+
+    frozenVault.blockNumber = event.block.number
+    frozenVault.blockTimestamp = event.block.timestamp
+    frozenVault.transactionHash = event.transaction.hash
+
+    frozenVault.save()
+}
+
+export function handleActiveVault(event: ActiveVaultEvent): void {
+    let activeVault = getOrCreateActiveVault(event.params.underlyingAsset.toHexString())
+    activeVault.isActive = event.params.isActive
+
+    activeVault.blockNumber = event.block.number
+    activeVault.blockTimestamp = event.block.timestamp
+    activeVault.transactionHash = event.transaction.hash
+
+    activeVault.save()
+}
+
+export function handlePausedVault(event: PausedVaultEvent): void {
+    let pausedVault = getOrCreatePausedVault(event.params.underlyingAsset.toHexString())
+    pausedVault.isPaused = event.params.isPaused
+
+    pausedVault.blockNumber = event.block.number
+    pausedVault.blockTimestamp = event.block.timestamp
+    pausedVault.transactionHash = event.transaction.hash
+
+    pausedVault.save()
 }
 
 

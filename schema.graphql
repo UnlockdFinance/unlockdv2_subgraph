@@ -56,6 +56,33 @@ type Withdraw @entity {
   transactionHash: Bytes!
 }
 
+type FrozenVault @entity {
+  id: ID! # Contract Address
+  isFrozen: Boolean!
+
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ActiveVault @entity {
+  id: ID! # Contract Address
+  isActive: Boolean!
+
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type PausedVault @entity {
+  id: ID! # Contract Address
+  isPaused: Boolean!
+
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
 #------------------------------------------------------------------------------------
 #                               ACTION
 #------------------------------------------------------------------------------------
@@ -356,6 +383,7 @@ type Collection @entity(immutable: false) {
 type Loan @entity(immutable: false) {
   id: ID! # loanId
   status: BigInt!
+  isFrozen: Boolean!
   user: Account! # address
   amount: BigInt!
   totalAssets: BigInt!
@@ -371,6 +399,7 @@ type Asset @entity {
     collection: Bytes!
     tokenId: BigInt!
     isOnAuction: Boolean!
+    orderId: Bytes!
     loan: Loan! 
 }
 
@@ -385,6 +414,7 @@ type Order @entity(immutable: false) {
   tokenId: BigInt!
   seller: Bytes! # address
   loanId: Bytes! # bytes32
+  loanStatus: BigInt!
   debtToSell: BigInt!
   startAmount: BigInt!
   endAmount: BigInt!

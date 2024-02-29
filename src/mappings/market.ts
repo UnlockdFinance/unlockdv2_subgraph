@@ -42,6 +42,9 @@ export function handleMarketCreated(event: MarketCreatedEvent): void {
     // Save into Private Entities
     const order = getOrCreateOrder(event.params.orderId.toHexString())
     const asset = getOrCreateAsset(event.params.assetId.toHexString())
+    asset.orderId = event.params.orderId
+    asset.save()
+
     // Query onchain the created order
     const onchainOrder = getOrder(event.params.orderId) as Market__getOrderResultValue0Struct
 
@@ -67,6 +70,8 @@ export function handleMarketCreated(event: MarketCreatedEvent): void {
         order.orderType = orderCreated.orderType.toString()
     }
 
+    const loan = getOrCreateLoan(event.params.loanId.toHexString())
+    order.loanStatus = loan.status
     order.save()
 }
 
@@ -75,6 +80,10 @@ export function handleMarketCancel(event: MarketCancelEvent): void {
     order.status = BigInt.fromI32(OrderStatus.CANCELLED)
     order.date = event.block.timestamp
     order.save()
+
+    const asset = getOrCreateAsset(order.assetId.toHexString())
+    asset.orderId = Bytes.fromHexString(ZERO_ADDRESS)
+    asset.save()
 }
 
 export function handleMarketBid(event: MarketBidEvent): void {
@@ -159,6 +168,7 @@ export function handleMarketClaim(event: MarketClaimEvent): void {
     // Update the order: status, bidder, bidAmount
     const order = getOrCreateOrder(event.params.orderId.toHexString())
     order.status = BigInt.fromI32(OrderStatus.CLAIMED)
+    order.loanStatus = BigInt.fromI32(LoanStatus.PAID)
     order.date = event.block.timestamp
     order.lastBidder = order.bidder
     order.lastBidAmount = order.bidAmount
@@ -182,6 +192,7 @@ export function handleMarketClaim(event: MarketClaimEvent): void {
         loan.status = BigInt.fromI32(LoanStatus.BORROWED)
         loan.save()
         asset.loan = loan.id
+        asset.orderId = Bytes.fromHexString(ZERO_ADDRESS)
         asset.save()
 
         // update the total count
@@ -228,6 +239,7 @@ export function handleMarketBuyNow(event: MarketBuyNowEvent): void {
 
     const order = getOrCreateOrder(event.params.orderId.toHexString())
     order.status = BigInt.fromI32(OrderStatus.BOUGHT)
+    order.loanStatus = BigInt.fromI32(LoanStatus.PAID)
     order.date = event.block.timestamp
     order.buyer = event.params.user
     order.buyerAmount = event.params.amount
@@ -242,6 +254,7 @@ export function handleMarketBuyNow(event: MarketBuyNowEvent): void {
         loan.status = BigInt.fromI32(LoanStatus.BORROWED)
         loan.save()
         asset.loan = loanCreated.loanId.toHexString()
+        asset.orderId = Bytes.fromHexString(ZERO_ADDRESS)
         asset.save()
 
         const totalCount = getOrCreateTotalCount()

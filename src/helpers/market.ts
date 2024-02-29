@@ -7,7 +7,7 @@ import {
     Bid,
     Buyer
 } from '../../generated/schema';
-import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts";
+import { Bytes } from "@graphprotocol/graph-ts";
 import { Market, Market__getOrderResultValue0Struct } from "../../generated/market/Market";
 import { BIGINT_ZERO, UNLOCK_HELPER_ADDRESS, UNLOCK_MARKET_ADDRESS, ZERO_ADDRESS } from '../utils/constants';
 import { UnlockdHelper } from '../../generated/action/UnlockdHelper';
@@ -104,6 +104,7 @@ export function getOrCreateOrder(
         order.date = BIGINT_ZERO;
         order.debtToSell = BIGINT_ZERO;
         order.loanId = Bytes.fromHexString(ZERO_ADDRESS);
+        order.loanStatus = BIGINT_ZERO;
         order.startAmount = BIGINT_ZERO;
         order.endAmount = BIGINT_ZERO;
         order.startTime = BIGINT_ZERO;
