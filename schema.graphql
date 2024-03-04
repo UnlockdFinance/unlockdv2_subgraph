@@ -428,6 +428,7 @@ type Order @entity(immutable: false) {
   buyerAmount: BigInt!
   bids: [Bid!]! @derivedFrom(field: "order")
   loan: Loan!
+  transactionHash: Bytes!
 }
 
 # Manages the Bids in the orders, shouldn't be deleted

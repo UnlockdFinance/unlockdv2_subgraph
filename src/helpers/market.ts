@@ -118,6 +118,7 @@ export function getOrCreateOrder(
         order.assetId = Bytes.fromHexString(ZERO_ADDRESS);
         order.collection = Bytes.fromHexString(ZERO_ADDRESS);
         order.tokenId = BIGINT_ZERO;
+        order.transactionHash = Bytes.fromHexString(ZERO_ADDRESS);
     }
 
     return order as Order;

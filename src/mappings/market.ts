@@ -174,6 +174,7 @@ export function handleMarketClaim(event: MarketClaimEvent): void {
     order.lastBidAmount = order.bidAmount
     order.bidder = event.params.user
     order.bidAmount = event.params.amount
+    order.transactionHash = event.transaction.hash
     order.save()
 
     // store the asset, remove it from the actual loan
@@ -243,6 +244,7 @@ export function handleMarketBuyNow(event: MarketBuyNowEvent): void {
     order.date = event.block.timestamp
     order.buyer = event.params.user
     order.buyerAmount = event.params.amount
+    order.transactionHash = event.transaction.hash
     order.save()
 
     const asset = getOrCreateAsset(event.params.assetId.toHexString())

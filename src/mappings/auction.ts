@@ -142,6 +142,7 @@ export function handleAuctionFinalize(event: AuctionFinalizeEvent): void {
     order.date = event.block.timestamp
     order.buyer = event.params.winner
     order.buyerAmount = event.params.amount
+    order.transactionHash = event.transaction.hash
     order.save()
 
     const asset = getOrCreateAsset(event.params.assetId.toHexString())
