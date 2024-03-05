@@ -7,9 +7,9 @@ dataSources:
     name: uTokenVault
     network: sepolia
     source:
-      address: "0x7A6156460C3163E0B86ae454Bdd1068D7e696BD8"
+      address: "0xac4bb3ab0bda6f447287753b5d307d2fd20bc0a6"
       abi: uTokenVault
-      startBlock: 5285787
+      startBlock: 5380242
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -45,9 +45,9 @@ dataSources:
     name: allowedControllers
     network: sepolia
     source:
-      address: "0xb324730a36227f1a975c3e21F36E71de2cA13d54"
+      address: "0xbbc60937d49344f37ea617613cebc3281d21212e"
       abi: AllowedControllers
-      startBlock: 5285787
+      startBlock: 5380242
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -67,7 +67,7 @@ dataSources:
     source:
       address: "0x987EfDB241fE66275b3594481696f039a82a799e"
       abi: CryptoPunks
-      startBlock: 5285787
+      startBlock: 5380242
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -92,9 +92,9 @@ dataSources:
     name: action
     network: sepolia
     source:
-      address: "0xF88D8570993065eE780AAE2fc801ffB1e43C4126"
+      address: "0xc623245043646121f93Ab8A4983f9510AB566d79"
       abi: Action
-      startBlock: 5285787
+      startBlock: 5380242
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -123,9 +123,9 @@ dataSources:
     name: sellNow
     network: sepolia
     source:
-      address: "0xF88D8570993065eE780AAE2fc801ffB1e43C4126"
+      address: "0xc623245043646121f93Ab8A4983f9510AB566d79"
       abi: SellNow
-      startBlock: 5285787
+      startBlock: 5380242
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -145,9 +145,9 @@ dataSources:
     name: market
     network: sepolia
     source:
-      address: "0xF88D8570993065eE780AAE2fc801ffB1e43C4126"
+      address: "0xc623245043646121f93Ab8A4983f9510AB566d79"
       abi: Market
-      startBlock: 5285787
+      startBlock: 5380242
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -179,9 +179,9 @@ dataSources:
     name: auction
     network: sepolia
     source:
-      address: "0xF88D8570993065eE780AAE2fc801ffB1e43C4126"
+      address: "0xc623245043646121f93Ab8A4983f9510AB566d79"
       abi: Auction
-      startBlock: 5285787
+      startBlock: 5380242
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -210,9 +210,9 @@ dataSources:
     name: unlockd
     network: sepolia
     source:
-      address: "0xF88D8570993065eE780AAE2fc801ffB1e43C4126"
+      address: "0xc623245043646121f93Ab8A4983f9510AB566d79"
       abi: Unlockd
-      startBlock: 5285787
+      startBlock: 5380242
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -230,9 +230,9 @@ dataSources:
     name: orderLogic
     network: sepolia
     source:
-      address: "0xF88D8570993065eE780AAE2fc801ffB1e43C4126"
+      address: "0xc623245043646121f93Ab8A4983f9510AB566d79"
       abi: OrderLogic
-      startBlock: 5285787
+      startBlock: 5380242
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -252,9 +252,9 @@ dataSources:
     name: LoanLogic
     network: sepolia
     source:
-      address: "0xF88D8570993065eE780AAE2fc801ffB1e43C4126"
+      address: "0xc623245043646121f93Ab8A4983f9510AB566d79"
       abi: LoanLogic
-      startBlock: 5285787
+      startBlock: 5380242
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
