@@ -120,7 +120,10 @@ export function handleMarketBid(event: MarketBidEvent): void {
     bid.amountToPay = event.params.amountToPay
     bid.amountOfDebt = event.params.amountOfDebt
     bid.save()
-
+    
+  
+    const buyerId = event.params.assetId.toHexString().concat(event.params.user.toHexString())
+    const buyer = getOrCreateBuyer(buyerId)
     // if the debt is greater than 0, create a loan
     if (event.params.amountOfDebt.gt(BigInt.fromI32(0))) {
         // make this loan pending till the claim event
@@ -137,13 +140,13 @@ export function handleMarketBid(event: MarketBidEvent): void {
         account.save()
 
         // Create the buyer
-        const buyerId = event.params.assetId.toHexString().concat(event.params.user.toHexString())
-        const buyer = getOrCreateBuyer(buyerId)
         buyer.user = event.params.user
         buyer.loanId = event.params.loanId
         buyer.assetId = event.params.assetId
         buyer.orderId = event.params.orderId
         buyer.save()
+    } else {
+      store.remove('Buyer', buyerId)
     }
 }
 
