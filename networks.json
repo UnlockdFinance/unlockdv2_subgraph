@@ -1,8 +1,9 @@
 {
-  "sepolia": {
-    "uToken": {
-      "address": "0x6F656F240CA33085be60257348C4625d51B159f3",
-      "startBlock": 4242015
+  "mainnet": {
+    "uTokenVault": {
+      "address": "0x25299e9Ec27c242465587B8A2Aa70bcE02636cDA",
+      "startBlock": 19507437
+
     }
   }
-}
+} 

@@ -8,9 +8,10 @@ import { Action__getLoanResultValue0Struct } from "../../generated/action/Action
 import { getOrCreateAsset, getOrCreateLoan, getLoan } from "../helpers/action";
 import { getOrCreateAuctionBid, getOrCreateAuctionFinalize, getOrCreateAuctionOrderRedeemed, getOrCreateAuctionRedeem, getOrderAuction } from "../helpers/auction";
 import { getOrCreateLoanCreated } from "../helpers/loanCreated";
-import { getOrCreateBid, getOrCreateOrder } from "../helpers/market";
+import { getOrCreateBid, getOrCreateOrder, getOrCreateBuyer } from "../helpers/market";
 import { getOrCreateOrderCreated } from "../helpers/orderLogic";
 import { getOrCreateTotalCount } from "../helpers/totalCount";
+import { getOrCreateAccount } from "../helpers/account";
 import { LoanStatus, OrderStatus, ZERO_ADDRESS } from "../utils/constants";
 import { BigInt, Bytes, store } from "@graphprotocol/graph-ts";
 
@@ -67,13 +68,31 @@ export function handleAuctionBid(event: AuctionBidEvent): void {
     bid.amountToPay = event.params.amountToPay
     bid.amountOfDebt = event.params.amountOfDebt
     bid.save()
+    
+    
+    const buyerId = event.params.assetId.toHexString().concat(event.params.user.toHexString())
+    const buyer = getOrCreateBuyer(buyerId)
+    
+    if(event.params.amountOfDebt.gt(BigInt.fromI32(0))) {
+      const loanCreated = getOrCreateLoanCreated(event.transaction.hash.toHexString())
+      const loan = getOrCreateLoan(loanCreated.loanId.toHexString())
+      loan.status = BigInt.fromI32(LoanStatus.PENDING)
+      loan.user = event.params.user.toHexString()
+      loan.save()
 
-    const loanCreated = getOrCreateLoanCreated(event.transaction.hash.toHexString())
-    if (loanCreated.loanId != Bytes.fromHexString(ZERO_ADDRESS)) {
-        const loan = getOrCreateLoan(loanCreated.loanId.toHexString())
-        loan.status = BigInt.fromI32(LoanStatus.PENDING)
-        loan.user = event.params.user.toHexString()
-        loan.save()
+      // Update the account created for the new user
+      const account = getOrCreateAccount(event.params.user.toHexString())
+      account.amountBorrowed = account.amountBorrowed.plus(event.params.amountOfDebt)
+      account.save()
+      
+      // Buyer
+      buyer.user = event.params.user
+      buyer.loanId = loanCreated.loanId
+      buyer.assetId = event.params.assetId
+      buyer.orderId = event.params.orderId
+      buyer.save()  
+    } else {
+      store.remove('Buyer', buyerId)
     }
 }
 
@@ -182,7 +201,29 @@ export function handleAuctionFinalize(event: AuctionFinalizeEvent): void {
         loan.save()
     }
 
-    const totalCount = getOrCreateTotalCount()
-    totalCount.totalCount = totalCount.totalCount.minus(BigInt.fromI32(1))
-    totalCount.save()
+    // get the buyer create on the bid event
+    const buyerId = event.params.assetId.toHexString().concat(event.params.winner.toHexString())
+    const buyer = getOrCreateBuyer(buyerId)
+
+    // if theres a valid loan id for the buyer
+    // we update the loan status to borrowed
+    // we add the stored asset to the new loan
+    if (buyer.loanId != Bytes.fromHexString(ZERO_ADDRESS)) {
+        const loan = getOrCreateLoan(buyer.loanId.toHexString())
+        loan.status = BigInt.fromI32(LoanStatus.BORROWED)
+        loan.save()
+        asset.loan = loan.id
+        asset.orderId = Bytes.fromHexString(ZERO_ADDRESS)
+        asset.save()
+
+        // update the total count
+        const totalCount = getOrCreateTotalCount()
+        totalCount.totalCount = totalCount.totalCount.plus(BigInt.fromI32(1))
+        totalCount.save()
+
+        // remove the history of the buyer
+        store.remove('Buyer', buyerId)
+    } else {
+        store.remove('Buyer', buyerId)
+    }
 }
