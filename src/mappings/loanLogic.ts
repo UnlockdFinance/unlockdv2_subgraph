@@ -1,4 +1,3 @@
-import { BigInt } from "@graphprotocol/graph-ts";
 import { LoanCreated as LoanCreatedEvent} from "../../generated/LoanLogic/LoanLogic";
 import { Action__getLoanResultValue0Struct } from "../../generated/action/Action";
 import { getOrCreateAccount } from "../helpers/account";
