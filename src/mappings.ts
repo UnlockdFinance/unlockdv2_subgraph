@@ -35,12 +35,6 @@ export {
 } from './mappings/sell';
 
 export {
-    handleAssign,
-    handlePunkBought,
-    handlePunkTransfer
-} from './mappings/cryptoPunks';
-
-export {
     handleProxyCreated
 } from './mappings/unlockd';
 
@@ -51,8 +45,4 @@ export {
 export {
     handleLoanCreated
 } from './mappings/loanLogic';
-
-export {
-    handleCollection
-} from './mappings/allowedController';
 
