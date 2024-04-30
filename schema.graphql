@@ -332,15 +332,6 @@ type LoanCreated @entity(immutable: false) {
 }
 
 #------------------------------------------------------------------------------------
-#                              CRYPTO PUNKS
-#------------------------------------------------------------------------------------
-
-type Punk @entity(immutable: false) {
-  id: ID!
-  owner: Bytes! # address
-}
-
-#------------------------------------------------------------------------------------
 #                              PRIVATE ENTITIES
 #------------------------------------------------------------------------------------
 
@@ -367,16 +358,6 @@ type Account @entity {
 type TotalCount @entity(immutable: false) {
   id: ID!
   totalCount: BigInt!
-}
-
-# Stores the allowed collection in the protocol
-type Collection @entity(immutable: false) {
-  id: ID! # collection address
-  isAllowed: Boolean!
-
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
 }
 
 # Manages the Loans in the protocol, shouldn't be deleted
