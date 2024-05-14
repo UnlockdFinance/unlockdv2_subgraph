@@ -3,13 +3,13 @@ schema:
   file: ./schema.graphql
 
 dataSources:
-  - kind: ethereum
+  - kind: ethereum/contract
     name: uTokenVault
-    network: sepolia
+    network: polygon-amoy
     source:
-      address: "0x68D46eafB4A3b312F643b742F1083c64163AfFdA"
+      address: "0xaEE2941b6E78858E203036E34110063EFc8350D4"
       abi: uTokenVault
-      startBlock: 5752387
+      startBlock: 6326248
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -41,13 +41,13 @@ dataSources:
         - event: PausedVault(indexed address,bool)
           handler: handlePausedVault
       file: ./src/mappings.ts
-  - kind: ethereum
+  - kind: ethereum/contract
     name: action
-    network: sepolia
+    network: polygon-amoy
     source:
-      address: "0x167b44409ae1eF6eF15a47a053f6a98879296E49"
+      address: "0x567136ccdFB320076dFEa5deFB65538D6737F7a7"
       abi: Action
-      startBlock: 5752387
+      startBlock: 6326248
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -72,13 +72,13 @@ dataSources:
         - event: AddCollateral(indexed bytes32,indexed address,indexed uint256,bytes32)
           handler: handleAddCollateral
       file: ./src/mappings.ts
-  - kind: ethereum
+  - kind: ethereum/contract
     name: sellNow
-    network: sepolia
+    network: polygon-amoy
     source:
-      address: "0x167b44409ae1eF6eF15a47a053f6a98879296E49"
+      address: "0x567136ccdFB320076dFEa5deFB65538D6737F7a7"
       abi: SellNow
-      startBlock: 5752387
+      startBlock: 6326248
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -94,13 +94,13 @@ dataSources:
         - event: ForceSold(bytes32,bytes32,address,uint256,uint256)
           handler: handleForceSold
       file: ./src/mappings.ts
-  - kind: ethereum
+  - kind: ethereum/contract
     name: market
-    network: sepolia
+    network: polygon-amoy
     source:
-      address: "0x167b44409ae1eF6eF15a47a053f6a98879296E49"
+      address: "0x567136ccdFB320076dFEa5deFB65538D6737F7a7"
       abi: Market
-      startBlock: 5752387
+      startBlock: 6326248
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -128,13 +128,13 @@ dataSources:
         - event: MarketBuyNow(indexed bytes32,indexed bytes32,indexed bytes32,uint256,address)
           handler: handleMarketBuyNow
       file: ./src/mappings.ts
-  - kind: ethereum
+  - kind: ethereum/contract
     name: auction
-    network: sepolia
+    network: polygon-amoy
     source:
-      address: "0x167b44409ae1eF6eF15a47a053f6a98879296E49"
+      address: "0x567136ccdFB320076dFEa5deFB65538D6737F7a7"
       abi: Auction
-      startBlock: 5752387
+      startBlock: 6326248
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -159,13 +159,13 @@ dataSources:
         - event: AuctionOrderRedeemed(indexed bytes32,indexed bytes32,uint256,uint256,uint256,uint256)
           handler: handleAuctionOrderRedeemed
       file: ./src/mappings.ts
-  - kind: ethereum
+  - kind: ethereum/contract
     name: unlockd
-    network: sepolia
+    network: polygon-amoy
     source:
-      address: "0x167b44409ae1eF6eF15a47a053f6a98879296E49"
+      address: "0x567136ccdFB320076dFEa5deFB65538D6737F7a7"
       abi: Unlockd
-      startBlock: 5752387
+      startBlock: 6326248
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -179,13 +179,13 @@ dataSources:
         - event: ProxyCreated(indexed address,uint256)
           handler: handleProxyCreated
       file: ./src/mappings.ts
-  - kind: ethereum
+  - kind: ethereum/contract
     name: orderLogic
-    network: sepolia
+    network: polygon-amoy
     source:
-      address: "0x167b44409ae1eF6eF15a47a053f6a98879296E49"
+      address: "0x567136ccdFB320076dFEa5deFB65538D6737F7a7"
       abi: OrderLogic
-      startBlock: 5752387
+      startBlock: 6326248
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -201,13 +201,13 @@ dataSources:
         - event: OrderCreated(indexed address,indexed bytes32,indexed bytes32,uint8)
           handler: handleOrderCreated
       file: ./src/mappings.ts
-  - kind: ethereum
+  - kind: ethereum/contract
     name: LoanLogic
-    network: sepolia
+    network: polygon-amoy
     source:
-      address: "0x167b44409ae1eF6eF15a47a053f6a98879296E49"
+      address: "0x567136ccdFB320076dFEa5deFB65538D6737F7a7"
       abi: LoanLogic
-      startBlock: 5752387
+      startBlock: 6326248
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
