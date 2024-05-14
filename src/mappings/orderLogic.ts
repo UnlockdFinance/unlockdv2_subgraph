@@ -18,11 +18,13 @@ export function handleOrderCreated(event: OrderCreatedEvent): void {
     loanCreated.transactionHash = event.transaction.hash
     loanCreated.transactionInput = event.transaction.input
     loanCreated.save()
-
-    const onChainLoan = getLoan(event.params.loanId) as Action__getLoanResultValue0Struct
-    const loan = getOrCreateLoan(event.params.loanId.toHexString())
-    loan.user = onChainLoan.owner.toHexString()
-    loan.totalAssets = onChainLoan.totalAssets
-    loan.underlyingAsset = onChainLoan.underlyingAsset
-    loan.save()
+   
+    if (event.params.orderType == 0) {
+        const onChainLoan = getLoan(event.params.loanId) as Action__getLoanResultValue0Struct
+        const loan = getOrCreateLoan(event.params.loanId.toHexString())
+        loan.user = onChainLoan.owner.toHexString()
+        loan.totalAssets = onChainLoan.totalAssets
+        loan.underlyingAsset = onChainLoan.underlyingAsset
+        loan.save()
+    }
 }

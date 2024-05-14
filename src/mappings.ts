@@ -45,4 +45,3 @@ export {
 export {
     handleLoanCreated
 } from './mappings/loanLogic';
-
