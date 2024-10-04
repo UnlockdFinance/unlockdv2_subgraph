@@ -22,6 +22,10 @@ export function getOrCreateMarketCreated(
     if (order == null && createIfNotFound) {
         // @ts-ignore: assign wrapper object to primitive
         order = new MarketCreated(id);
+        order.loanId = Bytes.fromHexString(ZERO_ADDRESS);
+        order.assetId = Bytes.fromHexString(ZERO_ADDRESS);
+        order.orderId = Bytes.fromHexString(ZERO_ADDRESS);
+        order.collection = Bytes.fromHexString(ZERO_ADDRESS);
         order.tokenId = BIGINT_ZERO;
     }
 
