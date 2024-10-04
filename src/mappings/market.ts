@@ -16,7 +16,7 @@ import {
     getOrder,
     getOrCreateBuyer
 } from "../helpers/market";
-import { LoanStatus, OrderStatus, ZERO_ADDRESS } from "../utils/constants";
+import { LoanStatus, OrderStatus, UNLOCK_MARKET_ADDRESS, ZERO_ADDRESS } from "../utils/constants";
 import { BigInt, Bytes, store } from "@graphprotocol/graph-ts";
 import { getOrCreateAsset, getOrCreateLoan } from "../helpers/action";
 import { getOrCreateOrderCreated } from "../helpers/orderLogic";
@@ -48,15 +48,15 @@ export function handleMarketCreated(event: MarketCreatedEvent): void {
     asset.save()
 
     // Query onchain the created order
-    const marketContract = MarketContract.bind(event.address)
-    const onchainOrderResult = marketContract.try_getOrder(event.params.orderId)
+    const marketContract = MarketContract.bind(UNLOCK_MARKET_ADDRESS);
+    const orderResult = marketContract.try_getOrder(event.params.orderId)
     
-    if (onchainOrderResult.reverted) {
+    if (orderResult.reverted) {
         log.warning('Onchain order query reverted for orderId: {}', [event.params.orderId.toHexString()])
         return
     }
 
-    const onchainOrder = onchainOrderResult.value
+    const onchainOrder = orderResult.value
     
     // Create Order for front-end. If the order is created by the contract, the orderType is 0
     order.status = BigInt.fromI32(OrderStatus.ACTIVE)
